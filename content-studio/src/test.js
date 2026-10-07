@@ -88,16 +88,16 @@ const FAKE = on => `
   else ok('papan kosong mengundang entri pertama, bukan layar kosong');
 
   // ---- 3. entri lewat form sungguhan ----
-  await pg.evaluate(() => { WHO = 'Kadek Ayu'; localStorage.setItem('jaens-studio-who','Kadek Ayu'); openForm('TIM'); });
+  await pg.evaluate(() => { WHO = 'Nama Uji'; localStorage.setItem('jaens-studio-who','Nama Uji'); openForm('TIM'); });
   await pg.waitForTimeout(250);
   await pg.evaluate(() => {
-    document.querySelector('#formFields [data-k="n"]').value = 'Kadek Ayu';
+    document.querySelector('#formFields [data-k="n"]').value = 'Nama Uji';
     document.querySelector('#formFields [data-k="role"]').value = 'Content Lead';
     submitForm();
   });
   await pg.waitForTimeout(250);
   const tim = await pg.evaluate(() => recs('TIM').map(p => p.n + '/' + p.role));
-  if (tim.join() !== 'Kadek Ayu/Content Lead') fail('entri tim: ' + JSON.stringify(tim));
+  if (tim.join() !== 'Nama Uji/Content Lead') fail('entri tim: ' + JSON.stringify(tim));
   else ok('anggota tim tersimpan lewat form, bukan ditanam di kode');
 
   await pg.evaluate(() => openForm('CNT'));
@@ -111,7 +111,7 @@ const FAKE = on => `
     const per = recs('TIM')[0].id;
     const mk = o => { const r = Object.assign({ id: nextId('CNT') }, o);
       r._m = { created_at:new Date().toISOString(), updated_at:new Date().toISOString(),
-               created_by:'Kadek Ayu', updated_by:'Kadek Ayu', is_archived:false };
+               created_by:'Nama Uji', updated_by:'Nama Uji', is_archived:false };
       (STORE.rec.CNT = STORE.rec.CNT || []).unshift(r); return r.id; };
     const a = mk({ n:'Video tur Outlet Bisma', channel:'Instagram', pillar:'Di balik layar', status:'Draft', date: shiftISO(todayISO(), 4), owner:per });
     const b = mk({ n:'Esai: harga pertumbuhan cepat', channel:'LinkedIn', pillar:'Bisnis', status:'Ide' });
@@ -137,7 +137,7 @@ const FAKE = on => `
     return l ? { by:l.by, ch:(l.ch||[]).map(c => c.l + ':' + c.from + '→' + c.to) } : null; }, ids.a);
   if (!mv || mv.ch[0] !== 'Status:Draft→Menunggu review') fail('catatan geseran: ' + JSON.stringify(mv));
   else ok('geseran tercatat sebagai perubahan kolom, dari nilai apa ke nilai apa');
-  if (mv.by !== 'Kadek Ayu') fail('penulis perubahan: ' + mv.by);
+  if (mv.by !== 'Nama Uji') fail('penulis perubahan: ' + mv.by);
   else ok('linimasa mencatat siapa yang menggeser — nama yang disetel orang itu sendiri');
 
   const barOn = await pg.$eval('#kanBar', n => n.classList.contains('on')).catch(() => false);
@@ -233,7 +233,7 @@ const FAKE = on => `
   await pg.evaluate(() => go('team'));
   await pg.waitForTimeout(220);
   const team = await pg.$eval('#view', e => e.innerText);
-  if (!/Kadek Ayu/.test(team)) fail('anggota tidak tampil');
+  if (!/Nama Uji/.test(team)) fail('anggota tidak tampil');
   else ok('halaman tim menampilkan anggota dan bebannya');
   if (!/belum punya penanggung jawab/i.test(team)) fail('konten tanpa PJ tidak ditagih');
   else ok('konten tanpa penanggung jawab ditagih terang-terangan');

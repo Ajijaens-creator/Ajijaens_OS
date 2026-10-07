@@ -58,7 +58,7 @@ function whoDialog(){
          terbaca: siapa menggeser apa, kapan.</div>
      </div>
      <div class="frm"><div class="fld full"><label>Nama Anda</label>
-       <input id="whoIn" type="text" value="${h(WHO)}" placeholder="Kadek Ayu" autocomplete="name">
+       <input id="whoIn" type="text" value="${h(WHO)}" placeholder="Nama Anda" autocomplete="name">
        <span class="fhint">Tersimpan di peramban ini saja — tiap orang menyetelnya sendiri di perangkatnya.</span></div></div>`,
     `<button class="btn solid" onclick="saveWho()">Simpan</button>
      <button class="btn ghost" onclick="closeModal()">Batal</button>`);
