@@ -1,5 +1,13 @@
 # Ajijaens OS
 
+> **REPO INI HARUS PRIVAT.** `aji-jaens-os/dist/` dan `os/index.html` memuat
+> keuangan grup Jan–Jul 2026, jumlah karyawan per unit, relasi bernama, dan
+> data keluarga — tertanam di dalam kode, bukan di penyimpanan peramban.
+> Lihat `docs/FASE.md` bagian "Peringatan keamanan".
+
+**Status fase: `docs/FASE.md`** — dan baca peringatannya lebih dulu:
+label "Phase" di dalam aplikasi TIDAK sama dengan fase roadmap resmi.
+
 Dua sistem yang dibangun bersama Claude, disimpan di sini supaya sumbernya tidak hilang
 lagi saat lingkungan kerja sementara dibersihkan.
 
