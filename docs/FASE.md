@@ -129,6 +129,40 @@ nyatanya dibersihkan dari salinan hosting.
 
 ---
 
+## TEMUAN TERBUKA — paparan data di repo publik
+
+**Tanggal temuan: 8 Oktober 2026, 01:45. Status: DIBIARKAN atas keputusan Aji.**
+
+Berkas `Ajijaens_OS-repo.tar.gz` (2,6 MB, commit `7af5db0`, 08 Okt 01:11) ada
+di repo **publik** `Ajijaens-creator/Ajijaens_OS`. Isinya seluruh repo privat
+termasuk direktori `.git`-nya.
+
+Dibuktikan, bukan diduga: `git clone` anonim tanpa login berhasil; arsip
+diekstrak dan dipindai dengan `public-copy/verify.sh` — **puluhan pola data
+nyata ditemukan**, termasuk `equity:17.461` di `aji-jaens-os/src/p3_data.js`.
+
+Yang terpapar: keuangan grup Jan–Jul 2026 per unit dan konsolidasi, jumlah
+karyawan, penilaian internal, nama relasi dengan skor kedekatan dan tanggal
+kontak terakhir, nama dan tanggal lahir anggota keluarga, serta laporan
+pemeriksaan internal.
+
+Tidak terpapar: kredensial. Dipindai untuk token GitHub, kunci API, AWS,
+Slack, dan private key — **tidak ada**. Tidak ada yang perlu dirotasi.
+
+Catatan penting: menghapus berkasnya saja **tidak menyelesaikan**. Commit
+`7af5db0` tetap menyimpannya, dan di repo publik riwayat terbuka bagi siapa
+pun. Penyelesaian tuntas butuh salah satu dari: repo dihapus dan dibuat ulang,
+atau riwayat ditulis ulang dari komputer.
+
+Pintu keluar termurah dan bisa dibalik: Settings → Change visibility →
+Private. Berhenti dalam hitungan detik; Pages mati selama privat.
+
+Tiga berkas hosting (`index.html`, `os.html`, `studio.html`) **tidak** terkena
+temuan ini — terverifikasi 0 dari 171 pola, dicek pada berkas yang benar-benar
+ada di GitHub, bukan pada salinan lokal.
+
+---
+
 ## Keputusan yang menunggu Aji
 
 1. Rencana "5 fase" buatan Claude: **dicabut**, **diturunkan derajatnya**
