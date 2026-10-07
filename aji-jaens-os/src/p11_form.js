@@ -293,7 +293,7 @@ const MODULE_ENTITIES = {
 };
 
 /* ================= RENDER FORM ================= */
-let FORM_T = null, FORM_ID = null;
+let FORM_T = null, FORM_ID = null, FORM_SRC = '';
 
 function fieldHTML(f, v, err){
   const val = v === undefined || v === null ? '' : String(v);
@@ -336,14 +336,17 @@ function fieldsHTML(type, vals, errs){
   return body + priv;
 }
 
-function openForm(type, id){
+/* pre  : nilai awal untuk record BARU (dipakai "Jadikan Praktik" / "Jadikan Bahan")
+   srcId : record asal, disimpan ke _m.source_id supaya tautannya dua arah */
+function openForm(type, id, pre, srcId){
   const S = SCHEMA[type]; if(!S) return;
-  FORM_T = type; FORM_ID = id || null;
+  FORM_T = type; FORM_ID = id || null; FORM_SRC = (!id && srcId) ? srcId : '';
   const r = id ? recById(id) : null;
   const vals = {};
   if(r){ Object.keys(r).forEach(k=>{ if(k!=='_m'&&k!=='id'&&k!=='type') vals[k]=r[k]; });
          vals._priv = r._m.privacy_level; vals._tags = (r._m.tags||[]).join(', '); }
-  else { const f0 = S.f.find(x=>x.k==='date'); if(f0) vals.date = new Date().toISOString().slice(0,10); }
+  else { const f0 = S.f.find(x=>x.k==='date'); if(f0) vals.date = new Date().toISOString().slice(0,10);
+         if(pre) Object.keys(pre).forEach(k => { if(pre[k]) vals[k] = pre[k]; }); }
   modal(
     (r ? 'Ubah ' : 'Tambah ') + S.n,
     r ? `${r.id} · dibuat ${dtID(r._m.created_at)}` : `${S.d} Setiap record baru otomatis mendapat ID global, metadata universal, dan tingkat privasi.`,
@@ -396,11 +399,15 @@ function submitForm(){
   } else {
     r = Object.assign({ id: nextId(type), type }, v);
     r._m = { created_at:now, updated_at:now, created_by:DB.owner.name, updated_by:DB.owner.name,
-             status:'ACTIVE', source_type:'MANUAL_ENTRY', source_id:'', source_url:'',
+             status:'ACTIVE', source_type: FORM_SRC ? 'DERIVED' : 'MANUAL_ENTRY',
+             source_id: FORM_SRC || '', source_url:'',
              privacy_level:priv, is_dummy:false, is_archived:false, tags };
     (STORE.rec[type] = STORE.rec[type] || []).unshift(r);
-    logAct('CREATE', r);
+    logAct('CREATE', r, FORM_SRC ? ('Dibuat dari ' + FORM_SRC) : '');
   }
+  /* cap sumber: dipakai untuk menandai "Sumber diperbarui — tinjau kembali" */
+  if(typeof npTakeSnap === 'function' && type === 'BHN') npTakeSnap(r);
+  FORM_SRC = '';
   saveStore(); closeModal();
   toast(`${S.n} tersimpan — ${r.id} · is_dummy = false`);
   go(CUR);
@@ -426,6 +433,7 @@ function recDetail(id){
        ${m.is_archived?'<span class="pill red">ARSIP</span>':''}
        ${(m.tags||[]).map(t=>`<span class="pill gray">${h(t)}</span>`).join('')}
      </div>
+     ${typeof npDetailExtra === 'function' ? npDetailExtra(r) : ''}
      <dl class="kv">${rows || '<dt>—</dt><dd>Belum ada isian.</dd>'}</dl>
      <div class="sep" style="margin:18px 0"></div>
      <div class="fgroup" style="border:0;padding:0;margin:0 0 10px">Metadata universal</div>
@@ -440,6 +448,7 @@ function recDetail(id){
       ? `<button class="btn grn" onclick="restoreRec('${r.id}')">${ic('arrow')} Pulihkan</button>
          <button class="btn ghost" onclick="closeModal()">Tutup</button>`
       : `<button class="btn solid" onclick="openForm('${typeOf(r)}','${r.id}')">Ubah</button>
+         ${typeof npDetailFoot === 'function' ? npDetailFoot(r) : ''}
          <button class="btn ghost" onclick="closeModal()">Tutup</button>
          <button class="btn red" style="margin-left:auto" onclick="archiveRec('${r.id}')">Arsipkan</button>`,
     true);
