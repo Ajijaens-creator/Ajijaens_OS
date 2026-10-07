@@ -16,10 +16,22 @@ Satu berkas HTML mandiri, tanpa pustaka luar.
 Status: **Phase 1 dan Phase 2 terkunci**, Phase 3.1 (sinkronisasi) berdiri.
 Pemeriksaan terakhir: 15 rangkaian uji, 393 pemeriksaan hijau.
 
-`dist/AJI-JAENS-OS.html` adalah hasil bangun yang sedang terbit. Berkas-berkas
-sumbernya (p1…p24) hilang saat container sesi di-reclaim — yang tersisa dan
-terpulihkan adalah hasil bangun ini, dan itu dinyatakan apa adanya di sini,
-bukan disamarkan seolah sumbernya lengkap.
+### Catatan tentang sumbernya
+
+Berkas sumber asli hilang saat container sesi dibersihkan. Modul di `src/` adalah
+hasil **pemulihan dari berkas terbangun**, dipecah di batas spanduk komentar tiap modul.
+
+Pemulihan itu bukan perkiraan: `build.py` menyusun ulang ke-22 modul dan hasilnya
+**identik bita-per-bita** dengan halaman yang sedang terbit (SHA-256 `133d0d4b593b598f…`,
+703.801 karakter). Jadi `src/` benar-benar membangun `dist/`, bukan mendekatinya.
+
+Yang tidak pulih: nama berkas asli hanya sebagian yang pasti, dan komentar antar-modul
+yang berada di luar spanduk ikut masuk ke modul sebelumnya. Keduanya tidak memengaruhi
+hasil bangun.
+
+```bash
+cd aji-jaens-os && python3 build.py   # menghasilkan dist/AJI-JAENS-OS.html + versi mandiri
+```
 
 ## `content-studio/`
 
