@@ -1,0 +1,108 @@
+<!doctype html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Life by Design — Aji Jaens</title>
+<meta name="description" content="Portal peserta workshop Life by Design bersama Aji Jaens Suputtra.">
+<link rel="stylesheet" href="../lib/ui.css">
+<style>
+/* ---- halaman pembuka: foto hospitality + tulisan emas ---- */
+.sampul{position:relative;min-height:62vh;display:flex;align-items:flex-end;overflow:hidden;
+  background:var(--surface-3)}
+.sampul img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+.sampul::after{content:"";position:absolute;inset:0;
+  background:linear-gradient(180deg,rgba(20,16,10,.18) 0%,rgba(20,16,10,.72) 72%,rgba(20,16,10,.9) 100%)}
+.sampul-isi{position:relative;z-index:2;padding:26px 18px 28px;color:#F7F2E6;width:100%}
+.skrip{font-family:var(--fd);font-size:clamp(34px,10vw,52px);font-weight:700;line-height:1;
+  color:#E8C87A;font-style:italic;margin-bottom:6px}
+.jejak{font-size:11px;letter-spacing:.26em;text-transform:uppercase;color:#D9CDB4;margin-bottom:18px}
+.sampul h1{color:#FFFDF6;font-size:clamp(24px,6.4vw,34px);line-height:1.12;margin-bottom:6px}
+.sampul .sub{color:#E3DAC6;font-size:15px}
+.rupa{display:flex;gap:12px;align-items:center;margin:18px 0 20px}
+.rupa .bulat{width:50px;height:50px;border-radius:50%;flex:0 0 50px;display:grid;place-items:center;
+  background:linear-gradient(140deg,#C9A85A,#8E681F);color:#fff;font-weight:800;font-size:17px;letter-spacing:.5px}
+.rupa b{display:block;color:#FFFDF6;font-size:16px}
+.rupa span{display:block;color:#CFC4AC;font-size:12.5px}
+.pita{display:inline-block;background:rgba(255,253,246,.14);border:1px solid rgba(255,253,246,.3);
+  color:#F7F2E6;font-size:12px;font-weight:600;padding:4px 11px;border-radius:20px;margin-bottom:14px}
+.ganti-foto{position:absolute;inset:0;display:grid;place-items:center;text-align:center;padding:24px;
+  color:var(--text-3);font-size:13px;line-height:1.6;z-index:1}
+.nilai-lc{float:right;font-weight:700;color:var(--gold-dark);font-size:13px}
+input[type="range"]{accent-color:var(--gold);width:100%}
+</style>
+</head>
+<body>
+
+<!-- ======================= 1. PEMBUKA ======================= -->
+<section id="l-pembuka">
+  <div class="sampul">
+    <!-- Foto hospitality milik Aji dipasang di sini. Tidak ada gambar
+         pengganti yang dibuat-buat: slot ini sengaja kosong sampai
+         fotonya tersedia dan disetujui. -->
+    <div class="ganti-foto">[ Foto hospitality dipasang di sini —<br>belum tersedia, sengaja tidak diisi gambar lain ]</div>
+    <div class="sampul-isi">
+      <div class="skrip">Life by Design</div>
+      <div class="jejak">People · Hospitality · Opportunity</div>
+      <span class="pita">Workshop · 150 menit</span>
+      <h1>Your Hospitality Skills Can Be a Business</h1>
+      <p class="sub">From Student to Hospitality Entrepreneur</p>
+      <div class="rupa"><span class="bulat">AJ</span>
+        <span><b>Aji Jaens Suputtra</b><span>Founder · Life Mastery Specialist</span></span></div>
+      <button class="btn lebar" id="keMasuk">Masuk &amp; dapatkan materi</button>
+      <p style="text-align:center;margin-top:12px;font-size:14px;color:#D9CDB4">
+        Sudah punya akun? <a href="#" id="keMasuk2" style="color:#E8C87A;font-weight:600">Masuk</a></p>
+    </div>
+  </div>
+  <div class="bungkus sempit" style="padding-block:22px 48px">
+    <p class="mini">Kami meminta email untuk mengirim kode masuk — <b>tidak ada kata sandi</b> yang perlu Anda buat
+      atau kami simpan. Data usaha Anda tidak pernah tampil di profil publik.</p>
+  </div>
+</section>
+
+<!-- ======================= 2. MASUK ======================= -->
+<section id="l-masuk" hidden><div class="bungkus sempit" style="padding-block:28px 60px">
+  <button class="btn hantu kecil" id="kembaliPembuka" style="margin-bottom:18px">← Kembali</button>
+  <h2>Masuk</h2>
+  <p class="mini" style="margin:6px 0 18px">Kode masuk dikirim ke email Anda. Berlaku beberapa menit.</p>
+  <div class="isian" id="i-m-email">
+    <label for="m-email">Email</label>
+    <input id="m-email" type="email" inputmode="email" autocomplete="email" placeholder="nama@contoh.com">
+    <span class="galat" hidden></span>
+  </div>
+  <button class="btn lebar" id="kirimKode">Kirim kode</button>
+  <div id="tahapKode" hidden style="margin-top:18px">
+    <p class="mini" id="ketKode" style="margin-bottom:10px"></p>
+    <div class="isian">
+      <label for="m-kode">Kode dari email</label>
+      <input id="m-kode" type="text" inputmode="numeric" autocomplete="one-time-code" maxlength="8" placeholder="123456">
+    </div>
+    <button class="btn lebar" id="verifKode">Masuk</button>
+  </div>
+  <p class="mini" style="margin-top:18px"><b>Masuk bukan berarti hadir.</b> Kehadiran dicatat terpisah saat Anda
+    check-in di lokasi sesi.</p>
+</div></section>
+
+<!-- ======================= 3. PENDAFTARAN ======================= -->
+<section id="l-daftar" hidden><div class="bungkus sempit" style="padding-block:24px 60px">
+  <div class="langkah"><i id="bar1"></i><i id="bar2"></i><i id="bar3"></i>
+    <span id="ketLangkah">Langkah 1 dari 3</span></div>
+  <div id="isiDaftar"></div>
+</div></section>
+
+<!-- ======================= 4. SESI SAYA ======================= -->
+<section id="l-sesi" hidden>
+  <header class="atas"><div class="bungkus atas-in">
+    <span class="merek">Sesi Saya<em id="halo"></em></span>
+    <span class="tumbuh"></span>
+    <button class="btn hantu kecil" id="keluarPortal">Keluar</button>
+  </div></header>
+  <div class="bungkus sempit" style="padding-block:20px 60px"><div id="isiSesi"></div></div>
+</section>
+
+<script src="stub.js"></script>
+<script>window.AJIOS_CONFIG={url:"https://uji.local",anon:"eyJUJI",schema:"ajios",origin:""}</script>
+<script src="../lib/app.js"></script>
+<script src="../lib/portal.js"></script>
+</body>
+</html>

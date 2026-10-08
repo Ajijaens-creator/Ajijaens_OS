@@ -81,6 +81,14 @@
     ],
     /* tabel yang TIDAK boleh terbaca peran cs/fasilitator */
     life_circle_score: [ { entry_id: 'le1', aspek: 'Kesehatan', nilai: 0 } ],
+    life_circle_entry: [],
+    life_circle_template: [ { id: 'tpl1', nama: 'Life Circle Dasar', versi: 1, aktif: true,
+      aspek: ['Kesehatan & energi','Keuangan','Hubungan','Karier','Spiritual','Belajar','Jeda','Kontribusi'] } ],
+    activity: [ { id: 'ak1', sesi_id: 's1', kode: 'lc', judul: 'Wellbeing Life Circle',
+      jenis: 'life_circle', status: 'Dibuka' },
+      { id: 'ak2', sesi_id: 's1', kode: 'pdf', judul: 'Materi PDF', jenis: 'materi', status: 'Belum dibuka' } ],
+    education_profile: [],
+    data_subject_request: [],
     activity_response: [], feedback: [], action_plan: [], staff: []
   };
 
@@ -99,8 +107,11 @@
       select(sel) { q._sel = sel; return q; },
       eq(k, v) { q._eq.push([k, v]); return q; },
       order(k, o) { q._order = [k, !o || o.ascending !== false]; return q; },
+      limit(n) { q._limit = n; return q; },
       maybeSingle() { q._single = true; return q; },
+      single() { q._single = true; q._wajib = true; return q; },
       insert(obj) { q._insert = obj; return q; },
+      update(obj) { q._update = obj; return q; },
       then(res, rej) { return jalankan().then(res, rej); }
     };
     function jalankan() {
@@ -110,10 +121,19 @@
         const larangan = TERLARANG[g.__STUB.peran] || [];
         if (larangan.indexOf(tabel) !== -1) return resolve({ data: [], error: null });
         if (q._insert) {
-          const baris = Object.assign({ id: 'x' + Math.random().toString(36).slice(2, 8) }, q._insert);
-          if (!baris.dibuat_pada) baris.dibuat_pada = NOW;
-          (DB[tabel] = DB[tabel] || []).unshift(baris);
-          return resolve({ data: [baris], error: null });
+          const satuan = Array.isArray(q._insert) ? q._insert : [q._insert];
+          const dibuat = satuan.map(x => {
+            const baris = Object.assign({ id: 'x' + Math.random().toString(36).slice(2, 8) }, x);
+            if (!baris.dibuat_pada) baris.dibuat_pada = NOW;
+            (DB[tabel] = DB[tabel] || []).unshift(baris);
+            return baris;
+          });
+          return resolve({ data: q._single ? dibuat[0] : dibuat, error: null });
+        }
+        if (q._update) {
+          const kena = rows.filter(r => q._eq.every(([k, v]) => r[k] === v));
+          kena.forEach(r => Object.assign(r, q._update));
+          return resolve({ data: q._single ? (kena[0] || null) : kena, error: null });
         }
         let out = rows.filter(r => q._eq.every(([k, v]) => r[k] === v));
         if (q._order) { const [k, asc] = q._order;
@@ -127,10 +147,24 @@
           const peta = (DB[tujuan === 'person' ? 'person' : tujuan] || []);
           out = out.map(r => Object.assign({}, r, { [alias]: peta.find(x => x.id === r[fk]) || null }));
         }
+        if (q._limit) out = out.slice(0, q._limit);
         resolve({ data: q._single ? (out[0] || null) : out, error: null });
       });
     }
     return q;
+  }
+
+  /* Keadaan awal dibaca SAAT DIMUAT, supaya tidak berlomba dengan boot().
+     __MASUK_UJI=false meniru pengunjung yang belum masuk sama sekali.
+     __TANPA_PROFIL=true meniru akun baru yang belum punya baris person. */
+  g.__STUB.masuk = (g.__MASUK_UJI === undefined) ? true : !!g.__MASUK_UJI;
+  if (g.__TANPA_PROFIL) DB.person = [];
+  /* Jadikan satu peserta contoh sebagai "saya", supaya jalur peserta yang
+     sudah terdaftar bisa diuji tanpa memuat ulang halaman. */
+  if (g.__PROFIL_SAYA) {
+    DB.person.forEach(x => { if (x.auth_user_id === 'u-admin') x.auth_user_id = null; });
+    const saya = DB.person.find(x => x.id === g.__PROFIL_SAYA);
+    if (saya) saya.auth_user_id = 'u-admin';
   }
 
   g.supabase = {
@@ -138,9 +172,11 @@
       return {
         from: kueri,
         auth: {
-          getSession: () => Promise.resolve({ data: { session: { user: g.__STUB.user } }, error: null }),
+          getSession: () => Promise.resolve({
+            data: { session: g.__STUB.masuk ? { user: g.__STUB.user } : null }, error: null }),
           signInWithOtp: () => Promise.resolve({ error: null }),
-          verifyOtp: () => Promise.resolve({ data: { session: { user: g.__STUB.user } }, error: null }),
+          verifyOtp: () => { g.__STUB.masuk = true;
+            return Promise.resolve({ data: { session: { user: g.__STUB.user } }, error: null }); },
           signOut: () => Promise.resolve({ error: null }),
           onAuthStateChange: () => ({ data: { subscription: { unsubscribe() {} } } })
         }
