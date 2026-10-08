@@ -16,7 +16,7 @@
 
 window.AJIOS_CONFIG = {
   url:  'https://zkqfbdvumqnabptiqjhb.supabase.co',
-  anon: 'ISI_DENGAN_ANON_PUBLIC_KEY',   // diawali eyJ...
+  anon: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InprcWZiZHZ1bXFuYWJwdGlxamhiIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTE0MjE0NzIsImV4cCI6MjEwNjk5NzQ3Mn0.MGiH8l4UcI2uOAE4pwp3XM7lKBQTRSph3Vmf-vkRXQs',   // diawali eyJ...
 
   /* Nama schema basis data. Jangan diubah. */
   schema: 'ajios',
@@ -30,5 +30,6 @@ window.AJIOS_CONFIG = {
      Dibiarkan kosong, alamatnya dihitung dari halaman yang sedang dibuka.
      Itu jalan untuk mencoba, tetapi QR yang dicetak sebelum sesi sebaiknya
      dibuat dari alamat yang pasti — isi nilainya begitu domainnya siap. */
-  origin: ''
+    origin: 'https://ajijaens-creator.github.io/Ajijaens_OS/app'
+
 };
