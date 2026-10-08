@@ -94,47 +94,96 @@ Diurutkan menurut pekerjaannya, bukan menurut label "Phase":
 
 ---
 
-## Paket NP — keadaan per 8 Oktober 2026
+## Paket NP — matriks per 8 Oktober 2026
 
-Daftar ini **bukan** pernyataan bahwa Fase 6 selesai. Satu paket selesai
-berarti satu paket selesai. Kolom "Teruji" hanya diisi kalau ada rangkaian
-pengujian yang benar-benar dijalankan dan hasilnya tercatat.
+Matriks ini diminta oleh NP-V09. Ia **bukan** pernyataan bahwa Fase 6
+selesai: satu paket selesai berarti satu paket selesai. Kolom "Teruji"
+hanya diisi kalau ada rangkaian pengujian yang benar-benar dijalankan dan
+angkanya tercatat — bukan karena kodenya terlihat benar.
 
 | Paket | Terimplementasi | Teruji | Kekurangan | Ketergantungan |
 |---|---|---|---|---|
-| **NP-01** Knowledge: Learn, Do & Share | Ya — artefak OS v21 | 18 pengujian | Bank bahan belum punya penelusuran penuh | artefak OS |
-| **NP-V02** Share: Bank Bahan, Modul & Program | Ya — artefak OS v22 | 14 pengujian | Tanpa editor slide (memang di luar lingkup) | NP-01 |
-| **NP-V00** Fondasi backend | Ya — 26 tabel, 57 kebijakan RLS, PDP PP 33/2026 | 36 pengujian di PostgreSQL 16.15 | — | Supabase |
-| **NP-V04** Portal Peserta | Ya — `app/portal/` | 25 pengujian | Belum pernah diuji bersama RLS lewat HTTP | NP-V00, anon key |
-| **NP-V05** Database Peserta, CRM & Funnel | Ya — `app/admin/crm.html` | 16 + 16 pengujian | Belum ada kirim WhatsApp/email (memang pencatatan saja) | NP-V00 |
-| **NP-V08** Sesi & Kendali Fasilitator | Ya — `app/sesi/` + layar proyektor | 41 + 41 pengujian, QR 18 pengujian | QR belum dipindai dengan ponsel sungguhan oleh manusia | NP-V00, alamat tetap |
-| **NP-V03** Slide Studio | Belum | — | — | NP-V02 |
-| **NP-V06** Learn | Belum | — | — | NP-01 |
-| **NP-V07** Do | Belum | — | — | NP-01 |
-| **NP-V09** Evaluasi & Tindak Lanjut | Belum | — | — | NP-V04, NP-V08 |
+| **NP-01** Knowledge: Learn, Do & Share | Ya — artefak OS | 18 | Bank bahan belum punya penelusuran penuh | artefak OS |
+| **NP-V02** Share: Bank Bahan, Modul & Program | Ya — artefak OS | 14 | Tanpa editor slide (memang di luar lingkup paket) | NP-01 |
+| **NP-V03** Slide Studio & Presentasi | Ya — artefak OS, sub-tab Share | 34 | Tidak ada pratinjau slide di dalam aplikasi, dan itu disengaja; ekspor belum ada | NP-V02, akun Canva |
+| **NP-V06** Learn | Ya — artefak OS | 30 (bersama V07) | Belum ada penggabungan topik yang mirip | NP-01 |
+| **NP-V07** Do | Ya — artefak OS | 30 (bersama V06) | Bukti masih rujukan teks, bukan berkas | NP-01 |
+| **NP-V00** Fondasi backend | Ya — 26 tabel, 57 kebijakan RLS, PDP PP 33/2026 | 51 di PostgreSQL 16.15 | — | Supabase |
+| **NP-V04** Portal Peserta | Ya — `app/portal/` | 27 + 22 | Belum pernah diuji bersama RLS lewat HTTP | NP-V00, anon key |
+| **NP-V05** Database Peserta, CRM & Funnel | Ya — `app/admin/crm.html` | 16 + 16 | Belum ada kirim WhatsApp/email (memang pencatatan saja) | NP-V00 |
+| **NP-V08** Sesi & Kendali Fasilitator | Ya — `app/sesi/` + proyektor | 41 + 41, QR 18 | QR belum dipindai ponsel sungguhan oleh manusia | NP-V00, alamat tetap |
+| **NP-V09** Evaluasi & Tindak Lanjut | Ya — `app/admin/evaluasi.html` + formulir di portal | 40 + 40 | Belum ada pengingat tindak lanjut otomatis | NP-V04, NP-V08 |
 
-Yang **tidak** boleh disimpulkan dari tabel ini: bahwa sistemnya siap
-produksi. Akses multiuser, penyimpanan, dan alur peserta belum pernah diuji
-bersama lewat HTTP terhadap Supabase sungguhan — hanya terhadap tiruan klien
-dan terhadap PostgreSQL lokal, terpisah.
+Angka "x + y" berarti rangkaian yang sama dijalankan dua kali: pada sumber
+bermacam berkas, dan pada berkas tunggal yang benar-benar diunggah.
 
-### Satu kesalahan yang ditemukan pengujian, dan cara memperbaikinya
+**Jumlah seluruhnya: 408 pengujian — 51 di basis data, 261 di aplikasi web,
+96 di artefak OS.** Dijalankan ulang dengan tiga perintah:
+`backend/jalankan_uji.sh`, `app/jalankan_uji.sh`, dan
+`aji-jaens-os/jalankan_uji.sh`. Ketiganya mencetak jumlahnya sendiri, jadi
+angka di atas bisa diperiksa, bukan dipercaya.
 
-Kebijakan RLS membuat `activity_response` hanya terbaca pemiliknya — itu
-benar, fasilitator memang tidak boleh membaca jawaban perorangan. Tetapi
-akibatnya hitungan `count(distinct person_id)` yang dijalankan fasilitator
-selalu menghasilkan **0**, dan layar kendali akan menuliskan
-"0 dari 12 peserta hadir sudah mengirim": sebuah pernyataan salah yang
+### Yang TIDAK boleh disimpulkan dari matriks ini
+
+**Sistem ini belum siap produksi.** Empat hal belum lulus pengujian, dan
+sampai keempatnya lulus, kalimat "siap dipakai" tidak boleh dipakai:
+
+| Belum lulus | Keadaan sekarang |
+|---|---|
+| **Akses multiuser** | RLS terbukti di PostgreSQL lokal (51 pengujian sebagai peran `authenticated` biasa). Antarmuka terbukti terhadap tiruan klien. Keduanya **belum pernah diuji bersama lewat HTTP** terhadap Supabase sungguhan. |
+| **Penyimpanan** | Migrasi terpasang dan terverifikasi di Supabase, tetapi belum ada satu baris data nyata yang masuk lewat aplikasi. |
+| **Pemulihan** | Belum pernah diuji. Belum ada percobaan memulihkan basis data dari cadangan, dan belum ada prosedurnya. |
+| **Alur peserta** | Belum ada peserta sungguhan yang mendaftar, check-in, mengisi aktivitas, dan mengevaluasi dari ujung ke ujung. |
+
+Yang membuka keempatnya satu langkah: **anon public key diisi di
+`app/config.js`**. Sampai itu terjadi, yang ada adalah dua sistem yang
+masing-masing terbukti benar, dan belum terbukti benar bersama.
+
+### Dua celah yang ditemukan pengujian, bukan oleh pembacaan kode
+
+Keduanya jenis kesalahan yang paling berbahaya: angka yang salah, tetapi
 terlihat seperti data.
 
-Diperbaiki di `backend/migrations/0005_progres.sql` dengan satu fungsi
-SECURITY DEFINER yang mengembalikan **hanya cacahnya**, dan `NULL` — bukan
-nol — bagi yang tidak berhak menghitung. Antarmuka menuliskan NULL sebagai
-"belum bisa dihitung di sini", dan **tidak menggambar batang progres** untuk
-angka yang tidak diketahui, karena batang kosong terbaca sebagai nol.
+**1. Fasilitator selalu melihat 0 pengirim.** Kebijakan RLS membuat
+`activity_response` hanya terbaca pemiliknya — itu benar, dan harus tetap
+begitu. Tetapi akibatnya hitungan yang dijalankan fasilitator selalu
+menghasilkan 0, dan layar kendali menuliskan "0 dari 12 peserta hadir
+sudah mengirim". Diperbaiki di `0005_progres.sql` dengan fungsi
+SECURITY DEFINER yang mengembalikan hanya cacahnya, dan **NULL — bukan
+nol** — bagi yang tidak berhak menghitung.
+
+**2. Hal yang sama pada evaluasi.** Rekap yang dihitung dari tabel
+`feedback` juga akan menghasilkan rata-rata nol. Diperbaiki di
+`0006_evaluasi.sql`, dengan tambahan: nol respons menghasilkan **nol
+baris**, sehingga layar tidak punya apa pun untuk digambar dan harus
+berkata "belum ada respons". Batang progres pun tidak digambar — batang
+kosong terbaca sebagai nol.
+
+Di berkas yang sama akhirnya dibuat view `tindak_lanjut_sesi` yang sudah
+dijanjikan komentar di `0003_rls.sql` sejak awal tetapi belum pernah ada:
+status action plan untuk staf sesi, tanpa isi tujuan, langkah, dukungan,
+atau bukti.
 
 Basis data yang sudah memakai `pasang_semua.sql` versi empat bagian cukup
-menjalankan `backend/pasang_tambahan_0005.sql` sekali.
+menjalankan `backend/pasang_tambahan.sql` sekali.
+
+### Tiga celah kecil, dicatat supaya tidak "diperbaiki" kembali
+
+- **Status LRN dan PRK tidak wajib**, jadi record berstatus kosong tidak
+  punya kolom di papan dan hilang dari pandangan tanpa pemberitahuan.
+  Ditambah bagian "Belum muncul di papan". Statusnya tetap tidak diisi
+  sendiri — status adalah pernyataan pemiliknya.
+- **Entri Life Circle tidak membawa `sesi_id`**, sehingga agregat
+  wellbeing per sesi selalu kosong padahal ada yang mengisi.
+- **`periksa.sql` berhenti dengan error** pada basis data yang view-nya
+  belum ada, karena cast `'...'::regclass` dinilai saat rencana dibuat —
+  padahal justru keadaan itu yang harus dilaporkannya.
+
+### Koreksi mockup yang disengaja
+
+Pada NV-07 tab **Bukti** tampak aktif. Yang semestinya terbuka lebih dulu
+adalah **Rencana**, dan itu yang dipakai. Mockup adalah acuan desain,
+bukan bukti fitur berjalan.
 
 ---
 
