@@ -1,6 +1,6 @@
 import pathlib
 d = pathlib.Path(__file__).parent / 'src'
-ORDER = ['p3_data.js', 'p4_core.js', 'p5_v1.js', 'p6_v2.js', 'p7_v3.js', 'p9_1a.js', 'p10_dummy.js', 'p11_form.js', 'p12_myday.js', 'p13_import.js', 'p14_tasks.js', 'p15_network.js', 'p16_os.js', 'p17_ai.js', 'p18_business.js', 'p19_rest.js', 'p20_final.js', 'p21_lock.js', 'p22_links.js', 'p23_board.js', 'p24_cloud.js', 'p25_np01.js', 'p26_np02.js', 'p8_ai.js']
+ORDER = ['p3_data.js', 'p4_core.js', 'p5_v1.js', 'p6_v2.js', 'p7_v3.js', 'p9_1a.js', 'p10_dummy.js', 'p11_form.js', 'p12_myday.js', 'p13_import.js', 'p14_tasks.js', 'p15_network.js', 'p16_os.js', 'p17_ai.js', 'p18_business.js', 'p19_rest.js', 'p20_final.js', 'p21_lock.js', 'p22_links.js', 'p23_board.js', 'p24_cloud.js', 'p25_np01.js', 'p26_np02.js', 'p27_np06.js', 'p28_np07.js', 'p8_ai.js']
 css   = (d/'head.css').read_text()
 shell = (d/'shell.html').read_text()
 js    = "".join((d/f).read_text() for f in ORDER)
