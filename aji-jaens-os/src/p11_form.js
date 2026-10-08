@@ -407,6 +407,9 @@ function submitForm(){
   }
   /* cap sumber: dipakai untuk menandai "Sumber diperbarui — tinjau kembali" */
   if(typeof npTakeSnap === 'function' && type === 'BHN') npTakeSnap(r);
+  /* Tautan desain slide dibersihkan SEBELUM disimpan: yang ditempel bisa
+     berupa kode embed lengkap, dan markup tidak boleh ikut masuk store. */
+  if(typeof sldSimpanBersih === 'function' && type === 'SLD') sldSimpanBersih(r);
   FORM_SRC = '';
   saveStore(); closeModal();
   toast(`${S.n} tersimpan — ${r.id} · is_dummy = false`);
