@@ -157,3 +157,31 @@ Tabelnya ada; halaman dan prosedurnya belum.
 
 **Sistem ini belum siap produksi.** Akses multiuser belum pernah diuji dengan
 pengguna sungguhan di server sungguhan.
+
+---
+
+## Status pemasangan
+
+**Terpasang di Supabase 8 Oktober 2026** — proyek `Ajijaens-OS`, region Singapore,
+organisasi berpaket Pro (tidak ada jeda otomatis, tidak ada batas 2 proyek).
+
+`periksa.sql` dijalankan di server sungguhan, hasilnya **SEMUA BENAR** —
+dan tujuh angkanya sama persis dengan hasil uji lokal:
+
+| Pemeriksaan | Hasil | Diharapkan |
+|---|---|---|
+| Tabel di schema ajios | 26 | 26 |
+| Tabel dengan RLS aktif | 26 | 26 |
+| Kebijakan izin terpasang | 57 | 57 |
+| Hak akses untuk authenticated | 120 | ada |
+| Tujuan persetujuan terisi | 4 | 4 |
+| Fungsi penolong izin | 5 | 5 |
+| auth.uid() tersedia | 1 | 1 |
+
+Perimeter API diperiksa dari luar: `GET /rest/v1/person` tanpa kunci
+mengembalikan **401** — endpoint hidup, permintaan tanpa kunci ditolak.
+
+**Yang masih belum diperiksa:** perilaku RLS lewat API dengan kunci anon yang
+sah — yaitu membuktikan bahwa pengunjung tanpa login benar-benar mendapat nol
+baris, bukan sekadar ditolak di pintu. Pengujian itu menunggu halaman pertama
+dibangun, karena halaman itu memang membawa kunci anon-nya sendiri.
