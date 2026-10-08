@@ -13,7 +13,7 @@ dengan Supabase.
 
 | Berkas | Isi |
 |---|---|
-| `migrations/0001_schema.sql` | 27 tabel: orang, akun, usaha, sesi, aktivitas, Life Circle, CRM |
+| `migrations/0001_schema.sql` | 26 tabel: orang, akun, usaha, sesi, aktivitas, Life Circle, CRM |
 | `migrations/0002_pdp.sql` | Persetujuan, hak subjek data, catatan kebocoran, audit — PP 33/2026 |
 | `migrations/0003_rls.sql` | 57 kebijakan izin tingkat baris + dua view terbatas |
 | `migrations/0004_grants.sql` | Hak akses schema untuk Supabase + pemeriksaan "tidak ada tabel tanpa RLS" |
@@ -100,7 +100,7 @@ bagian berikutnya.
    select id, 'admin' from auth.users where email = 'EMAIL-ANDA'
    on conflict (auth_user_id) do update set peran = 'admin';
    ```
-7. **Periksa sendiri.** Table Editor → ketiga puluh tabel harus punya lencana
+7. **Periksa sendiri.** Table Editor → keduapuluh enam tabel harus punya lencana
    **RLS enabled**. Satu tabel tanpa lencana adalah pintu terbuka.
 
 ### Kenapa proyek terpisah, bukan menumpang proyek lain
