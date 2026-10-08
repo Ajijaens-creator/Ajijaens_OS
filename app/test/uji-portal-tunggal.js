@@ -197,15 +197,25 @@ const bad = m => { fail++; console.log('  GAGAL  '+m); };
   });
   await pg.click('.lapis-kotak [data-simpan]'); await pg.waitForTimeout(800);
   r = await pg.evaluate(() => {
-    const s = window.__STUB.DB.life_circle_score;
-    const e = window.__STUB.DB.life_circle_entry[0];
-    const a0 = s.find(x=>x.aspek==='Kesehatan & energi'), a1 = s.find(x=>x.aspek==='Keuangan');
-    return { nol: a0 && a0.nilai === 0, lewati: a1 && a1.nilai === null, baseline: e && e.baseline,
-             jumlah: s.filter(x=>x.entry_id===(e||{}).id).length };
+    const DB = window.__STUB.DB;
+    const baru = DB.life_circle_entry[0];
+    const skor = DB.life_circle_score.filter(x => x.entry_id === (baru || {}).id);
+    const a0 = skor.find(x => x.aspek === 'Kesehatan & energi');
+    const a1 = skor.find(x => x.aspek === 'Keuangan');
+    const punyaBaseline = DB.life_circle_entry.filter(e => e.person_id === 'p1' && e.baseline).length;
+    return { nol: a0 && a0.nilai === 0, lewati: a1 && a1.nilai === null,
+             baruBaseline: !!(baru && baru.baseline), baselineLama: punyaBaseline,
+             sesi: (baru || {}).sesi_id, jumlah: skor.length };
   });
-  (r.nol && r.lewati && r.baseline && r.jumlah === 8)
-    ? ok('Life Circle tersimpan: nilai 0 tercatat sebagai 0, yang dilewati tercatat NULL, ditandai baseline')
+  (r.nol && r.lewati && r.jumlah === 8)
+    ? ok('Life Circle tersimpan: nilai 0 tercatat sebagai 0, yang dilewati tercatat NULL')
     : bad('Simpan Life Circle: '+JSON.stringify(r));
+  (!r.baruBaseline && r.baselineLama === 1)
+    ? ok('Pengisian ulang tidak menimpa baseline: baseline lama tetap satu dan utuh')
+    : bad('Baseline: '+JSON.stringify(r));
+  r.sesi
+    ? ok('Entri Life Circle membawa sesi_id, supaya agregat per sesi tidak kosong palsu')
+    : bad('sesi_id tidak tersimpan: '+JSON.stringify(r));
 
   /* --- tiga ukuran layar --- */
   await pg.close();

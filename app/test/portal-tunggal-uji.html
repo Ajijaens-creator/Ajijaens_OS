@@ -355,6 +355,10 @@ window.AJIOS_CONFIG = {
   }
   /* Beberapa tabel PDP ada di schema yang sama; disiapkan kalau nanti berbeda. */
   const from = (t) => sb().from(t);
+  /* Fungsi agregat di basis data dipanggil lewat ini. Dipakai di tempat
+     yang jawabannya HARUS dihitung server: kalau dihitung di sini,
+     kebijakan RLS membuat hasilnya 0 dan layar menulis angka palsu. */
+  const rpc = (nama, arg) => sb().rpc(nama, arg || {});
 
   /* ------------------------------------------------------ autentikasi */
   const auth = {
@@ -416,6 +420,30 @@ window.AJIOS_CONFIG = {
 
   /* ------------------------------------------------------------ nilai */
   /* Tiga keadaan yang tidak boleh tertukar sepanjang aplikasi ini. */
+  /* ---------------------------------------------- template evaluasi
+     Dipakai dua sisi: portal peserta menulisnya, layar rekap membaca
+     kuncinya kembali. Satu sumber supaya label di rekap tidak pernah
+     berbeda dari pertanyaan yang benar-benar ditanyakan.
+
+     Pertanyaan angka dimulai dari 0, dan 0 adalah jawaban sah —
+     "belum dijawab" diwakili null, bukan 0. Kunci yang tidak dikenal
+     tetap ditampilkan apa adanya di rekap, bukan disembunyikan: lebih
+     baik kelihatan mentah daripada hilang. */
+  const EVAL = {
+    versi: 1,
+    medan: [
+      { k: 'keseluruhan', t: 'skala', l: 'Seberapa bermanfaat sesi ini secara keseluruhan?' },
+      { k: 'kejelasan',   t: 'skala', l: 'Seberapa jelas penyampaiannya?' },
+      { k: 'relevansi',   t: 'skala', l: 'Seberapa cocok dengan usaha atau rencana Anda?' },
+      { k: 'paling_bermanfaat', t: 'teks', l: 'Bagian apa yang paling bermanfaat?' },
+      { k: 'perlu_diperbaiki',  t: 'teks', l: 'Apa yang perlu diperbaiki?' }
+    ],
+    label(k) {
+      const m = EVAL.medan.find(x => x.k === k);
+      return m ? m.l : k;
+    }
+  };
+
   const KOSONG = Symbol('belum diisi');
   function tampilNilai(v, opsi) {
     const o = opsi || {};
@@ -585,9 +613,9 @@ window.AJIOS_CONFIG = {
   }
 
   global.AJIOS = {
-    sb, from, auth, profilSaya, peranSaya, adalahStaf, lupakanCache,
+    sb, from, rpc, auth, profilSaya, peranSaya, adalahStaf, lupakanCache,
     esc, el, tgl, jam, tampilNilai, tampilOmzet, UI, sekaliSaja, consent, formulir,
-    CFG, ORIGIN, KOSONG
+    CFG, ORIGIN, KOSONG, EVAL
   };
 })(window);
 </script>
@@ -984,20 +1012,22 @@ window.AJIOS_CONFIG = {
     UI.memuat('isiSesi');
     try {
       await gabungDariTautan();
-      const [reg, akt, lc, ap, bon, kom] = await Promise.all([
+      const [reg, akt, lc, ap, bon, kom, ev] = await Promise.all([
         A.from('session_registration').select('*, sesi:sesi_id(*)').eq('person_id', SAYA.id),
         A.from('activity').select('*'),
         A.from('life_circle_entry').select('*').eq('person_id', SAYA.id).order('diisi_pada', { ascending: true }),
         A.from('action_plan').select('*').eq('person_id', SAYA.id),
         A.from('bonus_event').select('*').eq('person_id', SAYA.id),
-        A.from('community_membership').select('*').eq('person_id', SAYA.id)
+        A.from('community_membership').select('*').eq('person_id', SAYA.id),
+        A.from('feedback').select('*').eq('person_id', SAYA.id)
       ]);
-      [reg, akt, lc, ap, bon, kom].forEach(x => { if (x.error) throw x.error; });
-      gambarSesi(reg.data || [], akt.data || [], lc.data || [], ap.data || [], bon.data || [], (kom.data || [])[0]);
+      [reg, akt, lc, ap, bon, kom, ev].forEach(x => { if (x.error) throw x.error; });
+      gambarSesi(reg.data || [], akt.data || [], lc.data || [], ap.data || [],
+                 bon.data || [], (kom.data || [])[0], ev.data || []);
     } catch (e) { UI.gagal('isiSesi', e); }
   }
 
-  function gambarSesi(reg, akt, lc, ap, bon, kom) {
+  function gambarSesi(reg, akt, lc, ap, bon, kom, ev) {
     const sudahIG = bon.some(b => b.jenis === 'follow_ig_dikonfirmasi');
     const sudahSpot = bon.some(b => b.jenis === 'klik_spotify');
     const baseline = lc.find(x => x.baseline);
@@ -1012,8 +1042,34 @@ window.AJIOS_CONFIG = {
 
     const aktifLC = akt.find(a => a.jenis === 'life_circle' && a.status === 'Dibuka');
 
+    /* ---- Evaluasi: untuk sesi mana saja yang sudah layak dievaluasi ----
+       Dibuka kalau fasilitator membuka aktivitas evaluasi, atau kalau
+       sesinya sudah Selesai. Tidak dibuka sendiri hanya karena peserta
+       terdaftar — terdaftar bukan hadir, dan bukan juga sudah ikut. */
+    const sesiEval = reg.map(r => r.sesi).filter(Boolean).filter(x =>
+      x.status === 'Selesai' ||
+      akt.some(a => a.sesi_id === x.id && a.jenis === 'evaluasi' && a.status === 'Dibuka'));
+    const kartuEval = sesiEval.length
+      ? '<div class="kartu"><div class="kartu-h"><h3>Evaluasi sesi</h3></div>' +
+        '<p class="mini" style="margin-bottom:12px">Masukan Anda dipakai memperbaiki sesi berikutnya. ' +
+        '<b>Boleh dilewati</b>, dan tidak ada bagian yang wajib dijawab.</p>' +
+        sesiEval.map(x => {
+          const sudah = ev.find(f => f.sesi_id === x.id);
+          return '<div class="baris"><div class="pokok"><b>' + esc(x.judul) + '</b><span>' +
+            (sudah ? 'terkirim ' + A.tgl(sudah.dikirim_pada) +
+                     (sudah.boleh_dikutip ? ' · Anda mengizinkan kutipan' : ' · tanpa izin kutipan')
+                   : 'belum diisi') + '</span></div>' +
+            '<button class="btn hantu kecil" data-eval="' + x.id + '">' +
+            (sudah ? 'Ubah jawaban' : 'Isi evaluasi') + '</button></div>';
+        }).join('') +
+        '<p class="mini" style="margin-top:12px">Pengelola melihat <b>rata-rata dan jawaban teks tanpa nama</b> — ' +
+        'bukan daftar siapa menjawab apa. Kutipan hanya dipakai di luar kalau Anda mengizinkannya, ' +
+        'dan izin itu pun <b>tidak membuat apa pun terbit otomatis</b>.</p></div>'
+      : '';
+
     el('isiSesi').innerHTML =
       kartuGabung() +
+      kartuEval +
       kartuSesi +
       /* ---- Materi ---- */
       '<div class="kartu"><div class="kartu-h"><h3>Materi</h3></div>' +
@@ -1078,12 +1134,14 @@ window.AJIOS_CONFIG = {
       '<button class="btn hantu kecil" data-hak="Penghapusan">Minta penghapusan</button>' +
       '<button class="btn hantu kecil" id="aturConsent">Atur persetujuan</button></div></div>';
 
-    pasangSesi(akt, lc, ap, kom, sudahIG);
+    pasangSesi(akt, lc, ap, kom, sudahIG, ev);
   }
 
-  function pasangSesi(akt, lc, ap, kom, sudahIG) {
+  function pasangSesi(akt, lc, ap, kom, sudahIG, ev) {
     const q = (s) => el('isiSesi').querySelector(s);
-    const lcBtn = q('#bukaLC'); if (lcBtn) lcBtn.onclick = () => bukaLifeCircle(lcBtn.dataset.akt, lc);
+    const lcBtn = q('#bukaLC');
+    if (lcBtn) lcBtn.onclick = () => bukaLifeCircle(lcBtn.dataset.akt, lc,
+      (akt.find(a => a.id === lcBtn.dataset.akt) || {}).sesi_id || null);
     const igBox = q('#cekIG');
     if (igBox && !igBox.disabled) igBox.onchange = async () => {
       if (!igBox.checked) return;
@@ -1108,10 +1166,106 @@ window.AJIOS_CONFIG = {
     const ubahAP = q('#perbaruiAP'); if (ubahAP) ubahAP.onclick = () => formActionPlan(ap[0]);
     const consent = q('#aturConsent'); if (consent) consent.onclick = aturConsent;
     el('isiSesi').querySelectorAll('[data-hak]').forEach(b => b.onclick = () => mintaHak(b.dataset.hak));
+    el('isiSesi').querySelectorAll('[data-eval]').forEach(b => b.onclick = () =>
+      bukaEvaluasi(b.dataset.eval, ev.find(f => f.sesi_id === b.dataset.eval) || null));
+  }
+
+  /* ---------- Evaluasi sesi ----------
+     Skala dimulai dari "belum dijawab", bukan dari angka tengah. Nol
+     adalah jawaban sah dan harus bisa dipilih; yang dilewati tersimpan
+     sebagai tidak-ada-kunci, bukan sebagai 0. */
+  async function bukaEvaluasi(sesiId, sudah) {
+    const lama = (sudah && sudah.jawaban) || {};
+    const nilai = {};
+    A.EVAL.medan.forEach(m => {
+      nilai[m.k] = (lama[m.k] === undefined || lama[m.k] === null) ? null : lama[m.k];
+    });
+
+    const skala = A.EVAL.medan.filter(m => m.t === 'skala');
+    const teks  = A.EVAL.medan.filter(m => m.t === 'teks');
+
+    const lapis = document.createElement('div');
+    lapis.className = 'lapis';
+    lapis.innerHTML = '<div class="lapis-kotak" role="dialog" aria-modal="true" aria-label="Evaluasi sesi">' +
+      '<h3>' + (sudah ? 'Ubah evaluasi' : 'Evaluasi sesi') + '</h3>' +
+      '<p class="mini" style="margin:6px 0 16px">' +
+      (sudah ? 'Mengirim ulang <b>menggantikan</b> jawaban Anda sebelumnya. Jawaban lama tidak disimpan ganda.'
+             : 'Beri nilai 0–10, atau lewati. <b>Yang dilewati tercatat belum dijawab</b> — ' +
+               'dan itu berbeda dari memberi nilai 0.') + '</p>' +
+      skala.map((m, i) =>
+        '<div class="isian" data-k="' + esc(m.k) + '"><label for="ev' + i + '">' + esc(m.l) +
+        ' <span class="nilai-lc" id="ev-v' + i + '">' +
+        (nilai[m.k] === null ? 'belum dijawab' : nilai[m.k] + ' / 10') + '</span></label>' +
+        '<input id="ev' + i + '" type="range" min="0" max="10" step="1" value="' +
+        (nilai[m.k] === null ? 5 : nilai[m.k]) + '">' +
+        '<div class="deret" style="gap:6px">' +
+        '<button class="btn hantu kecil" data-set="' + i + '">Pakai nilai ini</button>' +
+        '<button class="btn hantu kecil" data-lewati="' + i + '">Lewati</button></div></div>').join('') +
+      teks.map((m, i) =>
+        '<div class="isian"><label for="evt' + i + '">' + esc(m.l) + '</label>' +
+        '<textarea id="evt' + i + '" maxlength="700" data-k="' + esc(m.k) + '">' +
+        esc(nilai[m.k] || '') + '</textarea></div>').join('') +
+      '<label class="pilihan" style="margin:6px 0 2px"><input type="checkbox" id="ev-kutip"' +
+      (sudah && sudah.boleh_dikutip ? ' checked' : '') + '><span>' +
+      '<b>Boleh mengutip jawaban teks saya</b>' +
+      '<em>Tanpa nama kecuali Anda diminta lagi dan setuju. Mencentang ini tidak menerbitkan apa pun — ' +
+      'ia hanya menandai bahwa Anda tidak keberatan.</em></span></label>' +
+      '<div class="deret" style="margin-top:12px">' +
+      '<button class="btn" data-kirim style="flex:1">' + (sudah ? 'Kirim ulang' : 'Kirim evaluasi') + '</button>' +
+      '<button class="btn hantu" data-batal>Batal</button></div>' +
+      '<p class="mini" style="margin-top:10px">Tidak mengisi evaluasi <b>tidak menghilangkan</b> materi, ' +
+      'bonus, atau keanggotaan Anda.</p></div>';
+    document.body.appendChild(lapis);
+
+    lapis.querySelectorAll('[data-set]').forEach(b => b.onclick = () => {
+      const i = b.dataset.set, r = lapis.querySelector('#ev' + i);
+      nilai[skala[i].k] = Number(r.value);
+      lapis.querySelector('#ev-v' + i).textContent = r.value + ' / 10';
+    });
+    lapis.querySelectorAll('[data-lewati]').forEach(b => b.onclick = () => {
+      const i = b.dataset.lewati;
+      nilai[skala[i].k] = null;
+      lapis.querySelector('#ev-v' + i).textContent = 'belum dijawab';
+    });
+    lapis.querySelector('[data-batal]').onclick = () => lapis.remove();
+    lapis.querySelector('[data-kirim]').onclick = function () {
+      A.sekaliSaja(this, async () => {
+        teks.forEach((m, i) => {
+          const v = lapis.querySelector('#evt' + i).value.trim();
+          nilai[m.k] = v || null;
+        });
+        /* Kunci yang null DIBUANG, tidak dikirim sebagai 0 atau string kosong.
+           Yang tidak dijawab harus tetap terbaca sebagai tidak dijawab. */
+        const jawaban = {};
+        Object.keys(nilai).forEach(k => { if (nilai[k] !== null) jawaban[k] = nilai[k]; });
+        const kutip = lapis.querySelector('#ev-kutip').checked;
+
+        const { error } = sudah
+          ? await A.from('feedback').update({
+              jawaban, boleh_dikutip: kutip, template_versi: A.EVAL.versi,
+              dikirim_pada: new Date().toISOString() }).eq('id', sudah.id)
+          : await A.from('feedback').insert({
+              sesi_id: sesiId, person_id: SAYA.id, jawaban,
+              boleh_dikutip: kutip, template_versi: A.EVAL.versi });
+        if (error) {
+          if (error.code === '23505') {
+            UI.pesan('Anda sudah pernah mengirim evaluasi sesi ini — muat ulang halaman untuk mengubahnya', 'gagal');
+            return;
+          }
+          throw error;
+        }
+        lapis.remove();
+        UI.pesan(Object.keys(jawaban).length ? 'Evaluasi terkirim' : 'Evaluasi terkirim tanpa jawaban', 'sukses');
+        sesiSaya();
+      });
+    };
   }
 
   /* ---------- Life Circle ---------- */
-  async function bukaLifeCircle(aktId, riwayat) {
+  /* sesiId wajib ikut tersimpan: rekap agregat wellbeing di sisi pengelola
+     disaring per sesi, jadi entri tanpa sesi_id tidak akan pernah terhitung
+     dan layar rekap akan menyebut "belum ada pengisi" padahal ada. */
+  async function bukaLifeCircle(aktId, riwayat, sesiId) {
     const { data: tpl, error } = await A.from('life_circle_template').select('*').eq('aktif', true).limit(1);
     if (error) { UI.pesan(UI.bacaError(error).isi, 'gagal'); return; }
     const t = (tpl || [])[0];
@@ -1159,6 +1313,7 @@ window.AJIOS_CONFIG = {
       A.sekaliSaja(this, async () => {
         const { data: entry, error: e1 } = await A.from('life_circle_entry').insert({
           person_id: SAYA.id, template_id: t.id, template_versi: t.versi,
+          sesi_id: sesiId || null,
           baseline: !riwayat.some(x => x.baseline),
           aspek_prioritas: lapis.querySelector('#lc-prioritas').value || null,
           langkah_7hari: lapis.querySelector('#lc-langkah').value.trim() || null

@@ -6,7 +6,7 @@ set -e
 cd "$(dirname "$0")"
 
 OUT=pasang_semua.sql
-URUT="0001_schema.sql 0002_pdp.sql 0003_rls.sql 0004_grants.sql 0005_progres.sql"
+URUT="0001_schema.sql 0002_pdp.sql 0003_rls.sql 0004_grants.sql 0005_progres.sql 0006_evaluasi.sql"
 JML=$(echo $URUT | wc -w)
 
 {
@@ -46,22 +46,36 @@ FOOT
 } > "$OUT"
 
 # Berkas tambahan untuk basis data yang SUDAH terpasang 0001-0004.
+# Semua migrasi setelah 0004 ikut, supaya yang tertinggal tidak perlu
+# ditebak satu per satu.
+TAMBAHAN="0005_progres.sql 0006_evaluasi.sql"
 {
 cat <<HEAD2
 -- =====================================================================
--- TAMBAHAN 0005 — untuk basis data yang sudah memakai pasang_semua.sql
--- versi empat bagian (0001-0004).
+-- TAMBAHAN — untuk basis data yang sudah memakai pasang_semua.sql versi
+-- empat bagian (0001-0004).
 --
--- Aman dijalankan ulang. Tidak menghapus data apa pun.
+-- Memuat: $TAMBAHAN
+--
+-- Aman dijalankan ulang, dan aman dijalankan walau sebagiannya sudah
+-- terpasang. Tidak menghapus data apa pun.
+--
 -- Kalau basis data Anda masih kosong, pakai pasang_semua.sql saja —
--- berkas itu sudah memuat bagian ini.
+-- berkas itu sudah memuat seluruh bagian ini.
 -- =====================================================================
 BEGIN;
 
 HEAD2
-cat migrations/0005_progres.sql
+for f in $TAMBAHAN; do
+  printf '\n-- ###  BAGIAN: %s\n\n' "$f"
+  cat "migrations/$f"
+done
 printf '\nCOMMIT;\n'
-} > pasang_tambahan_0005.sql
+} > pasang_tambahan.sql
+
+# Nama lama dipertahankan sebagai penunjuk, supaya tautan/instruksi yang
+# sudah tersebar tidak mengarah ke berkas yang hilang.
+cp pasang_tambahan.sql pasang_tambahan_0005.sql
 
 echo "pasang_semua.sql dirakit dari $JML migrasi ($(wc -c < "$OUT") bita)"
-echo "pasang_tambahan_0005.sql ($(wc -c < pasang_tambahan_0005.sql) bita)"
+echo "pasang_tambahan.sql dari $TAMBAHAN ($(wc -c < pasang_tambahan.sql) bita)"

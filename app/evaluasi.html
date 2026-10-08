@@ -2,9 +2,9 @@
 <html lang="id">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="robots" content="noindex,nofollow">
-<title>Layar Proyektor — Sesi</title>
+<title>Evaluasi &amp; Tindak Lanjut — AJI JAENS OS</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@600;700&family=Inter:wght@400;500;600;700;800&display=swap">
@@ -200,423 +200,78 @@ table.data .angka{text-align:right;font-variant-numeric:tabular-nums}
   padding:20px;width:100%;max-width:440px;max-height:88vh;overflow:auto;box-shadow:var(--bayang)}
 .lapis-kotak h3{margin-bottom:4px}
 </style>
-<style>
-/* Layar ini dilihat dari belakang ruangan: kontras tinggi, huruf besar,
-   tanpa satu pun elemen yang membawa data pribadi. */
-:root{color-scheme:dark}
-body{background:#14110A;color:#F7F2E6;margin:0;min-height:100vh;
-  font-family:var(--fs,system-ui,-apple-system,"Segoe UI",sans-serif)}
-.bar{display:flex;align-items:center;gap:14px;padding:14px 26px;
-  border-bottom:1px solid rgba(232,200,122,.22);flex-wrap:wrap}
-.bar h1{font-size:clamp(20px,2.4vw,30px);margin:0;color:#FFFDF6;flex:1;min-width:200px}
-.tanda{font-size:12px;letter-spacing:.2em;text-transform:uppercase;padding:4px 10px;border-radius:20px;
-  border:1px solid rgba(232,200,122,.5);color:#E8C87A}
-.tanda.jalan{background:rgba(120,170,110,.18);border-color:rgba(150,200,140,.6);color:#BFE3B2}
-.tanda.henti{opacity:.7}
-.jam{font-family:var(--fd,Georgia,serif);font-size:clamp(26px,3.4vw,44px);line-height:1;color:#E8C87A}
-.jam.lewat{color:#E79A8A}
-#segar{font-size:11px;color:#9A9080;letter-spacing:.06em}
-main{padding:26px}
-.panggung{border:1px solid rgba(232,200,122,.22);border-radius:16px;padding:28px;margin-bottom:22px;
-  background:linear-gradient(160deg,rgba(232,200,122,.07),rgba(232,200,122,.02))}
-.panggung h2{font-size:clamp(26px,4.4vw,52px);line-height:1.1;margin:6px 0 12px;color:#FFFDF6}
-.cap{font-size:11px;letter-spacing:.26em;text-transform:uppercase;color:#C9A85A}
-.arah{font-size:clamp(15px,1.6vw,20px);color:#DDD3BE;line-height:1.5;max-width:60ch}
-.arah.kecil{font-size:13px;color:#A79E8C;max-width:40ch}
-.takar{height:14px;border-radius:10px;background:rgba(255,253,246,.1);overflow:hidden;margin:18px 0 8px;max-width:620px}
-.takar i{display:block;height:100%;background:linear-gradient(90deg,#C9A85A,#E8C87A)}
-.angka-ket{font-size:clamp(15px,1.8vw,22px);color:#E3DAC6}
-.angka-besar{font-family:var(--fd,Georgia,serif);font-size:clamp(44px,7vw,86px);line-height:1;margin:8px 0 6px;color:#E8C87A}
-.kode-besar{font-family:var(--fd,Georgia,serif);font-size:clamp(30px,4.6vw,56px);letter-spacing:.08em;
-  margin:8px 0 10px;color:#FFFDF6}
-.kisi-proy{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:18px}
-.kotak{border:1px solid rgba(232,200,122,.2);border-radius:14px;padding:20px;background:rgba(255,253,246,.03)}
-.kotak.lebar{grid-column:1/-1;margin-top:18px}
-#qr{background:#fff;border-radius:10px;padding:10px;max-width:230px;margin:12px 0}
-#qr.sembunyi{display:none}
-#qr svg{width:100%;height:auto;display:block}
-.tanya{font-size:clamp(17px,2vw,26px);line-height:1.4;color:#FFFDF6;margin:0 0 14px;
-  padding-left:16px;border-left:3px solid #C9A85A}
-.tanya.sudah{opacity:.5;border-left-color:#6B6250}
-.keadaan{border:1px dashed rgba(232,200,122,.4);border-radius:14px;padding:26px;color:#DDD3BE}
-.keadaan b{display:block;font-size:22px;color:#FFFDF6;margin-bottom:8px}
-.btn-proy{background:none;border:1px solid rgba(232,200,122,.45);color:#E8C87A;border-radius:20px;
-  padding:6px 14px;font-size:12.5px;cursor:pointer;font-family:inherit}
-.btn-proy:hover{background:rgba(232,200,122,.12)}
-.kaki{padding:0 26px 26px;font-size:11.5px;color:#7E7768;line-height:1.6;max-width:80ch}
-</style>
 </head>
 <body>
 
-<div class="bar">
-  <h1 id="judul">Memuat…</h1>
-  <span class="tanda henti" id="status">—</span>
-  <div style="text-align:right">
-    <div class="jam" id="jam">belum dimulai</div>
-    <div id="segar">belum terhubung</div>
-  </div>
-  <button class="btn-proy" id="togelQR">Sembunyikan QR</button>
-  <button class="btn-proy" id="penuh">Layar penuh</button>
-</div>
+<header class="atas"><div class="bungkus atas-in">
+  <span class="merek">Aji Jaens<em>Evaluasi &amp; Tindak Lanjut</em></span>
+  <span class="tumbuh"></span>
+  <span id="peran" class="lbl abu">memeriksa…</span>
+  <button class="btn hantu kecil" id="keluar" hidden>Keluar</button>
+</div></header>
 
-<main id="isi"></main>
+<main class="bungkus" style="padding-block:22px 60px">
 
-<p class="kaki">Layar ini hanya menampilkan judul sesi, waktu, cara bergabung, aktivitas yang sedang dibuka,
-  angka agregat, dan pertanyaan yang sudah ditayangkan fasilitator. Catatan presenter, nama dan kontak peserta,
-  data usaha, serta jawaban perorangan tidak pernah muncul di sini. Angka disegarkan setiap 10 detik dengan
-  menarik ulang data — ini polling, bukan realtime, dan waktu pembaruan terakhir tertulis di sudut atas.</p>
+  <!-- ====================== gerbang masuk ====================== -->
+  <section id="gerbang" hidden>
+    <div class="kartu sempit" style="margin-inline:auto">
+      <h2>Masuk</h2>
+      <p class="mini" style="margin:6px 0 16px">Halaman ini untuk pengelola. Kode masuk dikirim ke email Anda —
+        tidak ada kata sandi yang kami simpan atau minta.</p>
+      <div class="isian" id="i-email">
+        <label for="email">Email</label>
+        <input id="email" type="email" inputmode="email" autocomplete="email" placeholder="nama@contoh.com">
+      </div>
+      <button class="btn lebar" id="kirimKode">Kirim kode</button>
+      <div id="tahapKode" hidden style="margin-top:16px">
+        <div class="isian" id="i-kode">
+          <label for="kode">Kode 6 angka dari email</label>
+          <input id="kode" type="text" inputmode="numeric" autocomplete="one-time-code" maxlength="8" placeholder="123456">
+        </div>
+        <button class="btn lebar" id="verifKode">Masuk</button>
+      </div>
+    </div>
+  </section>
 
-<script src="stub.js"></script>
-<script>
-/* =====================================================================
-   QR — pembuat kode QR mandiri, tanpa pustaka luar.
+  <!-- ====================== bukan staf ====================== -->
+  <section id="bukanStaf" hidden>
+    <div class="kartu sempit" style="margin-inline:auto">
+      <h2>Tidak punya akses</h2>
+      <p style="margin:8px 0 14px">Akun Anda masuk, tetapi tidak terdaftar sebagai pengelola.
+        Halaman ini menampilkan masukan peserta, jadi aksesnya ditolak <b>di sisi basis data</b> —
+        bukan sekadar disembunyikan di layar.</p>
+      <div class="deret" style="margin-top:14px">
+        <a class="btn hantu" href="../portal/">Ke portal peserta</a>
+      </div>
+    </div>
+  </section>
 
-   Mengapa ditulis sendiri dan tidak mengambil dari CDN:
+  <!-- ====================== isi ====================== -->
+  <section id="isi" hidden>
 
-   1. Layar sesi dipakai di ruangan, kadang dengan internet yang buruk.
-      Kalau QR-nya bergantung pada CDN, satu kegagalan muat berarti
-      peserta tidak bisa bergabung.
-   2. Ketentuan NP-V08: "Buat QR nyata dari URL sesi yang valid. Jangan
-      memakai QR ilustrasi." Kode di sini DIUJI dengan cara dibaca
-      kembali oleh pembaca QR sungguhan (OpenCV) dari gambar hasil
-      render — bukan sekadar dianggap benar.
+    <div id="pilih">
+      <h1>Evaluasi &amp; Tindak Lanjut</h1>
+      <p class="mini" style="margin:4px 0 16px">Pilih sesi untuk melihat rekapnya.</p>
+      <div class="kartu"><div id="daftarSesi"></div></div>
+    </div>
 
-   Cakupan yang disengaja: mode byte (UTF-8), tingkat koreksi M,
-   versi 1 sampai 10 (maksimum 216 bita). Di atas itu fungsi ini
-   MELEMPAR error, bukan menghasilkan gambar yang salah. Alamat sesi
-   jauh di bawah batas itu.
+    <div id="kerja" hidden>
+      <button class="btn hantu kecil" id="kembaliEv" style="margin-bottom:14px">← Semua sesi</button>
+      <h1 id="judulSesi">—</h1>
+      <p class="mini" id="subSesi" style="margin-bottom:16px">—</p>
 
-   Acuan: ISO/IEC 18004.
-   ===================================================================== */
-(function (global) {
-  'use strict';
+      <div class="tab" role="tablist" id="tabEv"></div>
+      <div id="isiTab"></div>
 
-  /* ---------------- tabel: [total kodeword, ecc per blok, blok grup1,
-                              data grup1, blok grup2, data grup2] ----- */
-  var M_TABEL = {
-    1:  [26,  10, 1, 16, 0, 0],
-    2:  [44,  16, 1, 28, 0, 0],
-    3:  [70,  26, 1, 44, 0, 0],
-    4:  [100, 18, 2, 32, 0, 0],
-    5:  [134, 24, 2, 43, 0, 0],
-    6:  [172, 16, 4, 27, 0, 0],
-    7:  [196, 18, 4, 31, 0, 0],
-    8:  [242, 22, 2, 38, 2, 39],
-    9:  [292, 22, 3, 36, 2, 37],
-    10: [346, 26, 4, 43, 1, 44]
-  };
-  var SEJAJAR = {
-    1: [], 2: [6, 18], 3: [6, 22], 4: [6, 26], 5: [6, 30],
-    6: [6, 34], 7: [6, 22, 38], 8: [6, 24, 42], 9: [6, 26, 46], 10: [6, 28, 50]
-  };
+      <p class="mini" style="margin-top:22px;max-width:70ch">Tiga hal yang tidak dilakukan layar ini,
+        dan sebaiknya tetap begitu: tidak mengubah angka nol-respons menjadi nilai nol; tidak menyebut
+        peserta yang belum mengisi sebagai peserta yang menilai buruk; dan tidak memperlakukan
+        &ldquo;dilaporkan selesai&rdquo; sebagai hasil yang sudah diverifikasi.</p>
+    </div>
+  </section>
+</main>
 
-  /* ---------------- GF(256) ---------------- */
-  var EXP = new Array(512), LOG = new Array(256);
-  (function () {
-    var x = 1;
-    for (var i = 0; i < 255; i++) { EXP[i] = x; LOG[x] = i; x <<= 1; if (x & 0x100) x ^= 0x11D; }
-    for (i = 255; i < 512; i++) EXP[i] = EXP[i - 255];
-  })();
-  function gmul(a, b) { return (a === 0 || b === 0) ? 0 : EXP[LOG[a] + LOG[b]]; }
-
-  function polGenerator(n) {
-    var g = [1];
-    for (var i = 0; i < n; i++) {
-      var baru = new Array(g.length + 1).fill(0);
-      for (var j = 0; j < g.length; j++) {
-        baru[j] ^= g[j];
-        baru[j + 1] ^= gmul(g[j], EXP[i]);
-      }
-      g = baru;
-    }
-    return g;
-  }
-
-  function ecc(data, n) {
-    var g = polGenerator(n), sisa = data.slice().concat(new Array(n).fill(0));
-    for (var i = 0; i < data.length; i++) {
-      var k = sisa[i];
-      if (k === 0) continue;
-      for (var j = 0; j < g.length; j++) sisa[i + j] ^= gmul(g[j], k);
-    }
-    return sisa.slice(data.length);
-  }
-
-  /* ---------------- UTF-8 ---------------- */
-  function bita(s) {
-    var out = [];
-    for (var i = 0; i < s.length; i++) {
-      var c = s.codePointAt(i);
-      if (c > 0xFFFF) i++;
-      if (c < 0x80) out.push(c);
-      else if (c < 0x800) out.push(0xC0 | (c >> 6), 0x80 | (c & 63));
-      else if (c < 0x10000) out.push(0xE0 | (c >> 12), 0x80 | ((c >> 6) & 63), 0x80 | (c & 63));
-      else out.push(0xF0 | (c >> 18), 0x80 | ((c >> 12) & 63), 0x80 | ((c >> 6) & 63), 0x80 | (c & 63));
-    }
-    return out;
-  }
-
-  /* ---------------- bit stream ---------------- */
-  function Bits() { this.b = []; }
-  Bits.prototype.tulis = function (nilai, panjang) {
-    for (var i = panjang - 1; i >= 0; i--) this.b.push((nilai >>> i) & 1);
-  };
-
-  /* ---------------- BCH ---------------- */
-  function bchFormat(data) {
-    var d = data << 10;
-    while (derajat(d) >= 11) d ^= 0x537 << (derajat(d) - 11);
-    return ((data << 10) | d) ^ 0x5412;
-  }
-  function bchVersi(data) {
-    var d = data << 12;
-    while (derajat(d) >= 13) d ^= 0x1F25 << (derajat(d) - 13);
-    return (data << 12) | d;
-  }
-  function derajat(n) { var d = 0; while (n !== 0) { d++; n >>>= 1; } return d; }
-
-  /* ---------------- matriks ---------------- */
-  function kosong(size) {
-    var m = [];
-    for (var i = 0; i < size; i++) m.push(new Array(size).fill(null));
-    return m;
-  }
-
-  function taruhFinder(m, r, c) {
-    for (var i = -1; i <= 7; i++) for (var j = -1; j <= 7; j++) {
-      var y = r + i, x = c + j;
-      if (y < 0 || x < 0 || y >= m.length || x >= m.length) continue;
-      var di = (i >= 0 && i <= 6 && (j === 0 || j === 6)) ||
-               (j >= 0 && j <= 6 && (i === 0 || i === 6)) ||
-               (i >= 2 && i <= 4 && j >= 2 && j <= 4);
-      m[y][x] = di ? 1 : 0;
-    }
-  }
-
-  function taruhSejajar(m, versi) {
-    var pos = SEJAJAR[versi], size = m.length;
-    for (var a = 0; a < pos.length; a++) for (var b = 0; b < pos.length; b++) {
-      var r = pos[a], c = pos[b];
-      /* lewati yang bertabrakan dengan finder */
-      if ((r <= 8 && c <= 8) || (r <= 8 && c >= size - 9) || (r >= size - 9 && c <= 8)) continue;
-      for (var i = -2; i <= 2; i++) for (var j = -2; j <= 2; j++)
-        m[r + i][c + j] = (Math.abs(i) === 2 || Math.abs(j) === 2 || (i === 0 && j === 0)) ? 1 : 0;
-    }
-  }
-
-  function taruhTiming(m) {
-    for (var i = 8; i < m.length - 8; i++) {
-      if (m[6][i] === null) m[6][i] = (i % 2 === 0) ? 1 : 0;
-      if (m[i][6] === null) m[i][6] = (i % 2 === 0) ? 1 : 0;
-    }
-  }
-
-  /* posisi 15 bit format, dua salinan */
-  function selFormat(size) {
-    var a = [], i;
-    for (i = 0; i <= 5; i++) a.push([8, i]);
-    a.push([8, 7]); a.push([8, 8]); a.push([7, 8]);
-    for (i = 5; i >= 0; i--) a.push([i, 8]);
-    var b = [];
-    for (i = 0; i <= 6; i++) b.push([size - 1 - i, 8]);
-    for (i = 7; i >= 0; i--) b.push([8, size - 8 + (7 - i)]);
-    return [a, b];
-  }
-
-  function cadangkanFormat(m) {
-    var size = m.length, f = selFormat(size), i;
-    for (i = 0; i < 15; i++) { m[f[0][i][0]][f[0][i][1]] = 0; m[f[1][i][0]][f[1][i][1]] = 0; }
-    m[size - 8][8] = 1;   /* modul gelap */
-  }
-
-  function cadangkanVersi(m, versi) {
-    if (versi < 7) return;
-    var size = m.length;
-    for (var i = 0; i < 18; i++) {
-      m[Math.floor(i / 3)][size - 11 + (i % 3)] = 0;
-      m[size - 11 + (i % 3)][Math.floor(i / 3)] = 0;
-    }
-  }
-
-  function tulisVersi(m, versi) {
-    if (versi < 7) return;
-    var size = m.length, v = bchVersi(versi);
-    for (var i = 0; i < 18; i++) {
-      var bit = (v >>> i) & 1;
-      m[Math.floor(i / 3)][size - 11 + (i % 3)] = bit;
-      m[size - 11 + (i % 3)][Math.floor(i / 3)] = bit;
-    }
-  }
-
-  function tulisFormat(m, mask) {
-    var size = m.length, f = selFormat(size);
-    var v = bchFormat((0 << 3) | mask);   /* 00 = tingkat M */
-    for (var i = 0; i < 15; i++) {
-      var bit = (v >>> (14 - i)) & 1;
-      m[f[0][i][0]][f[0][i][1]] = bit;
-      m[f[1][i][0]][f[1][i][1]] = bit;
-    }
-    m[size - 8][8] = 1;
-  }
-
-  function maskFn(k, i, j) {
-    switch (k) {
-      case 0: return (i + j) % 2 === 0;
-      case 1: return i % 2 === 0;
-      case 2: return j % 3 === 0;
-      case 3: return (i + j) % 3 === 0;
-      case 4: return (Math.floor(i / 2) + Math.floor(j / 3)) % 2 === 0;
-      case 5: return ((i * j) % 2) + ((i * j) % 3) === 0;
-      case 6: return (((i * j) % 2) + ((i * j) % 3)) % 2 === 0;
-      case 7: return (((i + j) % 2) + ((i * j) % 3)) % 2 === 0;
-    }
-  }
-
-  function denda(m) {
-    var size = m.length, n = 0, i, j, r, c;
-    /* aturan 1: deret >= 5 */
-    for (i = 0; i < size; i++) {
-      var deretB = 1, deretK = 1;
-      for (j = 1; j < size; j++) {
-        if (m[i][j] === m[i][j - 1]) deretB++;
-        else { if (deretB >= 5) n += 3 + (deretB - 5); deretB = 1; }
-        if (m[j][i] === m[j - 1][i]) deretK++;
-        else { if (deretK >= 5) n += 3 + (deretK - 5); deretK = 1; }
-      }
-      if (deretB >= 5) n += 3 + (deretB - 5);
-      if (deretK >= 5) n += 3 + (deretK - 5);
-    }
-    /* aturan 2: blok 2x2 */
-    for (i = 0; i < size - 1; i++) for (j = 0; j < size - 1; j++) {
-      var v = m[i][j];
-      if (v === m[i][j + 1] && v === m[i + 1][j] && v === m[i + 1][j + 1]) n += 3;
-    }
-    /* aturan 3: pola 1:1:3:1:1 dengan ruang kosong 4 */
-    var polaA = [1, 0, 1, 1, 1, 0, 1, 0, 0, 0, 0];
-    var polaB = [0, 0, 0, 0, 1, 0, 1, 1, 1, 0, 1];
-    function cocok(get, k) {
-      for (var t = 0; t < 11; t++) if (get(k + t) !== polaA[t]) return false;
-      return true;
-    }
-    function cocokB(get, k) {
-      for (var t = 0; t < 11; t++) if (get(k + t) !== polaB[t]) return false;
-      return true;
-    }
-    for (i = 0; i < size; i++) {
-      for (j = 0; j + 11 <= size; j++) {
-        var gb = (function (ii) { return function (x) { return m[ii][x]; }; })(i);
-        var gk = (function (jj) { return function (x) { return m[x][jj]; }; })(i);
-        if (cocok(gb, j) || cocokB(gb, j)) n += 40;
-        if (cocok(gk, j) || cocokB(gk, j)) n += 40;
-      }
-    }
-    /* aturan 4: keseimbangan gelap-terang */
-    var gelap = 0;
-    for (i = 0; i < size; i++) for (j = 0; j < size; j++) if (m[i][j]) gelap++;
-    var persen = gelap * 100 / (size * size);
-    n += Math.floor(Math.abs(persen - 50) / 5) * 10;
-    return n;
-  }
-
-  /* ---------------- utama ---------------- */
-  function matriks(teks) {
-    var d = bita(teks), versi = 0, i, j;
-    for (var v = 1; v <= 10; v++) {
-      var t = M_TABEL[v];
-      var dataKw = t[2] * t[3] + t[4] * t[5];
-      var hitungBit = 4 + (v < 10 ? 8 : 16) + d.length * 8;
-      if (hitungBit <= dataKw * 8) { versi = v; break; }
-    }
-    if (!versi) throw new Error('Teks terlalu panjang untuk QR versi 1-10 (maksimum 216 bita).');
-
-    var tab = M_TABEL[versi];
-    var eccPer = tab[1], b1 = tab[2], d1 = tab[3], b2 = tab[4], d2 = tab[5];
-    var totalData = b1 * d1 + b2 * d2;
-
-    var bs = new Bits();
-    bs.tulis(4, 4);                               /* mode byte */
-    bs.tulis(d.length, versi < 10 ? 8 : 16);
-    for (i = 0; i < d.length; i++) bs.tulis(d[i], 8);
-    var sisaBit = totalData * 8 - bs.b.length;
-    bs.tulis(0, Math.min(4, sisaBit));            /* terminator */
-    while (bs.b.length % 8 !== 0) bs.b.push(0);
-    var pad = [0xEC, 0x11], p = 0;
-    while (bs.b.length / 8 < totalData) { bs.tulis(pad[p % 2], 8); p++; }
-
-    var kw = [];
-    for (i = 0; i < bs.b.length; i += 8) {
-      var byt = 0;
-      for (j = 0; j < 8; j++) byt = (byt << 1) | bs.b[i + j];
-      kw.push(byt);
-    }
-
-    /* pecah ke blok, hitung ECC */
-    var blokData = [], blokEcc = [], ofs = 0, k;
-    for (k = 0; k < b1; k++) { blokData.push(kw.slice(ofs, ofs + d1)); ofs += d1; }
-    for (k = 0; k < b2; k++) { blokData.push(kw.slice(ofs, ofs + d2)); ofs += d2; }
-    for (k = 0; k < blokData.length; k++) blokEcc.push(ecc(blokData[k], eccPer));
-
-    /* selang-seling */
-    var urut = [], maxD = Math.max(d1, d2);
-    for (i = 0; i < maxD; i++) for (k = 0; k < blokData.length; k++)
-      if (i < blokData[k].length) urut.push(blokData[k][i]);
-    for (i = 0; i < eccPer; i++) for (k = 0; k < blokEcc.length; k++) urut.push(blokEcc[k][i]);
-
-    var bit = [];
-    for (i = 0; i < urut.length; i++) for (j = 7; j >= 0; j--) bit.push((urut[i] >>> j) & 1);
-
-    /* rangka */
-    var size = versi * 4 + 17, m = kosong(size);
-    taruhFinder(m, 0, 0); taruhFinder(m, 0, size - 7); taruhFinder(m, size - 7, 0);
-    taruhSejajar(m, versi); taruhTiming(m);
-    cadangkanFormat(m); cadangkanVersi(m, versi);
-
-    /* tempat data: kolom berpasangan dari kanan, zigzag, lewati kolom 6 */
-    var kerangka = m.map(function (r) { return r.slice(); });
-    var idx = 0, naik = true;
-    for (var col = size - 1; col > 0; col -= 2) {
-      if (col === 6) col = 5;
-      for (var s = 0; s < size; s++) {
-        var row = naik ? size - 1 - s : s;
-        for (var dc = 0; dc < 2; dc++) {
-          var cc = col - dc;
-          if (kerangka[row][cc] !== null) continue;
-          m[row][cc] = idx < bit.length ? bit[idx] : 0;
-          idx++;
-        }
-      }
-      naik = !naik;
-    }
-
-    /* pilih mask dengan denda terkecil */
-    var terbaik = null, dendaTerbaik = Infinity;
-    for (var mk = 0; mk < 8; mk++) {
-      var cand = m.map(function (r) { return r.slice(); });
-      for (i = 0; i < size; i++) for (j = 0; j < size; j++)
-        if (kerangka[i][j] === null && maskFn(mk, i, j)) cand[i][j] ^= 1;
-      tulisFormat(cand, mk); tulisVersi(cand, versi);
-      var sk = denda(cand);
-      if (sk < dendaTerbaik) { dendaTerbaik = sk; terbaik = cand; }
-    }
-    return terbaik;
-  }
-
-  /* ---------------- SVG ---------------- */
-  function svg(teks, opsi) {
-    var o = opsi || {}, tepi = o.margin === undefined ? 2 : o.margin;
-    var m = matriks(teks), size = m.length, total = size + tepi * 2;
-    var jalur = '';
-    for (var i = 0; i < size; i++) for (var j = 0; j < size; j++)
-      if (m[i][j]) jalur += 'M' + (j + tepi) + ' ' + (i + tepi) + 'h1v1h-1z';
-    return '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ' + total + ' ' + total + '" ' +
-      'shape-rendering="crispEdges" role="img" aria-label="Kode QR alamat sesi">' +
-      '<rect width="' + total + '" height="' + total + '" fill="#fff"/>' +
-      '<path d="' + jalur + '" fill="#000"/></svg>';
-  }
-
-  global.AJIQR = { matriks: matriks, svg: svg };
-})(typeof window !== 'undefined' ? window : globalThis);
-</script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.js"></script>
 <script>
 /* =====================================================================
    KONFIGURASI — satu-satunya berkas yang perlu Anda isi sendiri.
@@ -635,10 +290,22 @@ main{padding:26px}
    ===================================================================== */
 
 window.AJIOS_CONFIG = {
-  /* Nilai uji. Klien Supabase sendiri diganti tiruan di stub.js. */
-  url:  'https://uji.local',
-  anon: 'eyJUJI',
-  schema: 'ajios', origin: 'https://os.ajijaens.com'
+  url:  'https://zkqfbdvumqnabptiqjhb.supabase.co',
+  anon: 'ISI_DENGAN_ANON_PUBLIC_KEY',   // diawali eyJ...
+
+  /* Nama schema basis data. Jangan diubah. */
+  schema: 'ajios',
+
+  /* Alamat tempat aplikasi ini dihosting, tanpa garis miring di akhir.
+     Dipakai untuk tautan kode masuk (OTP) dan untuk alamat di QR sesi.
+
+     Contoh setelah domain terpasang:
+       origin: 'https://os.ajijaens.com'
+
+     Dibiarkan kosong, alamatnya dihitung dari halaman yang sedang dibuka.
+     Itu jalan untuk mencoba, tetapi QR yang dicetak sebelum sesi sebaiknya
+     dibuat dari alamat yang pasti — isi nilainya begitu domainnya siap. */
+  origin: ''
 };
 </script>
 <script>
@@ -941,194 +608,371 @@ window.AJIOS_CONFIG = {
 </script>
 <script>
 /* =====================================================================
-   NP-V08 — LAYAR PROYEKTOR
+   NP-V09 — EVALUASI & TINDAK LANJUT
 
-   Layar ini dilihat seluruh ruangan. Karena itu yang TIDAK ditampilkan
-   di sini sama pentingnya dengan yang ditampilkan:
+   Ketentuan yang dipegang ketat di berkas ini:
 
-   TIDAK PERNAH tampil:
-     - catatan presenter
-     - nama, kontak, email, WhatsApp peserta
-     - omzet atau data usaha
-     - jawaban perorangan, refleksi, Life Circle siapa pun
-     - tombol kendali (mulai / akhiri / buka / tutup / koreksi)
-     - tautan edit atau tautan admin
-
-   Yang tampil hanya: judul sesi, penghitung waktu, cara bergabung
-   (kode + QR), aktivitas yang sedang dibuka, angka agregat, dan
-   pertanyaan yang SUDAH ditayangkan fasilitator.
-
-   Pembaruan di sini juga POLLING, bukan realtime, dan dikatakan apa
-   adanya di sudut layar.
+   - Nol respons TIDAK menghasilkan rata-rata nol. Kalau belum ada yang
+     mengisi, yang ditulis "belum ada respons" dan tidak ada satu angka
+     pun digambar. Batang kosong terbaca sebagai nol, jadi batangnya pun
+     tidak digambar.
+   - Tidak merespons BUKAN otomatis gagal. Peserta yang tidak mengisi
+     disebut "belum mengisi", bukan "tidak puas" atau "gagal".
+   - "Dilaporkan selesai" adalah laporan peserta, BUKAN hasil yang sudah
+     diverifikasi. Kata itu muncul di layar setiap kali angkanya muncul.
+   - Klik Spotify adalah peristiwa klik, bukan bukti selesai mendengarkan.
+   - Wellbeing bukan ranking, bukan skor kelayakan investasi. Hanya
+     agregat, dan hanya kalau pengisinya cukup banyak untuk tidak
+     menunjuk satu orang.
+   - Membuat tugas tindak lanjut TIDAK mengirim pesan apa pun.
+   - Kutipan hanya dari peserta yang mengizinkan, dan izin itu bukan
+     perintah menerbitkan.
    ===================================================================== */
 (function () {
   'use strict';
   const A = window.AJIOS, esc = A.esc, el = A.el, UI = A.UI;
 
-  const JEDA = 10000;
-  let ID = (location.hash || '').replace(/^#/, '').trim();
-  let SESI = null, DATA = { akt: [], prog: [], tanya: [], hadir: 0, terdaftar: 0 };
-  let TERAKHIR = null, TAMPILQR = true;
+  /* Batas minimum pengisi sebelum agregat wellbeing ditampilkan. Angka
+     kecil mudah ditelusuri ke orangnya, dan itu yang mau dihindari. */
+  const MIN_WELLBEING = 5;
 
-  function alamatSesi() {
-    let dasar = A.CFG.origin || (location.origin + location.pathname.replace(/\/[^/]*$/, ''));
-    dasar = dasar.replace(/\/+$/, '').replace(/\/(sesi|admin|portal)$/, '');
-    return dasar + '/portal/?sesi=' + encodeURIComponent((SESI && SESI.kode_sesi) || ID);
-  }
+  let PERAN = null, SESI = null, TAB = 'ringkas';
+  let D = { rekap: [], teks: [], responden: null, hadir: null, terdaftar: null,
+            tindak: [], bonus: [], wellbeing: [], tugas: [] };
 
-  async function muat() {
-    if (!ID) {
-      el('isi').innerHTML = '<div class="keadaan"><b>Sesi belum dipilih</b>' +
-        '<p>Layar ini dibuka dari tombol <i>Buka layar proyektor</i> di halaman kendali, ' +
-        'supaya alamatnya membawa sesi mana yang ditayangkan.</p></div>';
-      return;
-    }
+  /* ===================== boot ===================== */
+  async function boot() {
     try {
-      const [s, akt, prog, tanya, hadir, reg] = await Promise.all([
-        A.from('sesi').select('*').eq('id', ID).maybeSingle(),
-        A.from('activity').select('*').eq('sesi_id', ID),
-        A.from('progres_aktivitas').select('*').eq('sesi_id', ID),
-        A.from('pertanyaan').select('id, isi, ditayangkan, terjawab, dikirim_pada')
-          .eq('sesi_id', ID).eq('ditayangkan', true).order('dikirim_pada', { ascending: true }),
-        A.from('attendance').select('id', { count: 'exact', head: true }).eq('sesi_id', ID).eq('hadir', true),
-        A.from('session_registration').select('id', { count: 'exact', head: true }).eq('sesi_id', ID)
-      ]);
-      if (s.error) throw s.error;
-      if (!s.data) {
-        el('isi').innerHTML = '<div class="keadaan"><b>Sesi tidak terbaca</b>' +
-          '<p>Sesi ini tidak ditemukan, atau akun di peramban ini tidak berhak membacanya. ' +
-          'Masuk sebagai pengelola sesi di tab yang sama, lalu muat ulang.</p></div>';
-        return;
+      const u = await A.auth.user();
+      if (!u) { el('gerbang').hidden = false; return; }
+      PERAN = await A.peranSaya();
+      el('peran').textContent = PERAN || 'bukan pengelola';
+      el('peran').className = 'lbl ' + (PERAN ? 'emas' : 'abu');
+      el('keluar').hidden = false;
+      if (!PERAN || ['admin', 'fasilitator', 'operator', 'cs'].indexOf(PERAN) === -1) {
+        el('bukanStaf').hidden = false; return;
       }
-      SESI = s.data;
-      DATA = {
-        akt: akt.data || [], prog: prog.data || [],
-        tanya: tanya.data || [],
+      el('isi').hidden = false;
+      await pilihSesi();
+    } catch (e) { el('isi').hidden = false; UI.gagal('daftarSesi', e); }
+  }
+
+  el('kirimKode').onclick = function () {
+    A.sekaliSaja(this, async () => {
+      await A.auth.kirimOtp(el('email').value.trim());
+      el('tahapKode').hidden = false; UI.pesan('Kode dikirim', 'sukses');
+    });
+  };
+  el('verifKode').onclick = function () {
+    A.sekaliSaja(this, async () => {
+      await A.auth.verifikasiOtp(el('email').value.trim(), el('kode').value.trim());
+      A.lupakanCache(); el('gerbang').hidden = true; await boot();
+    });
+  };
+  el('keluar').onclick = async () => { await A.auth.keluar(); location.reload(); };
+
+  /* ===================== pilih sesi ===================== */
+  async function pilihSesi() {
+    UI.memuat('daftarSesi', 'Memuat sesi…');
+    const { data, error } = await A.from('sesi').select('*').order('mulai_pada', { ascending: false });
+    if (error) return UI.gagal('daftarSesi', error);
+    const list = data || [];
+    if (!list.length) return UI.kosong('daftarSesi', 'Belum ada sesi',
+      'Evaluasi muncul setelah ada sesi yang dijalankan.');
+    el('daftarSesi').innerHTML = list.map(s =>
+      '<button class="baris" style="width:100%;text-align:left;background:none;' +
+      'border-top:1px solid var(--border-soft);cursor:pointer" data-sesi="' + s.id + '">' +
+      '<span class="pokok"><b>' + esc(s.judul) + '</b><span>' +
+      (s.mulai_pada ? A.tgl(s.mulai_pada) : 'belum dijadwalkan') + '</span></span>' +
+      '<span class="lbl ' + (s.status === 'Selesai' ? 'abu' : s.status === 'Berlangsung' ? 'hijau' : 'biru') +
+      '">' + esc(s.status) + '</span></button>').join('');
+    el('daftarSesi').querySelectorAll('[data-sesi]').forEach(b =>
+      b.onclick = () => muat(b.dataset.sesi, list.find(x => x.id === b.dataset.sesi)));
+  }
+
+  /* ===================== muat satu sesi ===================== */
+  async function muat(id, sesi) {
+    SESI = sesi;
+    el('pilih').hidden = true; el('kerja').hidden = false;
+    el('judulSesi').textContent = sesi.judul;
+    el('subSesi').textContent = [sesi.mulai_pada ? A.tgl(sesi.mulai_pada) : 'belum dijadwalkan',
+      sesi.lokasi, sesi.status].filter(Boolean).join(' · ');
+    UI.memuat('isiTab', 'Memuat rekap…');
+    try {
+      const [rekap, teks, hadir, reg, tindak, bonus, well, tugas] = await Promise.all([
+        A.rpc('rekap_feedback', { s: id }),
+        A.rpc('teks_feedback', { s: id }),
+        A.from('attendance').select('id', { count: 'exact', head: true }).eq('sesi_id', id).eq('hadir', true),
+        A.from('session_registration').select('id', { count: 'exact', head: true }).eq('sesi_id', id),
+        A.from('tindak_lanjut_sesi').select('*').eq('sesi_id', id),
+        A.from('bonus_event').select('jenis'),
+        A.rpc('rekap_wellbeing', { s: id, minimum: MIN_WELLBEING }),
+        A.from('follow_up_task').select('*, person:person_id(nama)').eq('sesi_id', id)
+      ]);
+      [rekap, teks, hadir, reg, tindak, bonus, well, tugas].forEach(x => { if (x.error) throw x.error; });
+
+      const resp = await A.rpc('jml_responden', { s: id });
+      if (resp.error) throw resp.error;
+
+      D = {
+        rekap: rekap.data || [],
+        teks: teks.data || [],
+        /* null = tidak berhak menghitung. 0 = berhak, memang belum ada.
+           Dua keadaan ini tidak boleh dilebur. */
+        responden: resp.data === null || resp.data === undefined ? null : Number(resp.data),
         hadir: typeof hadir.count === 'number' ? hadir.count : null,
-        terdaftar: typeof reg.count === 'number' ? reg.count : null
+        terdaftar: typeof reg.count === 'number' ? reg.count : null,
+        tindak: tindak.data || [],
+        bonus: bonus.data || [],
+        wellbeing: well.data || [],
+        tugas: tugas.data || []
       };
-      TERAKHIR = new Date();
-      gambar();
-    } catch (e) {
-      el('isi').innerHTML = '';
-      UI.gagal('isi', e, 'Layar proyektor tidak menampilkan angka yang tidak bisa dibaca.');
+      gambarTab();
+    } catch (e) { UI.gagal('isiTab', e); }
+  }
+
+  const TABS = [['ringkas', 'Ringkasan'], ['jawaban', 'Jawaban teks'],
+                ['tindak', 'Tindak lanjut'], ['wellbeing', 'Wellbeing']];
+  el('tabEv').innerHTML = TABS.map(([k, n]) =>
+    '<button role="tab" aria-selected="' + (k === 'ringkas') + '" data-t="' + k + '">' + n + '</button>').join('');
+  el('tabEv').onclick = (e) => {
+    const b = e.target.closest('[data-t]'); if (!b) return;
+    TAB = b.dataset.t;
+    el('tabEv').querySelectorAll('[data-t]').forEach(x => x.setAttribute('aria-selected', String(x === b)));
+    gambarTab();
+  };
+
+  function gambarTab() {
+    const V = { ringkas: tRingkas, jawaban: tJawaban, tindak: tTindak, wellbeing: tWellbeing };
+    el('isiTab').innerHTML = (V[TAB] || tRingkas)();
+    pasang();
+  }
+
+  /* ---------------- Ringkasan ---------------- */
+  function tRingkas() {
+    const r = D.responden;
+    const belumBerhak = r === null;
+    const kosong = r === 0;
+
+    const kartuAngka =
+      '<div class="deret" style="gap:10px;flex-wrap:wrap;margin-bottom:16px">' +
+      [['Terdaftar', D.terdaftar === null ? '—' : D.terdaftar, 'orang mendaftar'],
+       ['Hadir', D.hadir === null ? '—' : D.hadir,
+        D.terdaftar === null ? 'penyebut belum terbaca' : 'dari ' + D.terdaftar + ' terdaftar'],
+       ['Mengisi evaluasi', belumBerhak ? '—' : r,
+        belumBerhak ? 'peran Anda tidak berhak menghitung'
+                    : (D.hadir ? 'dari ' + D.hadir + ' yang hadir' : 'belum ada yang tercatat hadir')]]
+      .map(([l, n, k]) => '<div class="kartu" style="flex:1;min-width:150px">' +
+        '<div class="mini">' + l + '</div>' +
+        '<div style="font-family:var(--fd);font-size:30px;line-height:1.1">' + n + '</div>' +
+        '<div class="mini">' + k + '</div></div>').join('') + '</div>';
+
+    /* Inti ketentuan: nol respons tidak boleh jadi angka. */
+    if (belumBerhak) {
+      return kartuAngka + '<div class="keadaan"><b>Rekap evaluasi tidak terbuka untuk peran ini</b>' +
+        '<p>Jawaban evaluasi dibatasi di sisi basis data, bukan disembunyikan di layar. ' +
+        'Yang Anda lihat kosong karena tidak berhak dihitung — <b>bukan karena tidak ada respons</b>.</p></div>';
     }
+    if (kosong || !D.rekap.length) {
+      return kartuAngka + '<div class="keadaan"><b>Belum ada respons</b>' +
+        '<p>Tidak ada satu pun evaluasi yang masuk untuk sesi ini, jadi tidak ada rata-rata yang bisa dihitung. ' +
+        '<b>Belum ada respons bukan berarti nilainya nol</b>, dan peserta yang belum mengisi ' +
+        'bukan peserta yang menilai buruk.</p>' +
+        (D.hadir ? '<p class="mini">Buka aktivitas evaluasi di layar kendali sesi, atau tunggu — ' +
+          'peserta masih bisa mengisi setelah sesi selesai.</p>' : '') + '</div>';
+    }
+
+    return kartuAngka +
+      '<div class="kartu"><div class="kartu-h"><h3>Rata-rata per pertanyaan</h3>' +
+      '<span class="lbl abu">skala 0–10</span></div>' +
+      D.rekap.map(x => {
+        const lebar = Math.max(0, Math.min(100, Number(x.rata) * 10));
+        return '<div style="margin-bottom:16px">' +
+          '<div class="deret" style="justify-content:space-between;align-items:baseline">' +
+          '<b>' + esc(A.EVAL.label(x.kunci)) + '</b>' +
+          '<span style="font-family:var(--fd);font-size:20px">' + esc(String(x.rata)) + '</span></div>' +
+          '<div style="height:8px;border-radius:6px;background:var(--surface-3);overflow:hidden;margin:7px 0">' +
+          '<i style="display:block;height:100%;width:' + lebar + '%;background:var(--gold)"></i></div>' +
+          '<p class="mini">Dari <b>' + x.jml + ' orang</b> yang menjawab pertanyaan ini' +
+          (D.hadir ? ', dari ' + D.hadir + ' yang hadir' : '') + '. ' +
+          'Terendah ' + esc(String(x.terendah)) + ', tertinggi ' + esc(String(x.tertinggi)) + '. ' +
+          'Yang melewati pertanyaan ini <b>tidak dihitung sebagai 0</b>.</p></div>';
+      }).join('') +
+      '<p class="mini">Penyebut setiap baris bisa berbeda, karena setiap pertanyaan boleh dilewati. ' +
+      'Itu disebutkan satu per satu dan tidak diseragamkan.</p></div>' +
+
+      /* ---- bonus: klik bukan selesai mendengarkan ---- */
+      '<div class="kartu"><div class="kartu-h"><h3>Bonus audio</h3></div>' +
+      '<p><b>' + D.bonus.filter(b => b.jenis === 'follow_ig_dikonfirmasi').length + '</b> peserta ' +
+      'menyatakan sudah mengikuti Instagram. <span class="mini">Pernyataan peserta, tidak diperiksa ke Instagram.</span></p>' +
+      '<p style="margin-top:6px"><b>' + D.bonus.filter(b => b.jenis === 'klik_spotify').length + '</b> peserta ' +
+      'mengklik tautan Spotify. <span class="mini">Itu <b>peristiwa klik</b> — bukan bukti ada yang ' +
+      'selesai mendengarkan, dan tidak boleh dilaporkan sebagai jumlah pendengar.</span></p>' +
+      '<p class="mini" style="margin-top:8px">Angka ini lintas sesi, bukan per sesi: peristiwa bonus ' +
+      'tidak terikat ke satu sesi.</p></div>' +
+
+      '<div class="deret" style="margin-top:14px"><button class="btn hantu kecil" data-csv>Unduh CSV rekap</button></div>';
   }
 
-  function pengirim(id) {
-    const p = DATA.prog.find(x => x.activity_id === id);
-    return p ? p.pengirim : undefined;
+  /* ---------------- Jawaban teks ---------------- */
+  function tJawaban() {
+    if (D.responden === null) {
+      return '<div class="keadaan"><b>Tidak terbuka untuk peran ini</b>' +
+        '<p>Jawaban teks dibatasi di sisi basis data.</p></div>';
+    }
+    if (!D.teks.length) {
+      return '<div class="keadaan"><b>Belum ada jawaban teks</b>' +
+        '<p>Bisa jadi belum ada yang mengisi, bisa jadi yang mengisi hanya memberi nilai angka. ' +
+        'Keduanya sah, dan tidak satu pun berarti penilaian buruk.</p></div>';
+    }
+    const kelompok = {};
+    D.teks.forEach(t => { (kelompok[t.kunci] = kelompok[t.kunci] || []).push(t); });
+    return '<div class="kartu"><div class="kartu-h"><h3>Jawaban teks</h3>' +
+      '<span class="lbl abu">' + D.teks.length + ' jawaban</span></div>' +
+      '<p class="mini" style="margin-bottom:14px">Tanpa nama pengirim — <b>bukan disembunyikan di layar, ' +
+      'memang tidak diambil dari basis data</b>. Jawaban bertanda <i>boleh dikutip</i> adalah yang ' +
+      'pemiliknya mengizinkan; izin itu <b>bukan perintah menerbitkan</b>, dan tidak ada yang terbit ' +
+      'sendiri ke mana pun.</p>' +
+      Object.keys(kelompok).map(k =>
+        '<div style="margin-bottom:18px"><div class="cap" style="font-size:11px;letter-spacing:.2em;' +
+        'text-transform:uppercase;color:var(--text-3);margin-bottom:8px">' +
+        esc(A.EVAL.label(k)) + '</div>' +
+        kelompok[k].map(t =>
+          '<div style="border-left:3px solid ' + (t.boleh_dikutip ? 'var(--gold)' : 'var(--border)') +
+          ';padding-left:12px;margin-bottom:10px">' +
+          '<p style="margin:0 0 4px">' + esc(t.isi) + '</p>' +
+          '<span class="lbl ' + (t.boleh_dikutip ? 'hijau' : 'abu') + '">' +
+          (t.boleh_dikutip ? 'boleh dikutip' : 'tidak untuk dikutip') + '</span></div>').join('') +
+        '</div>').join('') + '</div>';
   }
 
-  function gambar() {
-    const aktif = DATA.akt.filter(a => a.status === 'Dibuka');
-    el('judul').textContent = SESI.judul;
-    el('status').textContent = SESI.status;
-    el('status').className = 'tanda ' + (SESI.status === 'Berlangsung' ? 'jalan' : 'henti');
-
-    el('isi').innerHTML =
-      /* ---------- aktivitas yang sedang dibuka ---------- */
-      (aktif.length
-        ? aktif.map(a => {
-            const n = pengirim(a.id), bisa = typeof n === 'number';
-            return '<div class="panggung">' +
-              '<div class="cap">Sedang berjalan</div>' +
-              '<h2>' + esc(a.judul) + '</h2>' +
-              '<p class="arah">Buka portal di ponsel Anda, lalu kirim jawaban Anda. ' +
-              'Jawaban Anda hanya terlihat oleh Anda sendiri.</p>' +
-              (bisa
-                ? '<div class="takar"><i style="width:' +
-                  (DATA.hadir ? Math.min(100, Math.round(n / DATA.hadir * 100)) : 0) + '%"></i></div>' +
-                  '<p class="angka-ket"><b>' + n + '</b> dari <b>' + (DATA.hadir === null ? '—' : DATA.hadir) +
-                  '</b> yang hadir sudah mengirim</p>'
-                : '<p class="angka-ket">Jumlah pengirim tidak ditampilkan di layar ini.</p>') +
-              '</div>';
-          }).join('')
-        : '<div class="panggung"><div class="cap">Menunggu</div>' +
-          '<h2>Belum ada aktivitas yang dibuka</h2>' +
-          '<p class="arah">Fasilitator akan membuka aktivitas berikutnya. ' +
-          'Aktivitas yang sudah ditutup tidak menghapus jawaban yang sudah terkirim.</p></div>') +
-
-      /* ---------- cara bergabung ---------- */
-      '<div class="kisi-proy">' +
-      '<div class="kotak"><div class="cap">Cara bergabung</div>' +
-      '<p class="kode-besar">' + esc(SESI.kode_sesi || 'belum ada kode') + '</p>' +
-      '<p class="arah kecil">' + esc(alamatSesi()) + '</p>' +
-      '<div id="qr" class="' + (TAMPILQR ? '' : 'sembunyi') + '"></div>' +
-      '<p class="arah kecil">Memindai QR hanya membuka halaman pendaftaran. ' +
-      'QR ini tidak membawa hak akses apa pun.</p></div>' +
-
-      /* ---------- angka ruangan ---------- */
-      '<div class="kotak"><div class="cap">Ruangan</div>' +
-      '<p class="angka-besar">' + (DATA.hadir === null ? '—' : DATA.hadir) + '</p>' +
-      '<p class="arah kecil">hadir, dari ' + (DATA.terdaftar === null ? '—' : DATA.terdaftar) + ' terdaftar. ' +
-      '<b>Terdaftar berbeda dari hadir.</b></p></div>' +
+  /* ---------------- Tindak lanjut ---------------- */
+  function tTindak() {
+    const n = D.tindak.length;
+    const hitung = {};
+    D.tindak.forEach(x => { hitung[x.status] = (hitung[x.status] || 0) + 1; });
+    return '<div class="kartu"><div class="kartu-h"><h3>Action plan peserta</h3>' +
+      '<span class="lbl abu">' + n + ' rencana</span></div>' +
+      '<p class="mini" style="margin-bottom:14px"><b>"Dilaporkan selesai" adalah laporan peserta, ' +
+      'bukan hasil yang sudah diverifikasi.</b> Dan <b>"Belum diperbarui" bukan kegagalan</b> — ' +
+      'bisa jadi rencananya berjalan tanpa dilaporkan. Isi tujuan dan langkahnya tidak ditampilkan ' +
+      'di sini: itu milik peserta.</p>' +
+      (n
+        ? '<div class="deret" style="gap:8px;flex-wrap:wrap;margin-bottom:14px">' +
+          Object.keys(hitung).map(k => '<span class="lbl ' +
+            (k === 'Dilaporkan selesai' ? 'hijau' : k === 'Perlu bantuan' ? 'oranye' : 'abu') + '">' +
+            esc(k) + ': ' + hitung[k] + '</span>').join('') + '</div>' +
+          D.tindak.map(x => '<div class="baris"><div class="pokok"><b>' + esc(x.nama || '—') + '</b><span>' +
+            esc(x.status) +
+            (x.diperbarui_pada ? ' · diperbarui ' + A.tgl(x.diperbarui_pada) : ' · belum pernah diperbarui') +
+            (x.ada_catatan_bukti ? ' · ada catatan bukti' : '') +
+            (x.lewat_tenggat ? ' · lewat tenggat' : '') + '</span></div>' +
+            '<button class="btn hantu kecil" data-tugas="' + x.person_id + '">Buat tugas</button></div>').join('')
+        : '<p class="mini">Belum ada peserta sesi ini yang membuat action plan.</p>') +
       '</div>' +
 
-      /* ---------- pertanyaan yang ditayangkan ---------- */
-      (DATA.tanya.length
-        ? '<div class="kotak lebar"><div class="cap">Pertanyaan</div>' +
-          DATA.tanya.map(t => '<p class="tanya' + (t.terjawab ? ' sudah' : '') + '">' +
-            esc(t.isi) + '</p>').join('') +
-          '<p class="arah kecil">Pertanyaan ditayangkan tanpa nama pengirim di layar ini.</p></div>'
-        : '');
-
-    gambarQR();
-    gambarWaktu();
+      '<div class="kartu"><div class="kartu-h"><h3>Tugas tindak lanjut</h3>' +
+      '<span class="lbl abu">' + D.tugas.length + '</span></div>' +
+      '<p class="mini" style="margin-bottom:12px"><b>Membuat tugas di sini tidak mengirim pesan apa pun.</b> ' +
+      'Ini pencatatan, bukan pengiriman — integrasi WhatsApp dan email belum ada.</p>' +
+      (D.tugas.length
+        ? D.tugas.map(t => '<div class="baris"><div class="pokok"><b>' + esc(t.tujuan) + '</b><span>' +
+            esc((t.person && t.person.nama) || '—') +
+            (t.jadwal ? ' · ' + A.tgl(t.jadwal) : ' · tanpa jadwal') +
+            (t.kanal ? ' · ' + esc(t.kanal) : '') + '</span></div>' +
+            '<span class="lbl ' + (t.status === 'Selesai' ? 'hijau' : 'biru') + '">' + esc(t.status) + '</span>' +
+            '</div>').join('')
+        : '<p class="mini">Belum ada tugas untuk sesi ini.</p>') + '</div>';
   }
 
-  function gambarQR() {
-    const k = el('qr'); if (!k) return;
-    if (!TAMPILQR) { k.innerHTML = ''; return; }
-    const url = alamatSesi();
-    k.dataset.url = url;
-    try {
-      if (!window.AJIQR) throw new Error('pembuat QR tidak termuat');
-      k.innerHTML = window.AJIQR.svg(url, { margin: 2 });
-      k.dataset.qr = 'nyata';
-    } catch (e) {
-      /* Tidak pernah menggambar kotak hiasan yang menyerupai QR. */
-      k.dataset.qr = 'gagal';
-      k.innerHTML = '<p class="arah kecil"><b>QR tidak bisa dibuat.</b> ' +
-        'Pembuat QR gagal, jadi tidak ada gambar yang ditampilkan. ' +
-        'Peserta bergabung lewat kode sesi di atas.</p>';
+  /* ---------------- Wellbeing ---------------- */
+  function tWellbeing() {
+    const cukup = D.wellbeing.length > 0;
+    return '<div class="kartu"><div class="kartu-h"><h3>Agregat Wellbeing Life Circle</h3></div>' +
+      '<p class="mini" style="margin-bottom:14px"><b>Ini bukan ranking peserta, bukan skor kelayakan ' +
+      'investasi, dan bukan diagnosis.</b> Life Circle adalah refleksi pribadi; yang terbaca di sini ' +
+      'hanya rata-rata per aspek, tanpa nama, dan hanya kalau pengisinya minimal ' + MIN_WELLBEING +
+      ' orang — supaya satu baris tidak bisa ditelusuri ke satu orang.</p>' +
+      (cukup
+        ? D.wellbeing.map(x => {
+            const lebar = Math.max(0, Math.min(100, Number(x.rata) * 10));
+            return '<div style="margin-bottom:14px">' +
+              '<div class="deret" style="justify-content:space-between;align-items:baseline">' +
+              '<b>' + esc(x.aspek) + '</b><span style="font-family:var(--fd);font-size:19px">' +
+              esc(String(x.rata)) + '</span></div>' +
+              '<div style="height:8px;border-radius:6px;background:var(--surface-3);overflow:hidden;margin:6px 0">' +
+              '<i style="display:block;height:100%;width:' + lebar + '%;background:var(--sage,#8AA87B)"></i></div>' +
+              '<p class="mini">' + x.jml + ' orang menjawab aspek ini. Aspek yang dilewati tidak ikut ' +
+              'dihitung dan <b>tidak dianggap nol</b>; nilai 0 yang benar-benar dipilih ikut dihitung.</p></div>';
+          }).join('')
+        : '<div class="keadaan" style="margin:0"><b>Belum bisa ditampilkan</b>' +
+          '<p>Pengisi Life Circle sesi ini belum mencapai ' + MIN_WELLBEING + ' orang. ' +
+          'Angkanya memang ada, tetapi menampilkannya sekarang sama dengan menunjuk orang tertentu — ' +
+          'jadi ditahan. <b>Ini bukan berarti nilainya nol atau tidak ada yang mengisi.</b></p></div>') +
+      '</div>';
+  }
+
+  /* ===================== aksi ===================== */
+  function pasang() {
+    const csv = el('isiTab').querySelector('[data-csv]');
+    if (csv) csv.onclick = unduhCsv;
+    el('isiTab').querySelectorAll('[data-tugas]').forEach(b =>
+      b.onclick = () => buatTugas(b.dataset.tugas,
+        (D.tindak.find(x => x.person_id === b.dataset.tugas) || {}).nama));
+  }
+
+  /* Sel CSV yang dimulai dengan = + - @ tab atau CR dijadikan teks, supaya
+     Excel dan Sheets tidak menjalankannya sebagai formula. */
+  function sel(v) {
+    if (v === null || v === undefined) return '';
+    let s = String(v);
+    if (/^[=+\-@\t\r]/.test(s)) s = "'" + s;
+    return '"' + s.replace(/"/g, '""') + '"';
+  }
+
+  function unduhCsv() {
+    const baris = [['pertanyaan', 'penjawab', 'rata_rata', 'terendah', 'tertinggi', 'hadir_saat_itu']];
+    D.rekap.forEach(x => baris.push([A.EVAL.label(x.kunci), x.jml, x.rata, x.terendah, x.tertinggi,
+      D.hadir === null ? '' : D.hadir]));
+    baris.push([]);
+    baris.push(['catatan', 'Rata-rata hanya dari yang menjawab pertanyaan itu. ' +
+      'Yang melewati pertanyaan tidak dihitung sebagai 0. ' +
+      'Jumlah responden: ' + (D.responden === null ? 'tidak berhak dihitung' : D.responden) +
+      ' dari ' + (D.hadir === null ? 'penyebut tidak terbaca' : D.hadir + ' yang hadir') + '.']);
+    const isi = baris.map(r => r.map(sel).join(',')).join('\r\n');
+    const nama = 'evaluasi-' + (SESI.kode_sesi || SESI.id).replace(/[^A-Za-z0-9-]/g, '') + '.csv';
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(new Blob(['﻿' + isi], { type: 'text/csv;charset=utf-8' }));
+    a.download = nama; a.click(); URL.revokeObjectURL(a.href);
+    UI.pesan('CSV diunduh', 'sukses');
+  }
+
+  async function buatTugas(personId, nama) {
+    const v = await A.formulir('Tugas tindak lanjut' + (nama ? ' — ' + esc(nama) : ''),
+      '<b>Menyimpan tugas tidak mengirim pesan apa pun.</b> Yang tercatat di sini adalah niat ' +
+      'menindaklanjuti, bukan pengirimannya.',
+      [{ k: 'tujuan', l: 'Yang akan dilakukan', wajib: true, ph: 'Tanyakan hambatan langkah pertama' },
+       { k: 'jadwal', l: 'Jadwal', t: 'date' },
+       { k: 'kanal', l: 'Lewat apa', t: 'pilih', opt: ['WhatsApp', 'Telepon', 'Email', 'Tatap muka', 'Belum ditentukan'] },
+       { k: 'catatan', l: 'Catatan', t: 'panjang' }]);
+    if (!v) return;
+    const { error } = await A.from('follow_up_task').insert({
+      person_id: personId, sesi_id: SESI.id, tujuan: v.tujuan,
+      jadwal: v.jadwal || null, kanal: v.kanal === 'Belum ditentukan' ? null : v.kanal,
+      catatan: v.catatan || null });
+    if (error) {
+      if (error.code === '23505') { UI.pesan('Tugas dengan tujuan yang sama sudah ada — tidak dibuat dua kali', 'gagal'); return; }
+      UI.pesan(UI.bacaError(error).isi, 'gagal'); return;
     }
+    UI.pesan('Tugas tercatat. Tidak ada pesan yang dikirim.', 'sukses');
+    await muat(SESI.id, SESI);
   }
 
-  function gambarWaktu() {
-    const n = el('jam'); if (!n) return;
-    if (!SESI || !SESI.dimulai_pada) { n.textContent = 'belum dimulai'; return; }
-    const akhir = SESI.diakhiri_pada ? new Date(SESI.diakhiri_pada) : new Date();
-    const det = Math.max(0, Math.floor((akhir - new Date(SESI.dimulai_pada)) / 1000) - (SESI.jeda_detik || 0));
-    const mm = String(Math.floor(det / 60)).padStart(2, '0'), ss = String(det % 60).padStart(2, '0');
-    n.textContent = mm + ':' + ss + (SESI.durasi_menit ? ' / ' + SESI.durasi_menit + ':00' : '');
-    n.className = SESI.durasi_menit && det > SESI.durasi_menit * 60 ? 'jam lewat' : 'jam';
-    const d = TERAKHIR ? Math.round((Date.now() - TERAKHIR) / 1000) : null;
-    el('segar').textContent = d === null ? 'belum terhubung' : 'diperbarui ' + d + ' detik lalu';
-  }
-
-  /* Kendali tampilan — bukan kendali sesi. Tidak ada tombol di layar ini
-     yang mengubah data. */
-  el('penuh').onclick = () => {
-    const d = document.documentElement;
-    if (document.fullscreenElement) document.exitFullscreen();
-    else if (d.requestFullscreen) d.requestFullscreen();
+  el('kembaliEv').onclick = () => {
+    el('kerja').hidden = true; el('pilih').hidden = false; pilihSesi();
   };
-  el('togelQR').onclick = () => {
-    TAMPILQR = !TAMPILQR;
-    el('togelQR').textContent = TAMPILQR ? 'Sembunyikan QR' : 'Tampilkan QR';
-    if (SESI) gambar();
-  };
-  window.addEventListener('hashchange', () => {
-    ID = (location.hash || '').replace(/^#/, '').trim(); muat();
-  });
 
-  muat();
-  setInterval(muat, JEDA);
-  setInterval(gambarWaktu, 1000);
-
-  window.__PROY = { gambar, gambarQR, alamatSesi, pengirim,
-                    data: () => DATA, sesi: () => SESI };
+  boot();
 })();
 </script>
 </body>

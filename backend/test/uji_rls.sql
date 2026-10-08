@@ -26,7 +26,7 @@ declare
   uB uuid := '22222222-2222-2222-2222-222222222222';
   uF uuid := '33333333-3333-3333-3333-333333333333';
   uAd uuid := '44444444-4444-4444-4444-444444444444';
-  pA uuid; pB uuid; pF uuid; pAd uuid; s uuid; biz uuid; act uuid; tpl uuid; eA uuid; eB uuid;
+  pA uuid; pB uuid; pF uuid; pAd uuid; s uuid; s2 uuid; biz uuid; act uuid; tpl uuid; eA uuid; eB uuid;
 begin
   -- Pembersihan harus mengenali juga baris yang sudah dianonimkan oleh
   -- hapus_data_pribadi() — namanya berganti dan auth_user_id-nya dikosongkan,
@@ -52,6 +52,13 @@ begin
 
   insert into sesi(judul, status, kode_sesi) values ('UJI Sesi','Berlangsung','UJI-1') returning id into s;
   insert into sesi_staff(sesi_id, auth_user_id, peran) values (s, uF, 'fasilitator');
+
+  -- Sesi kedua yang ditangani fasilitator yang sama tetapi BELUM punya
+  -- satu pun evaluasi. Dipakai membuktikan bahwa nol respons bukan
+  -- rata-rata nol.
+  insert into sesi(judul, status, kode_sesi) values ('UJI Sesi Sepi','Selesai','UJI-SEPI')
+    returning id into s2;
+  insert into sesi_staff(sesi_id, auth_user_id, peran) values (s2, uF, 'fasilitator');
   insert into session_registration(sesi_id, person_id) values (s,pA), (s,pB);
   insert into attendance(sesi_id, person_id, metode) values (s,pA,'Mandiri');
 
@@ -82,7 +89,13 @@ begin
 
   insert into action_plan(person_id, sesi_id, tujuan) values (pA,s,'UJI rencana A');
   insert into action_plan(person_id, sesi_id, tujuan) values (pB,s,'UJI rencana B');
-  insert into feedback(sesi_id, person_id, jawaban) values (s,pB,'{"saran":"rahasia B"}'::jsonb);
+  -- Evaluasi: B memberi angka + teks dan MENGIZINKAN kutipan; A hanya
+  -- angka, satu di antaranya 0 (nol yang sah), dan satu pertanyaan dia
+  -- lewati sama sekali. Tiga keadaan ini harus tetap bisa dibedakan.
+  insert into feedback(sesi_id, person_id, jawaban, boleh_dikutip) values
+    (s, pB, '{"saran":"rahasia B","keseluruhan":9,"kejelasan":8}'::jsonb, true);
+  insert into feedback(sesi_id, person_id, jawaban, boleh_dikutip) values
+    (s, pA, '{"keseluruhan":0,"catatan":"   "}'::jsonb, false);
 end $$;
 
 -- ===================================================== PESERTA A
@@ -108,8 +121,12 @@ select uji('Aspek yang belum dijawab tetap NULL, bukan 0',
 select uji('A TIDAK bisa membaca action plan milik B',
   (select count(*)::text from action_plan where tujuan = 'UJI rencana B'), '0');
 
-select uji('A TIDAK bisa membaca feedback milik B',
-  (select count(*)::text from feedback), '0');
+-- A punya evaluasi sendiri, jadi yang diuji bukan "nol baris" melainkan
+-- "hanya barisnya sendiri" — dan isi jawaban B tidak ikut terbaca.
+select uji('A hanya membaca feedback miliknya sendiri',
+  (select count(*)::text from feedback), '1');
+select uji('A TIDAK bisa membaca isi feedback milik B',
+  (select count(*)::text from feedback where jawaban->>'saran' = 'rahasia B'), '0');
 
 select uji('A TIDAK bisa membaca data usaha milik B',
   (select count(*)::text from business where nama = 'UJI Homestay B'), '0');
@@ -167,6 +184,61 @@ select uji('Fasilitator tetap mendapat jumlah pengirim yang benar',
   (select pengirim::text from progres_aktivitas limit 1), '1');
 select uji('Draft yang belum terkirim tidak dihitung sebagai pengirim',
   (select jml_pengirim(id)::text from activity where kode = 'lc'), '1');
+
+-- ============================ EVALUASI (NP-V09) ============================
+select uji('Fasilitator TIDAK bisa membaca baris feedback perorangan',
+  (select count(*)::text from feedback), '0');
+
+select uji('Rekap evaluasi: jumlah responden benar',
+  (select jml_responden(id)::text from sesi where kode_sesi = 'UJI-1'), '2');
+
+-- Inti ketentuan NP-V09: nol respons BUKAN rata-rata nol.
+select uji('Sesi tanpa evaluasi: responden 0 (berhak menghitung, memang kosong)',
+  (select jml_responden(id)::text from sesi where kode_sesi = 'UJI-SEPI'), '0');
+select uji('Sesi tanpa evaluasi: rekap mengembalikan NOL BARIS, bukan rata-rata nol',
+  (select count(*)::text from rekap_feedback((select id from sesi where kode_sesi = 'UJI-SEPI'))), '0');
+
+-- Nilai 0 dari satu peserta ikut dihitung sebagai jawaban sah.
+select uji('Nilai 0 ikut dihitung sebagai jawaban sah, bukan diabaikan',
+  (select (jml::text || '|' || rata::text || '|' || terendah::text)
+     from rekap_feedback((select id from sesi where kode_sesi = 'UJI-1'))
+    where kunci = 'keseluruhan'), '2|4.50|0');
+
+-- Pertanyaan yang hanya dijawab sebagian: penyebutnya ikut berbeda, dan
+-- yang tidak menjawab tidak dianggap menjawab 0.
+select uji('Pertanyaan yang dilewati: penyebut lebih kecil, bukan dihitung nol',
+  (select (jml::text || '|' || rata::text)
+     from rekap_feedback((select id from sesi where kode_sesi = 'UJI-1'))
+    where kunci = 'kejelasan'), '1|8.00');
+
+select uji('Teks evaluasi terbaca staf TANPA identitas pengirim',
+  (select count(*)::text from teks_feedback((select id from sesi where kode_sesi = 'UJI-1'))), '1');
+select uji('Izin mengutip terbawa apa adanya dari pilihan peserta',
+  (select boleh_dikutip::text from teks_feedback((select id from sesi where kode_sesi = 'UJI-1'))
+    where kunci = 'saran'), 'true');
+select uji('Teks berisi hanya spasi tidak dianggap jawaban',
+  (select count(*)::text from teks_feedback((select id from sesi where kode_sesi = 'UJI-1'))
+    where kunci = 'catatan'), '0');
+
+-- Wellbeing: agregat ditahan selama respondennya belum cukup banyak.
+select uji('Wellbeing: agregat ditahan saat pengisi di bawah batas minimum',
+  (select count(*)::text from rekap_wellbeing((select id from sesi where kode_sesi = 'UJI-1'))), '0');
+select uji('Wellbeing: dengan batas diturunkan, nilai 0 ikut dihitung dan NULL tidak',
+  (select (aspek || '|' || jml::text || '|' || rata::text)
+     from rekap_wellbeing((select id from sesi where kode_sesi = 'UJI-1'), 1)
+    where aspek = 'Kesehatan'), 'Kesehatan|2|3.50');
+select uji('Wellbeing: aspek yang dilewati tidak muncul sebagai nol',
+  (select (jml::text || '|' || rata::text)
+     from rekap_wellbeing((select id from sesi where kode_sesi = 'UJI-1'), 1)
+    where aspek = 'Keuangan'), '1|5.00');
+
+-- Tindak lanjut: status terlihat, isi rencana tidak.
+select uji('Tindak lanjut: staf melihat status action plan kedua peserta',
+  (select count(*)::text from tindak_lanjut_sesi
+    where sesi_id = (select id from sesi where kode_sesi = 'UJI-1')), '2');
+select uji('Tindak lanjut: "Belum diperbarui" apa adanya, tidak diubah jadi gagal',
+  (select count(distinct status)::text || '|' || (select min(status::text) from tindak_lanjut_sesi)
+     from tindak_lanjut_sesi), '1|Belum diperbarui');
 select auth.jadi_pemilik();
 
 -- ===================================================== ADMIN

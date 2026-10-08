@@ -90,7 +90,7 @@
     education_profile: [],
     data_subject_request: [],
     activity_response: [], feedback: [], action_plan: [], staff: [],
-    pertanyaan: [], audit_log: []
+    pertanyaan: [], audit_log: [], tindak_lanjut_sesi: []
   };
 
   /* Sesi contoh dilengkapi supaya layar kendali NP-V08 bisa diuji apa adanya:
@@ -115,7 +115,12 @@
     { id: 'ak3', sesi_id: 's2', kode: 'lc', judul: 'Wellbeing Life Circle',
       jenis: 'life_circle', status: 'Dibuka', terima_setelah_tutup: false },
     { id: 'ak4', sesi_id: 's2', kode: 'ap', judul: 'Action Plan 7 Hari',
-      jenis: 'action_plan', status: 'Belum dibuka', terima_setelah_tutup: false });
+      jenis: 'action_plan', status: 'Belum dibuka', terima_setelah_tutup: false },
+    /* Aktivitas evaluasi yang sudah dibuka fasilitator — itulah yang
+       membuka formulir evaluasi di portal peserta. Terdaftar saja tidak
+       cukup: terdaftar bukan hadir, dan bukan juga sudah ikut. */
+    { id: 'ak5', sesi_id: 's2', kode: 'ev', judul: 'Evaluasi Sesi',
+      jenis: 'evaluasi', status: 'Dibuka', terima_setelah_tutup: true });
   /* satu terkirim, satu masih draft — draft tidak boleh ikut dihitung */
   DB.activity_response.push(
     { id: 'ar1', activity_id: 'ak3', person_id: 'p1', jawaban: { x: 1 }, dikirim_pada: NOW },
@@ -137,7 +142,59 @@
   /* Peran yang berhak menghitung pengirim. Di basis data ini ditegakkan
      oleh jml_pengirim() (SECURITY DEFINER) — di sini ditiru supaya
      perbedaan NULL dan 0 ikut teruji. */
+  /* --- data evaluasi contoh untuk sesi s2 ---
+     Dua responden: satu memberi angka lengkap + teks dan MENGIZINKAN
+     kutipan; satu hanya memberi satu angka, dan angkanya 0 — nol yang
+     sah. Satu pertanyaan dilewati sama sekali, supaya penyebut yang
+     berbeda per pertanyaan ikut teruji. */
+  DB.feedback.push(
+    { id: 'f1', sesi_id: 's2', person_id: 'p1',
+      jawaban: { keseluruhan: 9, kejelasan: 8, relevansi: 7,
+                 paling_bermanfaat: 'Bagian menghitung harga kamar' },
+      boleh_dikutip: true, template_versi: 1, dikirim_pada: NOW },
+    { id: 'f2', sesi_id: 's2', person_id: 'p2',
+      jawaban: { keseluruhan: 0, perlu_diperbaiki: '   ' },
+      boleh_dikutip: false, template_versi: 1, dikirim_pada: NOW });
+
+  DB.action_plan.push(
+    { id: 'ap1', person_id: 'p1', sesi_id: 's2', tujuan: 'Pasang harga baru',
+      langkah_7hari: 'Hitung biaya per kamar', dukungan: 'Contoh perhitungan',
+      status: 'Dilaporkan selesai', bukti: 'Sudah saya terapkan', tenggat: null,
+      diperbarui_pada: NOW },
+    { id: 'ap2', person_id: 'p2', sesi_id: 's2', tujuan: 'Buka akun usaha',
+      langkah_7hari: 'Siapkan dokumen', dukungan: null,
+      status: 'Belum diperbarui', bukti: null, tenggat: '2026-09-01',
+      diperbarui_pada: null });
+
+  /* Life Circle s2: lima pengisi, supaya batas minimum agregat terlampaui.
+     Satu nilai 0 (sah) dan beberapa aspek dilewati (null) — dua keadaan
+     yang harus tetap bisa dibedakan di agregatnya. */
+  ['p1', 'p2', 'p3', 'p4u', 'p5u'].forEach((pid, i) => {
+    const eid = 'lcs' + i;
+    DB.life_circle_entry.push({ id: eid, person_id: pid, template_id: 'tpl1',
+      template_versi: 1, sesi_id: 's2', baseline: true, diisi_pada: NOW });
+    DB.life_circle_score.push(
+      { entry_id: eid, aspek: 'Kesehatan & energi', nilai: i === 0 ? 0 : 5 + i },
+      { entry_id: eid, aspek: 'Keuangan', nilai: i < 2 ? null : 6 });
+  });
+
   const BOLEH_HITUNG = ['admin', 'fasilitator', 'operator'];
+
+  /* View tindak_lanjut_sesi: STATUS saja. Isi tujuan, langkah, dukungan,
+     dan bukti TIDAK ikut — hanya ada/tidaknya catatan bukti. Kalau tiruan
+     ini membocorkannya, pengujian kebocoran jadi tidak ada artinya. */
+  function tindakLanjut() {
+    if (BOLEH_HITUNG.indexOf(g.__STUB.peran) === -1) return [];
+    const hariIni = NOW.slice(0, 10);
+    return DB.action_plan.map(ap => {
+      const p = DB.person.find(x => x.id === ap.person_id) || {};
+      return { sesi_id: ap.sesi_id, person_id: ap.person_id, nama: p.nama || null,
+               status: ap.status, diperbarui_pada: ap.diperbarui_pada || null,
+               ada_catatan_bukti: !!(ap.bukti && ap.bukti.trim()),
+               lewat_tenggat: !!(ap.tenggat && ap.tenggat < hariIni &&
+                                 ap.status !== 'Dilaporkan selesai') };
+    });
+  }
   function progresAktivitas() {
     const boleh = BOLEH_HITUNG.indexOf(g.__STUB.peran) !== -1;
     return DB.activity.map(a => ({
@@ -163,7 +220,9 @@
                                  'business','business_relationship'] };
 
   function kueri(tabel) {
-    let rows = (tabel === 'progres_aktivitas' ? progresAktivitas() : (DB[tabel] || [])).slice();
+    let rows = (tabel === 'progres_aktivitas' ? progresAktivitas()
+              : tabel === 'tindak_lanjut_sesi' ? tindakLanjut()
+              : (DB[tabel] || [])).slice();
     const q = {
       _eq: [], _order: null, _single: false,
       select(sel, opt) {
@@ -253,10 +312,73 @@
     if (saya) saya.auth_user_id = 'u-admin';
   }
 
+  /* ------------------------------------------------ fungsi agregat
+     Meniru fungsi SECURITY DEFINER di basis data, termasuk perbedaan yang
+     paling mudah salah: NULL (tidak berhak menghitung) BUKAN 0 (berhak,
+     memang belum ada). Kalau tiruan ini melebur keduanya, pengujiannya
+     lulus sementara produknya menulis angka palsu. */
+  const MIN_WB = 5;
+  function rpc(nama, arg) {
+    const a = arg || {};
+    const boleh = BOLEH_HITUNG.indexOf(g.__STUB.peran) !== -1;
+    const fb = DB.feedback.filter(f => f.sesi_id === a.s);
+
+    if (nama === 'jml_responden')
+      return Promise.resolve({ data: boleh ? fb.length : null, error: null });
+
+    if (nama === 'rekap_feedback') {
+      if (!boleh) return Promise.resolve({ data: [], error: null });
+      const per = {};
+      fb.forEach(f => Object.keys(f.jawaban || {}).forEach(k => {
+        if (typeof f.jawaban[k] !== 'number') return;
+        (per[k] = per[k] || []).push(f.jawaban[k]);
+      }));
+      const out = Object.keys(per).sort().map(k => {
+        const v = per[k];
+        return { kunci: k, jml: v.length,
+                 rata: Math.round(v.reduce((x, y) => x + y, 0) / v.length * 100) / 100,
+                 terendah: Math.min.apply(null, v), tertinggi: Math.max.apply(null, v) };
+      });
+      return Promise.resolve({ data: out, error: null });
+    }
+
+    if (nama === 'teks_feedback') {
+      if (!boleh) return Promise.resolve({ data: [], error: null });
+      const out = [];
+      fb.forEach(f => Object.keys(f.jawaban || {}).forEach(k => {
+        const v = f.jawaban[k];
+        if (typeof v !== 'string' || !v.trim()) return;
+        /* person_id SENGAJA tidak dibawa, persis seperti fungsinya. */
+        out.push({ kunci: k, isi: v, boleh_dikutip: !!f.boleh_dikutip, dikirim_pada: f.dikirim_pada || NOW });
+      }));
+      return Promise.resolve({ data: out, error: null });
+    }
+
+    if (nama === 'rekap_wellbeing') {
+      if (!boleh) return Promise.resolve({ data: [], error: null });
+      const minimum = a.minimum === undefined ? MIN_WB : a.minimum;
+      const entri = DB.life_circle_entry.filter(e => e.sesi_id === a.s && e.baseline);
+      const orang = new Set(entri.map(e => e.person_id)).size;
+      if (orang < Math.max(minimum, 1)) return Promise.resolve({ data: [], error: null });
+      const per = {};
+      DB.life_circle_score.forEach(sc => {
+        if (!entri.some(e => e.id === sc.entry_id)) return;
+        if (sc.nilai === null || sc.nilai === undefined) return;   /* dilewati ≠ nol */
+        (per[sc.aspek] = per[sc.aspek] || []).push(sc.nilai);
+      });
+      const out = Object.keys(per).sort().map(k => ({ aspek: k, jml: per[k].length,
+        rata: Math.round(per[k].reduce((x, y) => x + y, 0) / per[k].length * 100) / 100 }));
+      return Promise.resolve({ data: out, error: null });
+    }
+
+    return Promise.resolve({ data: null, error: { code: '42883', message: 'fungsi tiruan tidak ada: ' + nama } });
+  }
+
   g.supabase = {
     createClient() {
       return {
         from: kueri,
+        rpc,
         auth: {
           getSession: () => Promise.resolve({
             data: { session: g.__STUB.masuk ? { user: g.__STUB.user } : null }, error: null }),

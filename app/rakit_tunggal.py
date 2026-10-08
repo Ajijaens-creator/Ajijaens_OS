@@ -34,6 +34,7 @@ HALAMAN = [
     ('admin/crm.html',      'crm.html',       'test/crm-tunggal-uji.html'),
     ('sesi/index.html',     'sesi.html',      'test/sesi-tunggal-uji.html'),
     ('sesi/proyektor.html', 'proyektor.html', 'test/proyektor-tunggal-uji.html'),
+    ('admin/evaluasi.html', 'evaluasi.html',   'test/evaluasi-tunggal-uji.html'),
 ]
 
 SUPABASE_CDN = ('<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4'

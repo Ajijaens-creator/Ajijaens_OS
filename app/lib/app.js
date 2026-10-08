@@ -31,6 +31,10 @@
   }
   /* Beberapa tabel PDP ada di schema yang sama; disiapkan kalau nanti berbeda. */
   const from = (t) => sb().from(t);
+  /* Fungsi agregat di basis data dipanggil lewat ini. Dipakai di tempat
+     yang jawabannya HARUS dihitung server: kalau dihitung di sini,
+     kebijakan RLS membuat hasilnya 0 dan layar menulis angka palsu. */
+  const rpc = (nama, arg) => sb().rpc(nama, arg || {});
 
   /* ------------------------------------------------------ autentikasi */
   const auth = {
@@ -92,6 +96,30 @@
 
   /* ------------------------------------------------------------ nilai */
   /* Tiga keadaan yang tidak boleh tertukar sepanjang aplikasi ini. */
+  /* ---------------------------------------------- template evaluasi
+     Dipakai dua sisi: portal peserta menulisnya, layar rekap membaca
+     kuncinya kembali. Satu sumber supaya label di rekap tidak pernah
+     berbeda dari pertanyaan yang benar-benar ditanyakan.
+
+     Pertanyaan angka dimulai dari 0, dan 0 adalah jawaban sah —
+     "belum dijawab" diwakili null, bukan 0. Kunci yang tidak dikenal
+     tetap ditampilkan apa adanya di rekap, bukan disembunyikan: lebih
+     baik kelihatan mentah daripada hilang. */
+  const EVAL = {
+    versi: 1,
+    medan: [
+      { k: 'keseluruhan', t: 'skala', l: 'Seberapa bermanfaat sesi ini secara keseluruhan?' },
+      { k: 'kejelasan',   t: 'skala', l: 'Seberapa jelas penyampaiannya?' },
+      { k: 'relevansi',   t: 'skala', l: 'Seberapa cocok dengan usaha atau rencana Anda?' },
+      { k: 'paling_bermanfaat', t: 'teks', l: 'Bagian apa yang paling bermanfaat?' },
+      { k: 'perlu_diperbaiki',  t: 'teks', l: 'Apa yang perlu diperbaiki?' }
+    ],
+    label(k) {
+      const m = EVAL.medan.find(x => x.k === k);
+      return m ? m.l : k;
+    }
+  };
+
   const KOSONG = Symbol('belum diisi');
   function tampilNilai(v, opsi) {
     const o = opsi || {};
@@ -261,8 +289,8 @@
   }
 
   global.AJIOS = {
-    sb, from, auth, profilSaya, peranSaya, adalahStaf, lupakanCache,
+    sb, from, rpc, auth, profilSaya, peranSaya, adalahStaf, lupakanCache,
     esc, el, tgl, jam, tampilNilai, tampilOmzet, UI, sekaliSaja, consent, formulir,
-    CFG, ORIGIN, KOSONG
+    CFG, ORIGIN, KOSONG, EVAL
   };
 })(window);

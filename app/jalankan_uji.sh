@@ -31,6 +31,8 @@ jalan "NP-V04 Portal"              bash -c 'node test/uji-portal.js | tail -2'
 jalan "NP-V04 Portal (berkas tunggal)" bash -c 'node test/uji-portal-tunggal.js | tail -2'
 jalan "NP-V08 Sesi & Proyektor"    bash -c 'node test/uji-sesi.js | tail -2'
 jalan "NP-V08 Sesi & Proyektor (berkas tunggal)" bash -c 'TUNGGAL=1 node test/uji-sesi.js | tail -2'
+jalan "NP-V09 Evaluasi & Tindak Lanjut" bash -c 'node test/uji-evaluasi.js | tail -2'
+jalan "NP-V09 Evaluasi & Tindak Lanjut (berkas tunggal)" bash -c 'TUNGGAL=1 node test/uji-evaluasi.js | tail -2'
 
 echo ""
 [ $GAGAL -eq 0 ] && echo ">>> SELURUH PENGUJIAN APLIKASI LULUS" || echo ">>> ADA YANG GAGAL"
