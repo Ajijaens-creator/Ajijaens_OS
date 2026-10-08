@@ -16,6 +16,7 @@ dengan Supabase.
 | `migrations/0001_schema.sql` | 27 tabel: orang, akun, usaha, sesi, aktivitas, Life Circle, CRM |
 | `migrations/0002_pdp.sql` | Persetujuan, hak subjek data, catatan kebocoran, audit — PP 33/2026 |
 | `migrations/0003_rls.sql` | 57 kebijakan izin tingkat baris + dua view terbatas |
+| `migrations/0004_grants.sql` | Hak akses schema untuk Supabase + pemeriksaan "tidak ada tabel tanpa RLS" |
 | `test/shim_lokal.sql` | **Hanya untuk uji lokal.** Jangan dijalankan di Supabase |
 | `test/uji_rls.sql` | 32 pengujian izin dan PDP |
 
@@ -28,6 +29,12 @@ kali berturut-turut pada basis data yang sudah terisi.
 
 **32 lulus, 0 gagal.** Dijalankan sebagai peran `authenticated` biasa, bukan
 superuser — jadi kebijakannya benar-benar berlaku.
+
+Tiga jalur kegagalan pemasangan juga diuji dan ketiganya berhenti dengan
+pesan yang jelas: `0003` dilewati → `0004` menolak dan menyebut tabel mana
+yang telanjang; `auth.uid()` tidak ada → `0003` berhenti sebelum membuat satu
+tabel pun tanpa pembatasan; satu tabel RLS-nya dimatikan → pemeriksaan
+menangkapnya.
 
 Yang dibuktikan, bukan diklaim:
 
@@ -70,20 +77,52 @@ Keduanya nyata, keduanya sudah diperbaiki:
 
 Perlu komputer dengan peramban. Sekitar 20 menit.
 
-1. **Buat proyek** di `supabase.com` → New project. Pilih region terdekat
-   (Singapore). Simpan kata sandi basis datanya.
-2. **SQL Editor** → tempel isi `migrations/0001_schema.sql` → Run.
-3. Ulangi untuk `0002_pdp.sql`, lalu `0003_rls.sql`. **Urutannya wajib.**
-   Jangan menjalankan `test/shim_lokal.sql` — di Supabase, `auth.uid()` dan
-   peran `authenticated` sudah ada, dan menimpanya membuka celah.
-4. **Authentication → Providers** → nyalakan Email OTP dan/atau Phone.
-5. **Jadikan diri Anda admin.** Daftar lewat aplikasi sekali, lalu di SQL Editor:
+**Buat PROYEK BARU, bukan menumpang proyek yang sudah ada.** Alasannya di
+bagian berikutnya.
+
+1. **New project** di organisasi Anda. Region: **Singapore** (terdekat).
+   Simpan kata sandi basis datanya — tidak bisa dilihat lagi nanti.
+2. **SQL Editor** → tempel dan Run, **satu per satu, sesuai urutan nomor**:
+   `0001_schema.sql` → `0002_pdp.sql` → `0003_rls.sql` → `0004_grants.sql`.
+   Setelah `0003` dan `0004` Anda akan melihat pemberitahuan
+   *"RLS aktif di seluruh tabel ajios"*. Kalau tidak muncul, berhenti dan
+   baca errornya — jangan lanjut.
+3. **Settings → API → Exposed schemas** → tambahkan `ajios`.
+   **Tanpa langkah ini aplikasi tidak bisa membaca apa pun**, walau seluruh
+   migrasi berhasil. Ini kesalahan pemasangan yang paling sering terjadi.
+4. **JANGAN** menjalankan `test/shim_lokal.sql` di Supabase. Itu tiruan untuk
+   uji lokal; di Supabase ia menimpa `auth.uid()` yang asli dan membuka celah.
+5. **Authentication → Providers** → nyalakan Email OTP, dan Phone bila mau
+   memakai WhatsApp/SMS.
+6. **Jadikan diri Anda admin.** Daftar lewat aplikasi sekali, lalu di SQL Editor:
    ```sql
    insert into ajios.staff (auth_user_id, peran)
-   select id, 'admin' from auth.users where email = 'EMAIL-ANDA';
+   select id, 'admin' from auth.users where email = 'EMAIL-ANDA'
+   on conflict (auth_user_id) do update set peran = 'admin';
    ```
-6. **Periksa.** Database → pastikan ketiga puluh tabel punya lencana "RLS enabled".
-   Satu tabel tanpa lencana itu adalah pintu terbuka.
+7. **Periksa sendiri.** Table Editor → ketiga puluh tabel harus punya lencana
+   **RLS enabled**. Satu tabel tanpa lencana adalah pintu terbuka.
+
+### Kenapa proyek terpisah, bukan menumpang proyek lain
+
+Satu proyek Supabase punya **satu kolam akun** (`auth.users`). Kalau peserta
+workshop dan pelanggan usaha lain berada di kolam yang sama, satu celah
+kebijakan di salah satu sisi bisa menjangkau sisi lain. Selain itu:
+
+- Pencadangan dan pemulihan jadi satu paket — tidak bisa memulihkan satu
+  tanpa menyentuh yang lain.
+- PP 33/2026 menuntut dasar pemrosesan **per tujuan**; dua tujuan berbeda
+  lebih bersih kalau datanya memang terpisah.
+- Kalau satu proyek harus dihentikan sementara karena insiden, yang lain
+  tetap jalan.
+
+Schema-nya memang bernama `ajios`, jadi secara teknis tidak akan bentrok
+dengan tabel proyek lain. Tapi pemisahan di sini soal batas tanggung jawab,
+bukan soal nama tabel.
+
+**Satu catatan pada paket gratis:** satu organisasi hanya boleh punya
+**2 proyek aktif**. Kalau proyek lain sudah memakai satu slot, proyek ini
+mengisi yang kedua — pas, tetapi tidak ada ruang lagi setelahnya.
 
 ### Biaya
 

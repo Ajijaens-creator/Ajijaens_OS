@@ -20,6 +20,23 @@
 
 set search_path = ajios, public;
 
+-- ---------------------------------------------------------------------
+-- PRASYARAT. Seluruh kebijakan di bawah bergantung pada auth.uid().
+-- Di Supabase fungsi ini sudah ada. Di Postgres biasa belum — dan tanpa
+-- penjaga ini, migrasi gagal di tengah dengan pesan yang membingungkan,
+-- meninggalkan basis data TANPA RLS sama sekali: terbuka untuk siapa pun.
+-- ---------------------------------------------------------------------
+do $$
+begin
+  if to_regprocedure('auth.uid()') is null then
+    raise exception using message =
+      'auth.uid() tidak ditemukan. Di Supabase fungsi ini sudah tersedia. '
+      'Di PostgreSQL biasa, jalankan test/shim_lokal.sql lebih dulu. '
+      'JANGAN lanjut tanpa ini: tabel akan berdiri tanpa pembatasan akses.';
+  end if;
+end $$;
+
+
 -- ------------------------------------------------------- penolong
 create or replace function me() returns uuid
 language sql stable security definer set search_path = ajios, public as $$
@@ -244,3 +261,24 @@ select act.id as activity_id, act.sesi_id, act.judul, act.status,
        (select count(*) from attendance a where a.sesi_id = act.sesi_id and a.hadir) as hadir,
        (select count(*) from session_registration r where r.sesi_id = act.sesi_id) as terdaftar
 from activity act;
+
+-- ---------------------------------------------------------------------
+-- PEMERIKSAAN AKHIR. Berkas ini tidak boleh dianggap selesai kalau masih
+-- ada tabel tanpa RLS — itu pintu terbuka, dan lebih baik migrasinya
+-- berhenti sekarang daripada ketahuan saat peserta pertama mendaftar.
+-- ---------------------------------------------------------------------
+do $$
+declare lepas text; jml int;
+begin
+  select string_agg(c.relname, ', ' order by c.relname) into lepas
+    from pg_class c join pg_namespace n on n.oid = c.relnamespace
+   where n.nspname = 'ajios' and c.relkind = 'r' and not c.relrowsecurity;
+  if lepas is not null then
+    raise exception 'TABEL TANPA RLS: %', lepas;
+  end if;
+  select count(*) into jml from pg_policies where schemaname = 'ajios';
+  if jml < 40 then
+    raise exception 'Hanya % kebijakan terpasang — diharapkan jauh lebih banyak. Periksa error di atas.', jml;
+  end if;
+  raise notice 'RLS aktif di seluruh tabel ajios, % kebijakan terpasang.', jml;
+end $$;
