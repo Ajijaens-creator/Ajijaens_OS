@@ -5,7 +5,215 @@
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <meta name="robots" content="noindex,nofollow">
 <title>Layar Proyektor — Sesi</title>
-<link rel="stylesheet" href="../lib/ui.css">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@600;700&family=Inter:wght@400;500;600;700;800&display=swap">
+<style>
+/* ============ AJI JAENS OS — gaya bersama portal & pengelola ============
+   Off-white, kartu putih, emas untuk identitas, charcoal untuk teks.
+   Sage = Learn, biru = Do, terracotta = Share.
+   Status selalu punya TEKS, tidak hanya warna. */
+
+:root{
+  --bg:#FAF8F2; --surface:#FFFDF8; --surface-2:#F5F1E7; --surface-3:#EFEADC;
+  --border:#E6DFCE; --border-soft:#F0EADA;
+  --text:#2A2620; --text-2:#6A6255; --text-3:#9B9284;
+  --gold:#B58A3A; --gold-dark:#8E681F; --gold-tint:#FAF2E2; --gold-line:#E7D9B8;
+  --sage:#4E7A5A; --sage-t:#E8F0EA;
+  --biru:#1A5FB4; --biru-t:#E7EFFA;
+  --terra:#B4552F; --terra-t:#FBEBE4;
+  --hijau:#12874E; --hijau-t:#E4F3EA;
+  --merah:#C0392B; --merah-t:#FBEAE7;
+  --oranye:#B46A0D; --oranye-t:#FBF0DF;
+  --abu:#8A8377; --abu-t:#F0EDE5;
+  --r:14px; --r-sm:10px;
+  --bayang:0 1px 2px rgba(80,62,26,.05), 0 6px 20px -8px rgba(80,62,26,.10);
+  --ff:'Inter',-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;
+  --fd:'Cormorant Garamond','Iowan Old Style',Georgia,serif;
+}
+@media (prefers-color-scheme:dark){
+  :root:not([data-theme="light"]){
+    --bg:#14120E; --surface:#1C1915; --surface-2:#221E18; --surface-3:#2A251E;
+    --border:#332D24; --border-soft:#2A251E;
+    --text:#F0EADD; --text-2:#B3AA97; --text-3:#7E7666;
+    --gold:#D7BE7A; --gold-dark:#E4D0A0; --gold-tint:#241E12; --gold-line:#3D3320;
+    --sage:#7FBF93; --sage-t:#15271B; --biru:#7CB0F7; --biru-t:#152438;
+    --terra:#E59072; --terra-t:#2E1C14; --hijau:#5FD394; --hijau-t:#122A1E;
+    --merah:#F58E85; --merah-t:#301917; --oranye:#E8A94F; --oranye-t:#2C2211;
+    --abu:#9A9384; --abu-t:#232019;
+    color-scheme:dark;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#14120E; --surface:#1C1915; --surface-2:#221E18; --surface-3:#2A251E;
+  --border:#332D24; --border-soft:#2A251E;
+  --text:#F0EADD; --text-2:#B3AA97; --text-3:#7E7666;
+  --gold:#D7BE7A; --gold-dark:#E4D0A0; --gold-tint:#241E12; --gold-line:#3D3320;
+  --sage:#7FBF93; --sage-t:#15271B; --biru:#7CB0F7; --biru-t:#152438;
+  --terra:#E59072; --terra-t:#2E1C14; --hijau:#5FD394; --hijau-t:#122A1E;
+  --merah:#F58E85; --merah-t:#301917; --oranye:#E8A94F; --oranye-t:#2C2211;
+  --abu:#9A9384; --abu-t:#232019;
+  color-scheme:dark;
+}
+
+*{box-sizing:border-box}
+html,body{margin:0;padding:0}
+body{background:var(--bg);color:var(--text);font-family:var(--ff);font-size:16px;line-height:1.55;
+  -webkit-font-smoothing:antialiased}
+h1,h2,h3{margin:0;font-family:var(--fd);font-weight:600;letter-spacing:-.2px;text-wrap:balance}
+h1{font-size:clamp(26px,4.5vw,38px)}
+h2{font-size:clamp(20px,3vw,26px)}
+h3{font-size:18px;font-family:var(--ff);font-weight:700;letter-spacing:0}
+p{margin:0}
+a{color:var(--biru)}
+:focus-visible{outline:2px solid var(--gold);outline-offset:2px;border-radius:6px}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+
+.bungkus{max-width:1180px;margin:0 auto;padding-inline:18px}
+.sempit{max-width:560px}
+.mini{font-size:12.5px;color:var(--text-3);line-height:1.5}
+.nihil{color:var(--text-3);font-style:italic}
+
+/* ---- kartu ---- */
+.kartu{background:var(--surface);border:1px solid var(--border);border-radius:var(--r);
+  padding:18px;box-shadow:var(--bayang);min-width:0}
+.kartu + .kartu{margin-top:14px}
+.kartu-h{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:12px}
+.kartu-h h3{flex:1;min-width:0}
+
+/* ---- tombol ---- */
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:7px;border:1px solid transparent;
+  border-radius:var(--r-sm);padding:11px 18px;font:inherit;font-size:15px;font-weight:600;
+  cursor:pointer;background:var(--gold);color:#fff;transition:filter .15s;min-height:44px}
+.btn:hover:not(:disabled){filter:brightness(1.08)}
+.btn:disabled{opacity:.55;cursor:default}
+.btn.hantu{background:var(--surface);color:var(--text-2);border-color:var(--border)}
+.btn.hantu:hover:not(:disabled){border-color:var(--gold-line);color:var(--gold-dark)}
+.btn.bahaya{background:var(--merah)}
+.btn.kecil{padding:6px 12px;font-size:13px;min-height:34px}
+.btn.lebar{width:100%}
+
+/* ---- isian ---- */
+.isian{display:flex;flex-direction:column;gap:6px;margin-bottom:14px;min-width:0}
+.isian label{font-size:13px;font-weight:600;color:var(--text-2)}
+.isian label i{font-style:normal;color:var(--merah)}
+.isian input,.isian select,.isian textarea{width:100%;border:1px solid var(--border);
+  background:var(--surface);color:var(--text);border-radius:var(--r-sm);padding:12px 13px;
+  font:inherit;font-size:16px;outline:0;min-width:0}
+.isian textarea{resize:vertical;min-height:88px;line-height:1.55}
+.isian input:focus,.isian select:focus,.isian textarea:focus{border-color:var(--gold);
+  box-shadow:0 0 0 3px var(--gold-tint)}
+.isian.salah input,.isian.salah select,.isian.salah textarea{border-color:var(--merah);background:var(--merah-t)}
+.isian .galat{font-size:12.5px;color:var(--merah);font-weight:600}
+.isian .bantu{font-size:12.5px;color:var(--text-3);line-height:1.5}
+.pilihan{display:flex;gap:10px;align-items:flex-start;padding:11px 12px;border:1px solid var(--border);
+  border-radius:var(--r-sm);cursor:pointer;background:var(--surface);margin-bottom:9px}
+.pilihan:hover{border-color:var(--gold-line)}
+.pilihan input{width:20px;height:20px;flex:0 0 20px;margin-top:2px;accent-color:var(--gold)}
+.pilihan span{flex:1;min-width:0}
+.pilihan b{display:block;font-size:15px}
+.pilihan em{display:block;font-style:normal;font-size:12.5px;color:var(--text-3);margin-top:2px}
+
+/* ---- label status: selalu ada teksnya ---- */
+.lbl{display:inline-flex;align-items:center;gap:5px;font-size:12px;font-weight:700;
+  padding:3px 9px;border-radius:20px;white-space:nowrap}
+.lbl.sage{background:var(--sage-t);color:var(--sage)}
+.lbl.biru{background:var(--biru-t);color:var(--biru)}
+.lbl.terra{background:var(--terra-t);color:var(--terra)}
+.lbl.hijau{background:var(--hijau-t);color:var(--hijau)}
+.lbl.merah{background:var(--merah-t);color:var(--merah)}
+.lbl.oranye{background:var(--oranye-t);color:var(--oranye)}
+.lbl.abu{background:var(--abu-t);color:var(--abu)}
+.lbl.emas{background:var(--gold-tint);color:var(--gold-dark)}
+
+/* ---- keadaan ---- */
+.keadaan{padding:30px 20px;text-align:center;color:var(--text-2);border:1px dashed var(--border);
+  border-radius:var(--r);background:var(--surface-2)}
+.keadaan b{display:block;font-size:17px;color:var(--text);margin-bottom:6px;font-family:var(--fd)}
+.keadaan p{font-size:14px;margin-bottom:12px;max-width:52ch;margin-inline:auto}
+.keadaan.gagal{border-color:var(--merah);background:var(--merah-t)}
+.keadaan.gagal b{color:var(--merah)}
+.keadaan.memuat{border-style:solid;display:flex;align-items:center;justify-content:center;gap:10px}
+.putar{width:15px;height:15px;border:2px solid var(--border);border-top-color:var(--gold);
+  border-radius:50%;display:inline-block;animation:putar .7s linear infinite}
+@keyframes putar{to{transform:rotate(360deg)}}
+
+/* ---- toast ---- */
+.toast{position:fixed;left:50%;bottom:22px;transform:translate(-50%,160%);background:#241F17;color:#F5EFE2;
+  padding:12px 18px;border-radius:12px;font-size:14px;font-weight:600;z-index:400;
+  transition:transform .28s cubic-bezier(.2,.9,.3,1);max-width:calc(100vw - 32px);box-shadow:var(--bayang)}
+.toast.on{transform:translate(-50%,0)}
+.toast.gagal{background:var(--merah);color:#fff}
+.toast.sukses{background:var(--hijau);color:#fff}
+
+/* ---- tabel ---- */
+.gulir{overflow-x:auto;margin-inline:-18px;padding-inline:18px}
+table.data{width:100%;border-collapse:collapse;font-size:14.5px;min-width:620px}
+table.data th{text-align:left;font-size:11.5px;font-weight:700;letter-spacing:.7px;text-transform:uppercase;
+  color:var(--text-3);padding:0 12px 9px;white-space:nowrap}
+table.data td{padding:12px;border-top:1px solid var(--border-soft);vertical-align:middle}
+table.data tbody tr:hover{background:var(--surface-2)}
+table.data .angka{text-align:right;font-variant-numeric:tabular-nums}
+
+/* ---- bilah atas ---- */
+.atas{position:sticky;top:0;z-index:50;background:color-mix(in srgb,var(--bg) 90%,transparent);
+  backdrop-filter:blur(10px);border-bottom:1px solid var(--border-soft)}
+.atas-in{display:flex;align-items:center;gap:12px;min-height:58px}
+.merek{font-family:var(--fd);font-weight:700;font-size:19px;white-space:nowrap}
+.merek em{font-style:normal;color:var(--gold-dark);font-size:11px;letter-spacing:.16em;
+  text-transform:uppercase;display:block;line-height:1;margin-top:1px;font-family:var(--ff);font-weight:700}
+.tumbuh{flex:1}
+
+/* ---- tab ---- */
+.tab{display:flex;gap:3px;border-bottom:1px solid var(--border);margin-bottom:16px;overflow-x:auto}
+.tab button{padding:10px 15px;font:inherit;font-size:14.5px;font-weight:600;color:var(--text-2);
+  background:none;border:0;border-bottom:2px solid transparent;cursor:pointer;white-space:nowrap}
+.tab button[aria-selected="true"]{color:var(--gold-dark);border-bottom-color:var(--gold)}
+
+/* ---- langkah ---- */
+.langkah{display:flex;gap:7px;align-items:center;margin-bottom:18px;font-size:12.5px;color:var(--text-3)}
+.langkah i{flex:1;height:4px;border-radius:3px;background:var(--surface-3);font-style:normal}
+.langkah i.on{background:var(--gold)}
+
+/* ---- daftar baris ---- */
+.baris{display:flex;gap:12px;align-items:flex-start;padding:12px 0;border-top:1px solid var(--border-soft)}
+.baris:first-child{border-top:0}
+.baris .pokok{flex:1;min-width:0}
+.baris .pokok b{display:block;font-size:15px;font-weight:600}
+.baris .pokok span{display:block;font-size:13px;color:var(--text-3)}
+
+.kisi{display:grid;gap:14px}
+@media(min-width:760px){ .kisi.dua{grid-template-columns:1fr 1fr} .kisi.tiga{grid-template-columns:repeat(3,1fr)} }
+.deret{display:flex;gap:9px;flex-wrap:wrap;align-items:center}
+
+@media(max-width:560px){
+  body{font-size:15.5px}
+  .kartu{padding:15px}
+  .bungkus{padding-inline:16px}
+  .gulir{margin-inline:-15px;padding-inline:15px}
+}
+
+/* ---- lapis formulir ---- */
+.lapis{position:fixed;inset:0;z-index:420;background:rgba(28,22,12,.5);backdrop-filter:blur(3px);
+  display:flex;align-items:center;justify-content:center;padding:18px}
+.lapis-kotak{background:var(--surface);border:1px solid var(--border);border-radius:var(--r);
+  padding:20px;width:100%;max-width:440px;max-height:88vh;overflow:auto;box-shadow:var(--bayang)}
+.lapis-kotak h3{margin-bottom:4px}
+
+/* ============ RODA LIFE MASTERY ============
+   Dipakai di ponsel peserta dan di proyektor. Warna sektornya ditulis
+   langsung di SVG (delapan slot kategorikal berurutan tetap); yang
+   diatur di sini hanya permukaan, garis panduan, dan tinta — supaya
+   roda yang sama terbaca di latar terang maupun gelap. */
+.rd{--rd-bg:var(--surface);--rd-grid:var(--border);--rd-ink:var(--text);--rd-ink2:var(--text-3)}
+.rd svg{display:block;width:100%;height:auto}
+.rd-tabel{width:100%;border-collapse:collapse;font-size:13.5px;margin-top:10px}
+.rd-tabel th,.rd-tabel td{text-align:left;padding:6px 8px;border-top:1px solid var(--border-soft)}
+.rd-tabel thead th{font-size:11.5px;letter-spacing:.06em;text-transform:uppercase;
+  color:var(--text-3);border-top:0}
+.rd-tabel tbody th{font-weight:600;display:flex;align-items:center;gap:8px}
+.rd-tabel tbody th i{width:11px;height:11px;border-radius:3px;flex:0 0 11px;display:inline-block}
+</style>
 <style>
 /* Layar ini dilihat dari belakang ruangan: kontras tinggi, huruf besar,
    tanpa satu pun elemen yang membawa data pribadi. */
@@ -73,9 +281,1124 @@ main{padding:26px}
   menarik ulang data — ini polling, bukan realtime, dan waktu pembaruan terakhir tertulis di sudut atas.</p>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.js"></script>
-<script src="../lib/qr.js"></script>
-<script src="../config.js"></script>
-<script src="../lib/app.js"></script>
-<script src="../lib/proyektor.js"></script>
+<script>
+/* =====================================================================
+   QR — pembuat kode QR mandiri, tanpa pustaka luar.
+
+   Mengapa ditulis sendiri dan tidak mengambil dari CDN:
+
+   1. Layar sesi dipakai di ruangan, kadang dengan internet yang buruk.
+      Kalau QR-nya bergantung pada CDN, satu kegagalan muat berarti
+      peserta tidak bisa bergabung.
+   2. Ketentuan NP-V08: "Buat QR nyata dari URL sesi yang valid. Jangan
+      memakai QR ilustrasi." Kode di sini DIUJI dengan cara dibaca
+      kembali oleh pembaca QR sungguhan (OpenCV) dari gambar hasil
+      render — bukan sekadar dianggap benar.
+
+   Cakupan yang disengaja: mode byte (UTF-8), tingkat koreksi M,
+   versi 1 sampai 10 (maksimum 216 bita). Di atas itu fungsi ini
+   MELEMPAR error, bukan menghasilkan gambar yang salah. Alamat sesi
+   jauh di bawah batas itu.
+
+   Acuan: ISO/IEC 18004.
+   ===================================================================== */
+(function (global) {
+  'use strict';
+
+  /* ---------------- tabel: [total kodeword, ecc per blok, blok grup1,
+                              data grup1, blok grup2, data grup2] ----- */
+  var M_TABEL = {
+    1:  [26,  10, 1, 16, 0, 0],
+    2:  [44,  16, 1, 28, 0, 0],
+    3:  [70,  26, 1, 44, 0, 0],
+    4:  [100, 18, 2, 32, 0, 0],
+    5:  [134, 24, 2, 43, 0, 0],
+    6:  [172, 16, 4, 27, 0, 0],
+    7:  [196, 18, 4, 31, 0, 0],
+    8:  [242, 22, 2, 38, 2, 39],
+    9:  [292, 22, 3, 36, 2, 37],
+    10: [346, 26, 4, 43, 1, 44]
+  };
+  var SEJAJAR = {
+    1: [], 2: [6, 18], 3: [6, 22], 4: [6, 26], 5: [6, 30],
+    6: [6, 34], 7: [6, 22, 38], 8: [6, 24, 42], 9: [6, 26, 46], 10: [6, 28, 50]
+  };
+
+  /* ---------------- GF(256) ---------------- */
+  var EXP = new Array(512), LOG = new Array(256);
+  (function () {
+    var x = 1;
+    for (var i = 0; i < 255; i++) { EXP[i] = x; LOG[x] = i; x <<= 1; if (x & 0x100) x ^= 0x11D; }
+    for (i = 255; i < 512; i++) EXP[i] = EXP[i - 255];
+  })();
+  function gmul(a, b) { return (a === 0 || b === 0) ? 0 : EXP[LOG[a] + LOG[b]]; }
+
+  function polGenerator(n) {
+    var g = [1];
+    for (var i = 0; i < n; i++) {
+      var baru = new Array(g.length + 1).fill(0);
+      for (var j = 0; j < g.length; j++) {
+        baru[j] ^= g[j];
+        baru[j + 1] ^= gmul(g[j], EXP[i]);
+      }
+      g = baru;
+    }
+    return g;
+  }
+
+  function ecc(data, n) {
+    var g = polGenerator(n), sisa = data.slice().concat(new Array(n).fill(0));
+    for (var i = 0; i < data.length; i++) {
+      var k = sisa[i];
+      if (k === 0) continue;
+      for (var j = 0; j < g.length; j++) sisa[i + j] ^= gmul(g[j], k);
+    }
+    return sisa.slice(data.length);
+  }
+
+  /* ---------------- UTF-8 ---------------- */
+  function bita(s) {
+    var out = [];
+    for (var i = 0; i < s.length; i++) {
+      var c = s.codePointAt(i);
+      if (c > 0xFFFF) i++;
+      if (c < 0x80) out.push(c);
+      else if (c < 0x800) out.push(0xC0 | (c >> 6), 0x80 | (c & 63));
+      else if (c < 0x10000) out.push(0xE0 | (c >> 12), 0x80 | ((c >> 6) & 63), 0x80 | (c & 63));
+      else out.push(0xF0 | (c >> 18), 0x80 | ((c >> 12) & 63), 0x80 | ((c >> 6) & 63), 0x80 | (c & 63));
+    }
+    return out;
+  }
+
+  /* ---------------- bit stream ---------------- */
+  function Bits() { this.b = []; }
+  Bits.prototype.tulis = function (nilai, panjang) {
+    for (var i = panjang - 1; i >= 0; i--) this.b.push((nilai >>> i) & 1);
+  };
+
+  /* ---------------- BCH ---------------- */
+  function bchFormat(data) {
+    var d = data << 10;
+    while (derajat(d) >= 11) d ^= 0x537 << (derajat(d) - 11);
+    return ((data << 10) | d) ^ 0x5412;
+  }
+  function bchVersi(data) {
+    var d = data << 12;
+    while (derajat(d) >= 13) d ^= 0x1F25 << (derajat(d) - 13);
+    return (data << 12) | d;
+  }
+  function derajat(n) { var d = 0; while (n !== 0) { d++; n >>>= 1; } return d; }
+
+  /* ---------------- matriks ---------------- */
+  function kosong(size) {
+    var m = [];
+    for (var i = 0; i < size; i++) m.push(new Array(size).fill(null));
+    return m;
+  }
+
+  function taruhFinder(m, r, c) {
+    for (var i = -1; i <= 7; i++) for (var j = -1; j <= 7; j++) {
+      var y = r + i, x = c + j;
+      if (y < 0 || x < 0 || y >= m.length || x >= m.length) continue;
+      var di = (i >= 0 && i <= 6 && (j === 0 || j === 6)) ||
+               (j >= 0 && j <= 6 && (i === 0 || i === 6)) ||
+               (i >= 2 && i <= 4 && j >= 2 && j <= 4);
+      m[y][x] = di ? 1 : 0;
+    }
+  }
+
+  function taruhSejajar(m, versi) {
+    var pos = SEJAJAR[versi], size = m.length;
+    for (var a = 0; a < pos.length; a++) for (var b = 0; b < pos.length; b++) {
+      var r = pos[a], c = pos[b];
+      /* lewati yang bertabrakan dengan finder */
+      if ((r <= 8 && c <= 8) || (r <= 8 && c >= size - 9) || (r >= size - 9 && c <= 8)) continue;
+      for (var i = -2; i <= 2; i++) for (var j = -2; j <= 2; j++)
+        m[r + i][c + j] = (Math.abs(i) === 2 || Math.abs(j) === 2 || (i === 0 && j === 0)) ? 1 : 0;
+    }
+  }
+
+  function taruhTiming(m) {
+    for (var i = 8; i < m.length - 8; i++) {
+      if (m[6][i] === null) m[6][i] = (i % 2 === 0) ? 1 : 0;
+      if (m[i][6] === null) m[i][6] = (i % 2 === 0) ? 1 : 0;
+    }
+  }
+
+  /* posisi 15 bit format, dua salinan */
+  function selFormat(size) {
+    var a = [], i;
+    for (i = 0; i <= 5; i++) a.push([8, i]);
+    a.push([8, 7]); a.push([8, 8]); a.push([7, 8]);
+    for (i = 5; i >= 0; i--) a.push([i, 8]);
+    var b = [];
+    for (i = 0; i <= 6; i++) b.push([size - 1 - i, 8]);
+    for (i = 7; i >= 0; i--) b.push([8, size - 8 + (7 - i)]);
+    return [a, b];
+  }
+
+  function cadangkanFormat(m) {
+    var size = m.length, f = selFormat(size), i;
+    for (i = 0; i < 15; i++) { m[f[0][i][0]][f[0][i][1]] = 0; m[f[1][i][0]][f[1][i][1]] = 0; }
+    m[size - 8][8] = 1;   /* modul gelap */
+  }
+
+  function cadangkanVersi(m, versi) {
+    if (versi < 7) return;
+    var size = m.length;
+    for (var i = 0; i < 18; i++) {
+      m[Math.floor(i / 3)][size - 11 + (i % 3)] = 0;
+      m[size - 11 + (i % 3)][Math.floor(i / 3)] = 0;
+    }
+  }
+
+  function tulisVersi(m, versi) {
+    if (versi < 7) return;
+    var size = m.length, v = bchVersi(versi);
+    for (var i = 0; i < 18; i++) {
+      var bit = (v >>> i) & 1;
+      m[Math.floor(i / 3)][size - 11 + (i % 3)] = bit;
+      m[size - 11 + (i % 3)][Math.floor(i / 3)] = bit;
+    }
+  }
+
+  function tulisFormat(m, mask) {
+    var size = m.length, f = selFormat(size);
+    var v = bchFormat((0 << 3) | mask);   /* 00 = tingkat M */
+    for (var i = 0; i < 15; i++) {
+      var bit = (v >>> (14 - i)) & 1;
+      m[f[0][i][0]][f[0][i][1]] = bit;
+      m[f[1][i][0]][f[1][i][1]] = bit;
+    }
+    m[size - 8][8] = 1;
+  }
+
+  function maskFn(k, i, j) {
+    switch (k) {
+      case 0: return (i + j) % 2 === 0;
+      case 1: return i % 2 === 0;
+      case 2: return j % 3 === 0;
+      case 3: return (i + j) % 3 === 0;
+      case 4: return (Math.floor(i / 2) + Math.floor(j / 3)) % 2 === 0;
+      case 5: return ((i * j) % 2) + ((i * j) % 3) === 0;
+      case 6: return (((i * j) % 2) + ((i * j) % 3)) % 2 === 0;
+      case 7: return (((i + j) % 2) + ((i * j) % 3)) % 2 === 0;
+    }
+  }
+
+  function denda(m) {
+    var size = m.length, n = 0, i, j, r, c;
+    /* aturan 1: deret >= 5 */
+    for (i = 0; i < size; i++) {
+      var deretB = 1, deretK = 1;
+      for (j = 1; j < size; j++) {
+        if (m[i][j] === m[i][j - 1]) deretB++;
+        else { if (deretB >= 5) n += 3 + (deretB - 5); deretB = 1; }
+        if (m[j][i] === m[j - 1][i]) deretK++;
+        else { if (deretK >= 5) n += 3 + (deretK - 5); deretK = 1; }
+      }
+      if (deretB >= 5) n += 3 + (deretB - 5);
+      if (deretK >= 5) n += 3 + (deretK - 5);
+    }
+    /* aturan 2: blok 2x2 */
+    for (i = 0; i < size - 1; i++) for (j = 0; j < size - 1; j++) {
+      var v = m[i][j];
+      if (v === m[i][j + 1] && v === m[i + 1][j] && v === m[i + 1][j + 1]) n += 3;
+    }
+    /* aturan 3: pola 1:1:3:1:1 dengan ruang kosong 4 */
+    var polaA = [1, 0, 1, 1, 1, 0, 1, 0, 0, 0, 0];
+    var polaB = [0, 0, 0, 0, 1, 0, 1, 1, 1, 0, 1];
+    function cocok(get, k) {
+      for (var t = 0; t < 11; t++) if (get(k + t) !== polaA[t]) return false;
+      return true;
+    }
+    function cocokB(get, k) {
+      for (var t = 0; t < 11; t++) if (get(k + t) !== polaB[t]) return false;
+      return true;
+    }
+    for (i = 0; i < size; i++) {
+      for (j = 0; j + 11 <= size; j++) {
+        var gb = (function (ii) { return function (x) { return m[ii][x]; }; })(i);
+        var gk = (function (jj) { return function (x) { return m[x][jj]; }; })(i);
+        if (cocok(gb, j) || cocokB(gb, j)) n += 40;
+        if (cocok(gk, j) || cocokB(gk, j)) n += 40;
+      }
+    }
+    /* aturan 4: keseimbangan gelap-terang */
+    var gelap = 0;
+    for (i = 0; i < size; i++) for (j = 0; j < size; j++) if (m[i][j]) gelap++;
+    var persen = gelap * 100 / (size * size);
+    n += Math.floor(Math.abs(persen - 50) / 5) * 10;
+    return n;
+  }
+
+  /* ---------------- utama ---------------- */
+  function matriks(teks) {
+    var d = bita(teks), versi = 0, i, j;
+    for (var v = 1; v <= 10; v++) {
+      var t = M_TABEL[v];
+      var dataKw = t[2] * t[3] + t[4] * t[5];
+      var hitungBit = 4 + (v < 10 ? 8 : 16) + d.length * 8;
+      if (hitungBit <= dataKw * 8) { versi = v; break; }
+    }
+    if (!versi) throw new Error('Teks terlalu panjang untuk QR versi 1-10 (maksimum 216 bita).');
+
+    var tab = M_TABEL[versi];
+    var eccPer = tab[1], b1 = tab[2], d1 = tab[3], b2 = tab[4], d2 = tab[5];
+    var totalData = b1 * d1 + b2 * d2;
+
+    var bs = new Bits();
+    bs.tulis(4, 4);                               /* mode byte */
+    bs.tulis(d.length, versi < 10 ? 8 : 16);
+    for (i = 0; i < d.length; i++) bs.tulis(d[i], 8);
+    var sisaBit = totalData * 8 - bs.b.length;
+    bs.tulis(0, Math.min(4, sisaBit));            /* terminator */
+    while (bs.b.length % 8 !== 0) bs.b.push(0);
+    var pad = [0xEC, 0x11], p = 0;
+    while (bs.b.length / 8 < totalData) { bs.tulis(pad[p % 2], 8); p++; }
+
+    var kw = [];
+    for (i = 0; i < bs.b.length; i += 8) {
+      var byt = 0;
+      for (j = 0; j < 8; j++) byt = (byt << 1) | bs.b[i + j];
+      kw.push(byt);
+    }
+
+    /* pecah ke blok, hitung ECC */
+    var blokData = [], blokEcc = [], ofs = 0, k;
+    for (k = 0; k < b1; k++) { blokData.push(kw.slice(ofs, ofs + d1)); ofs += d1; }
+    for (k = 0; k < b2; k++) { blokData.push(kw.slice(ofs, ofs + d2)); ofs += d2; }
+    for (k = 0; k < blokData.length; k++) blokEcc.push(ecc(blokData[k], eccPer));
+
+    /* selang-seling */
+    var urut = [], maxD = Math.max(d1, d2);
+    for (i = 0; i < maxD; i++) for (k = 0; k < blokData.length; k++)
+      if (i < blokData[k].length) urut.push(blokData[k][i]);
+    for (i = 0; i < eccPer; i++) for (k = 0; k < blokEcc.length; k++) urut.push(blokEcc[k][i]);
+
+    var bit = [];
+    for (i = 0; i < urut.length; i++) for (j = 7; j >= 0; j--) bit.push((urut[i] >>> j) & 1);
+
+    /* rangka */
+    var size = versi * 4 + 17, m = kosong(size);
+    taruhFinder(m, 0, 0); taruhFinder(m, 0, size - 7); taruhFinder(m, size - 7, 0);
+    taruhSejajar(m, versi); taruhTiming(m);
+    cadangkanFormat(m); cadangkanVersi(m, versi);
+
+    /* tempat data: kolom berpasangan dari kanan, zigzag, lewati kolom 6 */
+    var kerangka = m.map(function (r) { return r.slice(); });
+    var idx = 0, naik = true;
+    for (var col = size - 1; col > 0; col -= 2) {
+      if (col === 6) col = 5;
+      for (var s = 0; s < size; s++) {
+        var row = naik ? size - 1 - s : s;
+        for (var dc = 0; dc < 2; dc++) {
+          var cc = col - dc;
+          if (kerangka[row][cc] !== null) continue;
+          m[row][cc] = idx < bit.length ? bit[idx] : 0;
+          idx++;
+        }
+      }
+      naik = !naik;
+    }
+
+    /* pilih mask dengan denda terkecil */
+    var terbaik = null, dendaTerbaik = Infinity;
+    for (var mk = 0; mk < 8; mk++) {
+      var cand = m.map(function (r) { return r.slice(); });
+      for (i = 0; i < size; i++) for (j = 0; j < size; j++)
+        if (kerangka[i][j] === null && maskFn(mk, i, j)) cand[i][j] ^= 1;
+      tulisFormat(cand, mk); tulisVersi(cand, versi);
+      var sk = denda(cand);
+      if (sk < dendaTerbaik) { dendaTerbaik = sk; terbaik = cand; }
+    }
+    return terbaik;
+  }
+
+  /* ---------------- SVG ---------------- */
+  function svg(teks, opsi) {
+    var o = opsi || {}, tepi = o.margin === undefined ? 2 : o.margin;
+    var m = matriks(teks), size = m.length, total = size + tepi * 2;
+    var jalur = '';
+    for (var i = 0; i < size; i++) for (var j = 0; j < size; j++)
+      if (m[i][j]) jalur += 'M' + (j + tepi) + ' ' + (i + tepi) + 'h1v1h-1z';
+    return '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ' + total + ' ' + total + '" ' +
+      'shape-rendering="crispEdges" role="img" aria-label="Kode QR alamat sesi">' +
+      '<rect width="' + total + '" height="' + total + '" fill="#fff"/>' +
+      '<path d="' + jalur + '" fill="#000"/></svg>';
+  }
+
+  global.AJIQR = { matriks: matriks, svg: svg };
+})(typeof window !== 'undefined' ? window : globalThis);
+</script>
+<script>
+/* =====================================================================
+   RODA LIFE MASTERY — delapan sektor, terisi dari pusat ke tepi.
+
+   Dipakai dua tempat dengan gambar yang sama persis:
+     - ponsel peserta, memperlihatkan jawabannya sendiri sambil mengisi
+     - proyektor, memperlihatkan rata-rata seluruh kelas tanpa nama
+
+   Tiga hal yang dipegang ketat di berkas ini:
+
+   1. BELUM DIJAWAB BUKAN NOL. Aspek yang belum dijawab tidak digambar
+      sebagai sektor kosong — sektor kosong terbaca sebagai nilai 0.
+      Yang digambar garis putus-putus sampai tepi, dan angkanya ditulis
+      "belum", bukan "0".
+   2. NILAI 0 ADALAH JAWABAN SAH. Ia digambar sebagai titik kecil di
+      pusat dengan angka 0 yang jelas terbaca — bukan tidak digambar.
+   3. SETIAP SEKTOR DIBERI NAMA DAN ANGKA. Warna hanya pembeda
+      tambahan; identitas sektor datang dari tulisannya. Itu juga yang
+      membuat roda ini tetap terbaca oleh mata yang sulit membedakan
+      warna, dan di proyektor yang warnanya pudar.
+
+   Warna: delapan slot kategorikal berurutan tetap, sudah lolos
+   pemeriksaan keterbedaan warna (termasuk untuk buta warna) pada
+   pasangan yang bersebelahan — dan di roda, yang bersebelahan memang
+   yang perlu dibedakan.
+   ===================================================================== */
+(function (global) {
+  'use strict';
+
+  /* Delapan aspek roda Life Mastery, searah jarum jam dari atas.
+     Urutan ini mengikuti gambar tangan Aji dan tidak diacak. */
+  const ASPEK = [
+    'Physical Body',
+    'Mind & Emotion',
+    'Relationship',
+    'Family',
+    'Sosial / Friends / Fun',
+    'Career / Business',
+    'Financial',
+    'Spirituality'
+  ];
+
+  const WARNA = ['#2a78d6', '#eb6834', '#1baf7a', '#eda100',
+                 '#e87ba4', '#008300', '#4a3aa7', '#e34948'];
+
+  const esc = s => String(s == null ? '' : s)
+    .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;');
+
+  const rad = d => (d - 90) * Math.PI / 180;
+  const titik = (cx, cy, r, d) => [cx + r * Math.cos(rad(d)), cy + r * Math.sin(rad(d))];
+
+  /* Satu juring dari pusat. */
+  function juring(cx, cy, r, a1, a2) {
+    if (r <= 0.01) return '';
+    const [x1, y1] = titik(cx, cy, r, a1);
+    const [x2, y2] = titik(cx, cy, r, a2);
+    const besar = (a2 - a1) > 180 ? 1 : 0;
+    return 'M' + cx + ' ' + cy + ' L' + x1.toFixed(2) + ' ' + y1.toFixed(2) +
+           ' A' + r + ' ' + r + ' 0 ' + besar + ' 1 ' + x2.toFixed(2) + ' ' + y2.toFixed(2) + ' Z';
+  }
+
+  /* Busur tepi saja, untuk menandai aspek yang belum dijawab. */
+  function busur(cx, cy, r, a1, a2) {
+    const [x1, y1] = titik(cx, cy, r, a1);
+    const [x2, y2] = titik(cx, cy, r, a2);
+    return 'M' + x1.toFixed(2) + ' ' + y1.toFixed(2) +
+           ' A' + r + ' ' + r + ' 0 0 1 ' + x2.toFixed(2) + ' ' + y2.toFixed(2);
+  }
+
+  /* nilai: larik 8 angka 0-10, atau null untuk "belum dijawab".
+     opsi.sub  : larik keterangan kecil di bawah angka (mis. "dari 37")
+     opsi.judul: tulisan di tengah roda
+     opsi.besar: true untuk proyektor — huruf diperbesar */
+  function svg(nilai, opsi) {
+    const o = opsi || {};
+    const besar = !!o.besar;
+    const W = 620, H = 560, cx = 310, cy = 290, R = 190;
+    const celah = 1.1;                       /* derajat, memberi sela antar sektor */
+    const fLabel = besar ? 19 : 15;
+    const fAngka = besar ? 27 : 21;
+
+    let isi = '';
+
+    /* lingkaran panduan 2-4-6-8-10, sengaja tipis dan pudar */
+    for (let g = 2; g <= 10; g += 2) {
+      isi += '<circle cx="' + cx + '" cy="' + cy + '" r="' + (R * g / 10).toFixed(1) +
+        '" fill="none" stroke="var(--rd-grid)" stroke-width="1"/>';
+    }
+
+    for (let i = 0; i < 8; i++) {
+      const a1 = i * 45 + celah, a2 = (i + 1) * 45 - celah;
+      const v = nilai[i];
+      const ada = (v !== null && v !== undefined && v !== '');
+      const n = ada ? Math.max(0, Math.min(10, Number(v))) : null;
+      const w = WARNA[i];
+
+      if (ada && n > 0) {
+        isi += '<path d="' + juring(cx, cy, R * n / 10, a1, a2) + '" fill="' + w +
+               '" fill-opacity="0.85" stroke="var(--rd-bg)" stroke-width="2"/>';
+      } else if (ada) {
+        /* nilai 0 yang benar-benar dipilih: titik di pusat, bukan kekosongan */
+        isi += '<circle cx="' + cx + '" cy="' + cy + '" r="4" fill="' + w + '"/>';
+      }
+
+      /* tepi sektor selalu digambar, supaya pembagian delapan selalu terlihat */
+      isi += '<path d="' + busur(cx, cy, R, a1, a2) + '" fill="none" stroke="' + w +
+             '" stroke-width="' + (ada ? 2.5 : 2) + '"' +
+             (ada ? '' : ' stroke-dasharray="5 5" stroke-opacity="0.55"') + '/>';
+
+      /* angka di dalam sektor */
+      const aTengah = i * 45 + 22.5;
+      const rAngka = ada && n > 2.2 ? R * n / 10 * 0.62 : R * 0.17;
+      const [tx, ty] = titik(cx, cy, rAngka, aTengah);
+      isi += '<text x="' + tx.toFixed(1) + '" y="' + (ty + fAngka * 0.34).toFixed(1) +
+             '" text-anchor="middle" font-size="' + (ada ? fAngka : fAngka * 0.62) +
+             '" font-weight="700" fill="' + (ada && n > 2.2 ? '#fff' : 'var(--rd-ink2)') + '"' +
+             (ada && n > 2.2 ? ' stroke="rgba(0,0,0,.28)" stroke-width="3" paint-order="stroke"' : '') +
+             '>' + (ada ? String(n).replace('.', ',') : 'belum') + '</text>';
+
+      /* nama aspek di luar lingkaran */
+      const [lx, ly] = titik(cx, cy, R + 30, aTengah);
+      const kiri = Math.cos(rad(aTengah)) < -0.25;
+      const kanan = Math.cos(rad(aTengah)) > 0.25;
+      const anchor = kiri ? 'end' : kanan ? 'start' : 'middle';
+      const baris = ASPEK[i].split(' / ');
+      isi += '<text x="' + lx.toFixed(1) + '" y="' + ly.toFixed(1) +
+             '" text-anchor="' + anchor + '" font-size="' + fLabel +
+             '" font-weight="600" fill="var(--rd-ink)">' +
+             baris.map((b, k) => '<tspan x="' + lx.toFixed(1) + '" dy="' +
+               (k === 0 ? (baris.length > 1 ? -fLabel * 0.5 : 0) : fLabel * 1.15) + '">' +
+               esc(b) + '</tspan>').join('') + '</text>';
+
+      /* keterangan kecil (mis. berapa orang menjawab aspek ini) */
+      if (o.sub && o.sub[i]) {
+        const [sx, sy] = titik(cx, cy, R + 30, aTengah);
+        isi += '<text x="' + sx.toFixed(1) + '" y="' +
+               (sy + fLabel * (baris.length > 1 ? 1.8 : 1.25)).toFixed(1) +
+               '" text-anchor="' + anchor + '" font-size="' + (fLabel * 0.72) +
+               '" fill="var(--rd-ink2)">' + esc(o.sub[i]) + '</text>';
+      }
+    }
+
+    /* pusat */
+    isi += '<circle cx="' + cx + '" cy="' + cy + '" r="' + (besar ? 34 : 28) +
+           '" fill="var(--rd-bg)" stroke="var(--rd-grid)" stroke-width="1.5"/>';
+    if (o.judul) {
+      isi += '<text x="' + cx + '" y="' + (cy + (besar ? 7 : 6)) +
+             '" text-anchor="middle" font-size="' + (besar ? 20 : 16) +
+             '" font-weight="700" fill="var(--rd-ink)">' + esc(o.judul) + '</text>';
+    }
+
+    return '<svg viewBox="0 0 ' + W + ' ' + H + '" role="img" width="100%" ' +
+      'aria-label="' + esc(o.alt || 'Roda Life Mastery, delapan aspek, nilai 0 sampai 10') +
+      '" style="display:block;max-width:100%;height:auto">' + isi + '</svg>';
+  }
+
+  /* Tabel yang menyertai roda. Bukan hiasan: ia yang membuat angkanya
+     tetap terbaca kalau warnanya tidak terbedakan, dan terbaca pembaca
+     layar. */
+  function tabel(nilai, sub) {
+    return '<table class="rd-tabel"><thead><tr><th>Aspek</th><th>Nilai</th>' +
+      (sub ? '<th>Keterangan</th>' : '') + '</tr></thead><tbody>' +
+      ASPEK.map((a, i) => {
+        const v = nilai[i];
+        const ada = (v !== null && v !== undefined && v !== '');
+        return '<tr><th scope="row"><i style="background:' + WARNA[i] + '"></i>' + esc(a) + '</th>' +
+          '<td>' + (ada ? String(v).replace('.', ',') + ' / 10'
+                        : '<span class="nihil">belum dijawab</span>') + '</td>' +
+          (sub ? '<td>' + esc(sub[i] || '') + '</td>' : '') + '</tr>';
+      }).join('') + '</tbody></table>';
+  }
+
+  global.RODA = { ASPEK: ASPEK, WARNA: WARNA, svg: svg, tabel: tabel };
+})(typeof window !== 'undefined' ? window : globalThis);
+</script>
+<script>
+/* =====================================================================
+   KONFIGURASI — satu-satunya berkas yang perlu Anda isi sendiri.
+
+   Keduanya diambil dari:
+   Dashboard Supabase → Project Settings → API Keys
+
+   Dua nilai ini MEMANG PUBLIK. Keduanya tertanam di setiap halaman yang
+   dibuka peserta dan terbaca siapa pun yang melihat kode halaman. Yang
+   melindungi data bukan kerahasiaannya, melainkan 57 kebijakan RLS di
+   basis data.
+
+   JANGAN PERNAH menaruh service_role key di sini. Kunci itu melewati
+   seluruh kebijakan RLS. Kalau ia masuk ke berkas ini, ia ikut terbit
+   ke internet dan seluruh pengamanan kita hilang dalam satu langkah.
+   ===================================================================== */
+
+window.AJIOS_CONFIG = {
+  url:  'https://zkqfbdvumqnabptiqjhb.supabase.co',
+  anon: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InprcWZiZHZ1bXFuYWJwdGlxamhiIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTE0MjE0NzIsImV4cCI6MjEwNjk5NzQ3Mn0.MGiH8l4UcI2uOAE4pwp3XM7lKBQTRSph3Vmf-vkRXQs',   // diawali eyJ...
+
+  /* Nama schema basis data. Jangan diubah. */
+  schema: 'ajios',
+
+  /* Alamat tempat aplikasi ini dihosting, tanpa garis miring di akhir.
+     Dipakai untuk tautan kode masuk (OTP) dan untuk alamat di QR sesi.
+
+     Contoh setelah domain terpasang:
+       origin: 'https://os.ajijaens.com'
+
+     Dibiarkan kosong, alamatnya dihitung dari halaman yang sedang dibuka.
+     Itu jalan untuk mencoba, tetapi QR yang dicetak sebelum sesi sebaiknya
+     dibuat dari alamat yang pasti — isi nilainya begitu domainnya siap. */
+  origin: 'https://ajijaens-creator.github.io/Ajijaens_OS/app'
+};
+</script>
+<script>
+/* =====================================================================
+   LAPISAN BERSAMA — klien Supabase, autentikasi, peran, dan keadaan UI.
+   Dipakai portal peserta maupun sisi pengelola.
+
+   Prinsip yang dipegang di sini:
+   - Tidak pernah menyatakan "tersimpan" sebelum server menjawab berhasil.
+   - Tidak pernah menyembunyikan tombol sebagai pengganti izin; yang
+     menolak tetap basis data. UI hanya menjelaskan penolakannya.
+   - Nol dan kosong dibedakan di seluruh lapisan ini.
+   ===================================================================== */
+
+(function (global) {
+  'use strict';
+
+  const CFG = global.AJIOS_CONFIG || {};
+  const ORIGIN = CFG.origin || global.location.origin + global.location.pathname.replace(/\/[^/]*$/, '');
+
+  /* ---------------------------------------------------------- klien */
+  let _sb = null;
+  function sb() {
+    if (_sb) return _sb;
+    if (!global.supabase || !global.supabase.createClient)
+      throw new Error('Pustaka Supabase belum termuat. Periksa koneksi internet.');
+    if (!CFG.url || !CFG.anon || CFG.anon.indexOf('ISI_DENGAN') === 0)
+      throw new Error('config.js belum diisi. Masukkan Project URL dan anon public key.');
+    _sb = global.supabase.createClient(CFG.url, CFG.anon, {
+      db: { schema: CFG.schema || 'ajios' },
+      auth: { persistSession: true, autoRefreshToken: true, detectSessionInUrl: true }
+    });
+    return _sb;
+  }
+  /* Beberapa tabel PDP ada di schema yang sama; disiapkan kalau nanti berbeda. */
+  const from = (t) => sb().from(t);
+  /* Fungsi agregat di basis data dipanggil lewat ini. Dipakai di tempat
+     yang jawabannya HARUS dihitung server: kalau dihitung di sini,
+     kebijakan RLS membuat hasilnya 0 dan layar menulis angka palsu. */
+  const rpc = (nama, arg) => sb().rpc(nama, arg || {});
+
+  /* ------------------------------------------------------ autentikasi */
+  const auth = {
+    async sesiSekarang() {
+      const { data, error } = await sb().auth.getSession();
+      if (error) throw error;
+      return data.session || null;
+    },
+    async user() {
+      const s = await auth.sesiSekarang();
+      return s ? s.user : null;
+    },
+    /* Masuk tanpa email, untuk ruangan berisi banyak peserta sekaligus.
+
+       Kenapa ada: kode lewat email tidak bisa dipakai saat 100 orang masuk
+       bersamaan — mereka harus berpindah ke aplikasi email, menunggu, dan
+       sebagian pasti tidak menerimanya. Masuk anonim menyelesaikan itu.
+
+       Yang TIDAK hilang: peserta tetap mendapat identitas auth sungguhan,
+       jadi seluruh kebijakan RLS tetap berlaku persis seperti sebelumnya —
+       jawaban satu peserta tetap tidak bisa dibaca peserta lain.
+
+       Yang HILANG: tidak ada email untuk memulihkan. Peserta yang menutup
+       peramban dan kehilangan sesinya tidak bisa kembali ke jawabannya.
+       Itu dikatakan di layar, bukan disembunyikan. */
+    async masukAnonim() {
+      const { data, error } = await sb().auth.signInAnonymously();
+      if (error) throw error;
+      return data.session;
+    },
+    /* OTP lewat email. Tidak ada kata sandi yang kami simpan atau minta. */
+    async kirimOtp(email, tujuan) {
+      const { error } = await sb().auth.signInWithOtp({
+        email: String(email || '').trim(),
+        options: { emailRedirectTo: tujuan || (ORIGIN + '/') }
+      });
+      if (error) throw error;
+      return true;
+    },
+    async verifikasiOtp(email, kode) {
+      const { data, error } = await sb().auth.verifyOtp({
+        email: String(email || '').trim(), token: String(kode || '').trim(), type: 'email'
+      });
+      if (error) throw error;
+      return data.session;
+    },
+    async keluar() { await sb().auth.signOut(); _profilCache = null; _peranCache = null; },
+    onBerubah(fn) { sb().auth.onAuthStateChange((_e, s) => fn(s)); }
+  };
+
+  /* --------------------------------------------------- profil & peran */
+  let _profilCache = null, _peranCache = null;
+
+  /* Baris person milik pengguna yang sedang masuk. null kalau belum ada
+     — itu keadaan sah, bukan error: akun bisa ada sebelum profilnya diisi. */
+  async function profilSaya() {
+    if (_profilCache !== null) return _profilCache;
+    const u = await auth.user();
+    if (!u) return (_profilCache = false);
+    const { data, error } = await from('person').select('*').eq('auth_user_id', u.id).maybeSingle();
+    if (error) throw error;
+    return (_profilCache = (data || false));
+  }
+
+  /* Peran internal. Peserta biasa tidak punya baris staff, dan RLS membuat
+     kueri ini mengembalikan kosong untuk mereka — bukan error. */
+  async function peranSaya() {
+    if (_peranCache !== null) return _peranCache;
+    const u = await auth.user();
+    if (!u) return (_peranCache = null);
+    const { data, error } = await from('staff').select('peran, aktif').eq('auth_user_id', u.id).maybeSingle();
+    if (error && error.code !== 'PGRST116') throw error;
+    return (_peranCache = (data && data.aktif ? data.peran : null));
+  }
+  const adalahStaf = async (...p) => { const r = await peranSaya(); return !!r && (!p.length || p.indexOf(r) !== -1); };
+  function lupakanCache() { _profilCache = null; _peranCache = null; }
+
+  /* ------------------------------------------------------------ nilai */
+  /* Tiga keadaan yang tidak boleh tertukar sepanjang aplikasi ini. */
+  /* ---------------------------------------------- template evaluasi
+     Dipakai dua sisi: portal peserta menulisnya, layar rekap membaca
+     kuncinya kembali. Satu sumber supaya label di rekap tidak pernah
+     berbeda dari pertanyaan yang benar-benar ditanyakan.
+
+     Pertanyaan angka dimulai dari 0, dan 0 adalah jawaban sah —
+     "belum dijawab" diwakili null, bukan 0. Kunci yang tidak dikenal
+     tetap ditampilkan apa adanya di rekap, bukan disembunyikan: lebih
+     baik kelihatan mentah daripada hilang. */
+  const EVAL = {
+    versi: 1,
+    medan: [
+      { k: 'keseluruhan', t: 'skala', l: 'Seberapa bermanfaat sesi ini secara keseluruhan?' },
+      { k: 'kejelasan',   t: 'skala', l: 'Seberapa jelas penyampaiannya?' },
+      { k: 'relevansi',   t: 'skala', l: 'Seberapa cocok dengan usaha atau rencana Anda?' },
+      { k: 'paling_bermanfaat', t: 'teks', l: 'Bagian apa yang paling bermanfaat?' },
+      { k: 'perlu_diperbaiki',  t: 'teks', l: 'Apa yang perlu diperbaiki?' }
+    ],
+    label(k) {
+      const m = EVAL.medan.find(x => x.k === k);
+      return m ? m.l : k;
+    }
+  };
+
+  const KOSONG = Symbol('belum diisi');
+  function tampilNilai(v, opsi) {
+    const o = opsi || {};
+    if (v === null || v === undefined || v === '') return o.kosong || '<span class="nihil">belum diisi</span>';
+    if (v === 0) return o.nol !== undefined ? o.nol : '0';
+    return esc(String(v));
+  }
+  /* Omzet: "Belum menghasilkan" dan "Belum bersedia mengisi" BUKAN nol. */
+  function tampilOmzet(rentang, periode) {
+    if (!rentang) return '<span class="nihil">belum diisi</span>';
+    if (rentang === 'Belum bersedia mengisi') return '<span class="nihil">belum bersedia</span>';
+    if (rentang === 'Belum menghasilkan') return 'Belum menghasilkan';
+    return esc(rentang) + (periode ? ' <span class="mini">· ' + esc(periode) + '</span>' : '');
+  }
+
+  /* ----------------------------------------------------------- utilitas */
+  function esc(s) {
+    return String(s === null || s === undefined ? '' : s)
+      .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
+      .replace(/"/g, '&quot;').replace(/'/g, '&#39;');
+  }
+  function el(id) { return document.getElementById(id); }
+  function tgl(iso) {
+    if (!iso) return '—';
+    try {
+      return new Date(iso).toLocaleDateString('id-ID', { day: 'numeric', month: 'short', year: 'numeric' });
+    } catch (e) { return iso; }
+  }
+  function jam(iso) {
+    if (!iso) return '—';
+    try { return new Date(iso).toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit' }); }
+    catch (e) { return iso; }
+  }
+
+  /* -------------------------------------------------- keadaan tampilan */
+  const UI = {
+    memuat(target, teks) {
+      const n = typeof target === 'string' ? el(target) : target;
+      if (n) n.innerHTML = '<div class="keadaan memuat"><span class="putar"></span>' +
+        esc(teks || 'Memuat…') + '</div>';
+    },
+    kosong(target, judul, isi, aksi) {
+      const n = typeof target === 'string' ? el(target) : target;
+      if (n) n.innerHTML = '<div class="keadaan"><b>' + esc(judul) + '</b><p>' + (isi || '') + '</p>' +
+        (aksi || '') + '</div>';
+    },
+    /* Pesan error menjelaskan apa yang terjadi DAN apa yang bisa dilakukan. */
+    gagal(target, e, konteks) {
+      const n = typeof target === 'string' ? el(target) : target;
+      const p = UI.bacaError(e);
+      if (n) n.innerHTML = '<div class="keadaan gagal"><b>' + esc(p.judul) + '</b><p>' + esc(p.isi) + '</p>' +
+        (konteks ? '<p class="mini">' + esc(konteks) + '</p>' : '') +
+        '<button class="btn" onclick="location.reload()">Muat ulang</button></div>';
+      if (global.console) console.error(e);
+    },
+    bacaError(e) {
+      const kode = (e && (e.code || e.status)) || '';
+      const pesan = (e && (e.message || e.error_description)) || String(e);
+      if (/Failed to fetch|NetworkError/i.test(pesan))
+        return { judul: 'Tidak tersambung', isi: 'Koneksi ke server terputus. Jawaban yang belum terkirim belum tersimpan.' };
+      if (kode === '42501' || /permission denied/i.test(pesan))
+        return { judul: 'Tidak punya akses', isi: 'Akun Anda tidak berhak membuka data ini. Kalau ini keliru, hubungi pengelola.' };
+      if (kode === 'PGRST301' || kode === 401 || /JWT|not authenticated/i.test(pesan))
+        return { judul: 'Sesi berakhir', isi: 'Silakan masuk kembali.' };
+      if (kode === '23505') return { judul: 'Sudah pernah tersimpan', isi: 'Data yang sama sudah ada. Tidak ada yang digandakan.' };
+      if (kode === 'PGRST205' || /schema cache|does not exist/i.test(pesan))
+        return { judul: 'Schema belum dibuka', isi: 'Tambahkan "ajios" di Integrations → Data API → Settings → Exposed schemas.' };
+      if (!CFG.anon || CFG.anon.indexOf('ISI_DENGAN') === 0)
+        return { judul: 'Belum dikonfigurasi', isi: 'config.js belum diisi anon public key.' };
+      return { judul: 'Gagal', isi: pesan };
+    },
+    /* Toast hanya muncul SETELAH server menjawab. */
+    pesan(teks, jenis) {
+      let t = el('ajios-toast');
+      if (!t) {
+        t = document.createElement('div'); t.id = 'ajios-toast'; t.className = 'toast';
+        document.body.appendChild(t);
+      }
+      t.textContent = teks; t.className = 'toast on ' + (jenis || '');
+      clearTimeout(t._t); t._t = setTimeout(() => { t.className = 'toast ' + (jenis || ''); }, 3400);
+    }
+  };
+
+  /* ------------------------------------------------ tombol anti-ganda */
+  /* Mencegah submit dobel yang membuat record kembar. */
+  function sekaliSaja(btn, kerja) {
+    if (btn.dataset.sibuk === '1') return Promise.resolve();
+    btn.dataset.sibuk = '1';
+    const teksLama = btn.textContent;
+    btn.disabled = true; btn.textContent = 'Menyimpan…';
+    return Promise.resolve()
+      .then(kerja)
+      .catch(e => { UI.pesan(UI.bacaError(e).judul + ' — ' + UI.bacaError(e).isi, 'gagal'); throw e; })
+      .finally(() => { btn.dataset.sibuk = '0'; btn.disabled = false; btn.textContent = teksLama; });
+  }
+
+  /* ------------------------------------------------------- persetujuan */
+  const consent = {
+    async tujuan() {
+      const { data, error } = await from('consent_purpose').select('*').order('wajib', { ascending: false });
+      if (error) throw error; return data || [];
+    },
+    async milikSaya(personId) {
+      const { data, error } = await from('consent').select('*').eq('person_id', personId)
+        .order('pada', { ascending: false }).order('urut', { ascending: false });
+      if (error) throw error;
+      const terakhir = {};
+      (data || []).forEach(r => { if (!(r.purpose in terakhir)) terakhir[r.purpose] = r; });
+      return { histori: data || [], terakhir };
+    },
+    /* Pencabutan ditambahkan sebagai baris baru. Histori tidak pernah dihapus. */
+    async catat(personId, purpose, diberikan, sumber, teks) {
+      const { error } = await from('consent').insert({
+        person_id: personId, purpose, diberikan: !!diberikan,
+        sumber: sumber || 'portal', teks_saat_itu: teks || null,
+        dicabut_pada: diberikan ? null : new Date().toISOString()
+      });
+      if (error) throw error; return true;
+    }
+  };
+
+  /* ------------------------------------------------------- formulir */
+  /* prompt() bawaan peramban tidak bisa divalidasi, tidak bisa diberi
+     keterangan, dan di sebagian penampil tidak muncul sama sekali.
+     Semua isian di aplikasi ini memakai formulir sendiri. */
+  function formulir(judul, keterangan, medan) {
+    return new Promise((selesai) => {
+      const lapis = document.createElement('div');
+      lapis.className = 'lapis';
+      lapis.innerHTML = '<div class="lapis-kotak" role="dialog" aria-modal="true" aria-label="' +
+        esc(judul) + '"><h3>' + esc(judul) + '</h3>' +
+        (keterangan ? '<p class="mini" style="margin:6px 0 14px">' + keterangan + '</p>' : '') +
+        medan.map(m => '<div class="isian" data-k="' + esc(m.k) + '">' +
+          '<label for="f-' + esc(m.k) + '">' + esc(m.l) + (m.wajib ? ' <i>*</i>' : '') + '</label>' +
+          (m.t === 'pilih'
+            ? '<select id="f-' + esc(m.k) + '">' + (m.opt || []).map(o =>
+                '<option value="' + esc(o) + '">' + esc(o) + '</option>').join('') + '</select>'
+            : m.t === 'panjang'
+              ? '<textarea id="f-' + esc(m.k) + '" placeholder="' + esc(m.ph || '') + '"></textarea>'
+              : '<input id="f-' + esc(m.k) + '" type="' + esc(m.t || 'text') + '" placeholder="' +
+                esc(m.ph || '') + '">') +
+          (m.bantu ? '<span class="bantu">' + m.bantu + '</span>' : '') +
+          '<span class="galat" hidden></span></div>').join('') +
+        '<div class="deret" style="margin-top:6px"><button class="btn" data-ok>Simpan</button>' +
+        '<button class="btn hantu" data-batal>Batal</button></div></div>';
+      document.body.appendChild(lapis);
+      const tutup = (hasil) => { lapis.remove(); selesai(hasil); };
+      lapis.querySelector('[data-batal]').onclick = () => tutup(null);
+      lapis.onclick = (e) => { if (e.target === lapis) tutup(null); };
+      lapis.querySelector('[data-ok]').onclick = () => {
+        const nilai = {}; let bermasalah = false;
+        medan.forEach(m => {
+          const kotak = lapis.querySelector('[data-k="' + m.k + '"]');
+          const v = (kotak.querySelector('input,select,textarea').value || '').trim();
+          nilai[m.k] = v;
+          const galat = m.wajib && !v ? 'Wajib diisi'
+            : (v && m.periksa ? m.periksa(v) : '');
+          kotak.classList.toggle('salah', !!galat);
+          const g = kotak.querySelector('.galat'); g.textContent = galat || ''; g.hidden = !galat;
+          if (galat) bermasalah = true;
+        });
+        if (!bermasalah) tutup(nilai);
+      };
+      const awal = lapis.querySelector('input,select,textarea'); if (awal) awal.focus();
+      lapis.addEventListener('keydown', (e) => { if (e.key === 'Escape') tutup(null); });
+    });
+  }
+
+  global.AJIOS = {
+    sb, from, rpc, auth, profilSaya, peranSaya, adalahStaf, lupakanCache,
+    esc, el, tgl, jam, tampilNilai, tampilOmzet, UI, sekaliSaja, consent, formulir,
+    CFG, ORIGIN, KOSONG, EVAL
+  };
+})(window);
+</script>
+<script>
+/* =====================================================================
+   NP-V08 — LAYAR PROYEKTOR
+
+   Layar ini dilihat seluruh ruangan. Karena itu yang TIDAK ditampilkan
+   di sini sama pentingnya dengan yang ditampilkan:
+
+   TIDAK PERNAH tampil:
+     - catatan presenter
+     - nama, kontak, email, WhatsApp peserta
+     - omzet atau data usaha
+     - jawaban perorangan, refleksi, Life Circle siapa pun
+     - tombol kendali (mulai / akhiri / buka / tutup / koreksi)
+     - tautan edit atau tautan admin
+
+   Yang tampil hanya: judul sesi, penghitung waktu, cara bergabung
+   (kode + QR), aktivitas yang sedang dibuka, angka agregat, dan
+   pertanyaan yang SUDAH ditayangkan fasilitator.
+
+   Pembaruan di sini juga POLLING, bukan realtime, dan dikatakan apa
+   adanya di sudut layar.
+   ===================================================================== */
+(function () {
+  'use strict';
+  const A = window.AJIOS, esc = A.esc, el = A.el, UI = A.UI;
+
+  const JEDA = 10000;
+  let ID = (location.hash || '').replace(/^#/, '').trim();
+  const MIN_RODA = 5;   /* pengisi minimum sebelum roda kelas ditampilkan */
+  let SESI = null, DATA = { akt: [], prog: [], tanya: [], hadir: 0, terdaftar: 0, well: [] };
+  let TERAKHIR = null, TAMPILQR = true;
+
+  function alamatSesi() {
+    let dasar = A.CFG.origin || (location.origin + location.pathname.replace(/\/[^/]*$/, ''));
+    dasar = dasar.replace(/\/+$/, '').replace(/\/(sesi|admin|portal)$/, '');
+    return dasar + '/portal/?sesi=' + encodeURIComponent((SESI && SESI.kode_sesi) || ID);
+  }
+
+  async function muat() {
+    if (!ID) {
+      el('isi').innerHTML = '<div class="keadaan"><b>Sesi belum dipilih</b>' +
+        '<p>Layar ini dibuka dari tombol <i>Buka layar proyektor</i> di halaman kendali, ' +
+        'supaya alamatnya membawa sesi mana yang ditayangkan.</p></div>';
+      return;
+    }
+    try {
+      const [s, akt, prog, tanya, hadir, reg, well] = await Promise.all([
+        A.from('sesi').select('*').eq('id', ID).maybeSingle(),
+        A.from('activity').select('*').eq('sesi_id', ID),
+        A.from('progres_aktivitas').select('*').eq('sesi_id', ID),
+        A.from('pertanyaan').select('id, isi, ditayangkan, terjawab, dikirim_pada')
+          .eq('sesi_id', ID).eq('ditayangkan', true).order('dikirim_pada', { ascending: true }),
+        A.from('attendance').select('id', { count: 'exact', head: true }).eq('sesi_id', ID).eq('hadir', true),
+        A.from('session_registration').select('id', { count: 'exact', head: true }).eq('sesi_id', ID),
+        /* Agregat roda. Fungsi di basis data menahan hasilnya sampai
+           pengisinya cukup banyak, supaya satu baris tidak bisa
+           ditelusuri ke satu orang. Di layar depan itu penting. */
+        A.rpc('rekap_wellbeing', { s: ID, minimum: MIN_RODA })
+      ]);
+      if (s.error) throw s.error;
+      if (well.error) throw well.error;
+      if (!s.data) {
+        el('isi').innerHTML = '<div class="keadaan"><b>Sesi tidak terbaca</b>' +
+          '<p>Sesi ini tidak ditemukan, atau akun di peramban ini tidak berhak membacanya. ' +
+          'Masuk sebagai pengelola sesi di tab yang sama, lalu muat ulang.</p></div>';
+        return;
+      }
+      SESI = s.data;
+      DATA = {
+        akt: akt.data || [], prog: prog.data || [],
+        tanya: tanya.data || [],
+        hadir: typeof hadir.count === 'number' ? hadir.count : null,
+        terdaftar: typeof reg.count === 'number' ? reg.count : null,
+        well: well.data || []
+      };
+      TERAKHIR = new Date();
+      gambar();
+    } catch (e) {
+      el('isi').innerHTML = '';
+      UI.gagal('isi', e, 'Layar proyektor tidak menampilkan angka yang tidak bisa dibaca.');
+    }
+  }
+
+  function pengirim(id) {
+    const p = DATA.prog.find(x => x.activity_id === id);
+    return p ? p.pengirim : undefined;
+  }
+
+  function gambar() {
+    const aktif = DATA.akt.filter(a => a.status === 'Dibuka');
+    el('judul').textContent = SESI.judul;
+    el('status').textContent = SESI.status;
+    el('status').className = 'tanda ' + (SESI.status === 'Berlangsung' ? 'jalan' : 'henti');
+
+    el('isi').innerHTML =
+      /* ---------- aktivitas yang sedang dibuka ---------- */
+      (aktif.length
+        ? aktif.map(a => {
+            const n = pengirim(a.id), bisa = typeof n === 'number';
+            return '<div class="panggung">' +
+              '<div class="cap">Sedang berjalan</div>' +
+              '<h2>' + esc(a.judul) + '</h2>' +
+              '<p class="arah">Buka portal di ponsel Anda, lalu kirim jawaban Anda. ' +
+              'Jawaban Anda hanya terlihat oleh Anda sendiri.</p>' +
+              (bisa
+                ? '<div class="takar"><i style="width:' +
+                  (DATA.hadir ? Math.min(100, Math.round(n / DATA.hadir * 100)) : 0) + '%"></i></div>' +
+                  '<p class="angka-ket"><b>' + n + '</b> dari <b>' + (DATA.hadir === null ? '—' : DATA.hadir) +
+                  '</b> yang hadir sudah mengirim</p>'
+                : '<p class="angka-ket">Jumlah pengirim tidak ditampilkan di layar ini.</p>') +
+              '</div>';
+          }).join('')
+        : '<div class="panggung"><div class="cap">Menunggu</div>' +
+          '<h2>Belum ada aktivitas yang dibuka</h2>' +
+          '<p class="arah">Fasilitator akan membuka aktivitas berikutnya. ' +
+          'Aktivitas yang sudah ditutup tidak menghapus jawaban yang sudah terkirim.</p></div>') +
+
+      /* ---------- roda kelas ---------- */
+      rodaKelas() +
+
+      /* ---------- cara bergabung ---------- */
+      '<div class="kisi-proy">' +
+      '<div class="kotak"><div class="cap">Cara bergabung</div>' +
+      '<p class="kode-besar">' + esc(SESI.kode_sesi || 'belum ada kode') + '</p>' +
+      '<p class="arah kecil">' + esc(alamatSesi()) + '</p>' +
+      '<div id="qr" class="' + (TAMPILQR ? '' : 'sembunyi') + '"></div>' +
+      '<p class="arah kecil">Memindai QR hanya membuka halaman pendaftaran. ' +
+      'QR ini tidak membawa hak akses apa pun.</p></div>' +
+
+      /* ---------- angka ruangan ---------- */
+      '<div class="kotak"><div class="cap">Ruangan</div>' +
+      '<p class="angka-besar">' + (DATA.hadir === null ? '—' : DATA.hadir) + '</p>' +
+      '<p class="arah kecil">hadir, dari ' + (DATA.terdaftar === null ? '—' : DATA.terdaftar) + ' terdaftar. ' +
+      '<b>Terdaftar berbeda dari hadir.</b></p></div>' +
+      '</div>' +
+
+      /* ---------- pertanyaan yang ditayangkan ---------- */
+      (DATA.tanya.length
+        ? '<div class="kotak lebar"><div class="cap">Pertanyaan</div>' +
+          DATA.tanya.map(t => '<p class="tanya' + (t.terjawab ? ' sudah' : '') + '">' +
+            esc(t.isi) + '</p>').join('') +
+          '<p class="arah kecil">Pertanyaan ditayangkan tanpa nama pengirim di layar ini.</p></div>'
+        : '');
+
+    gambarQR();
+    gambarWaktu();
+  }
+
+
+  /* ---------------- roda Life Mastery, rata-rata seluruh kelas ----------------
+     Yang ditayangkan: nama aspek dan rata-ratanya. Yang TIDAK pernah
+     ditayangkan: nama peserta, dan jawaban siapa pun secara perorangan.
+     Bukan karena disembunyikan di layar — fungsinya di basis data memang
+     tidak mengembalikannya. */
+  function rodaKelas() {
+    if (!window.RODA) return '';
+    const peta = {};
+    DATA.well.forEach(w => { peta[w.aspek] = w; });
+    const adaIsi = DATA.well.length > 0;
+
+    /* Urutan mengikuti roda, bukan urutan balasan basis data. Aspek yang
+       belum dijawab siapa pun tetap muncul sebagai sektor kosong
+       bergaris putus — bukan sebagai nol. */
+    const nilai = window.RODA.ASPEK.map(a => (peta[a] ? Number(peta[a].rata) : null));
+    const sub   = window.RODA.ASPEK.map(a => (peta[a] ? 'dari ' + peta[a].jml + ' jawaban' : ''));
+
+    if (!adaIsi) {
+      return '<div class="panggung"><div class="cap">Roda kelas</div>' +
+        '<h2>Belum bisa ditampilkan</h2>' +
+        '<p class="arah">Roda kelas muncul setelah sedikitnya <b>' + MIN_RODA + ' orang</b> mengisi. ' +
+        'Ditahan sampai itu supaya satu garis tidak bisa ditelusuri ke satu orang. ' +
+        '<b>Ini bukan berarti nilainya nol</b>, dan bukan berarti belum ada yang mengisi.</p></div>';
+    }
+
+    const n = Math.max.apply(null, DATA.well.map(w => w.jml));
+    return '<div class="panggung"><div class="cap">Roda kelas — rata-rata, tanpa nama</div>' +
+      '<div class="rd" style="max-width:760px;margin:10px auto 0">' +
+      window.RODA.svg(nilai, { besar: true, judul: 'KELAS',
+        sub: sub, alt: 'Roda Life Mastery rata-rata kelas, delapan aspek' }) +
+      '</div>' +
+      '<p class="arah" style="text-align:center;margin-top:6px">Rata-rata dari jawaban yang masuk. ' +
+      'Penyebut tiap aspek ditulis di sebelah namanya, karena tidak semua orang menjawab semua aspek — ' +
+      'dan yang melewati satu aspek <b>tidak dihitung sebagai nol</b>.</p>' +
+      '<p class="arah kecil" style="text-align:center">Ini cermin bersama, <b>bukan peringkat</b> ' +
+      'dan bukan penilaian siapa pun.</p></div>';
+  }
+
+  function gambarQR() {
+    const k = el('qr'); if (!k) return;
+    if (!TAMPILQR) { k.innerHTML = ''; return; }
+    const url = alamatSesi();
+    k.dataset.url = url;
+    try {
+      if (!window.AJIQR) throw new Error('pembuat QR tidak termuat');
+      k.innerHTML = window.AJIQR.svg(url, { margin: 2 });
+      k.dataset.qr = 'nyata';
+    } catch (e) {
+      /* Tidak pernah menggambar kotak hiasan yang menyerupai QR. */
+      k.dataset.qr = 'gagal';
+      k.innerHTML = '<p class="arah kecil"><b>QR tidak bisa dibuat.</b> ' +
+        'Pembuat QR gagal, jadi tidak ada gambar yang ditampilkan. ' +
+        'Peserta bergabung lewat kode sesi di atas.</p>';
+    }
+  }
+
+  function gambarWaktu() {
+    const n = el('jam'); if (!n) return;
+    if (!SESI || !SESI.dimulai_pada) { n.textContent = 'belum dimulai'; return; }
+    const akhir = SESI.diakhiri_pada ? new Date(SESI.diakhiri_pada) : new Date();
+    const det = Math.max(0, Math.floor((akhir - new Date(SESI.dimulai_pada)) / 1000) - (SESI.jeda_detik || 0));
+    const mm = String(Math.floor(det / 60)).padStart(2, '0'), ss = String(det % 60).padStart(2, '0');
+    n.textContent = mm + ':' + ss + (SESI.durasi_menit ? ' / ' + SESI.durasi_menit + ':00' : '');
+    n.className = SESI.durasi_menit && det > SESI.durasi_menit * 60 ? 'jam lewat' : 'jam';
+    const d = TERAKHIR ? Math.round((Date.now() - TERAKHIR) / 1000) : null;
+    el('segar').textContent = d === null ? 'belum terhubung' : 'diperbarui ' + d + ' detik lalu';
+  }
+
+  /* Kendali tampilan — bukan kendali sesi. Tidak ada tombol di layar ini
+     yang mengubah data. */
+  el('penuh').onclick = () => {
+    const d = document.documentElement;
+    if (document.fullscreenElement) document.exitFullscreen();
+    else if (d.requestFullscreen) d.requestFullscreen();
+  };
+  el('togelQR').onclick = () => {
+    TAMPILQR = !TAMPILQR;
+    el('togelQR').textContent = TAMPILQR ? 'Sembunyikan QR' : 'Tampilkan QR';
+    if (SESI) gambar();
+  };
+  window.addEventListener('hashchange', () => {
+    ID = (location.hash || '').replace(/^#/, '').trim(); muat();
+  });
+
+  muat();
+  setInterval(muat, JEDA);
+  setInterval(gambarWaktu, 1000);
+
+  window.__PROY = { gambar, gambarQR, alamatSesi, pengirim,
+                    data: () => DATA, sesi: () => SESI };
+})();
+</script>
 </body>
 </html>
