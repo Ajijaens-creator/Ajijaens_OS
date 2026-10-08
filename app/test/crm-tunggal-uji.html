@@ -1,0 +1,1029 @@
+<!doctype html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="robots" content="noindex,nofollow">
+<title>Peserta &amp; Komunitas — AJI JAENS OS</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@600;700&family=Inter:wght@400;500;600;700;800&display=swap">
+<style>
+/* ============ AJI JAENS OS — gaya bersama portal & pengelola ============
+   Off-white, kartu putih, emas untuk identitas, charcoal untuk teks.
+   Sage = Learn, biru = Do, terracotta = Share.
+   Status selalu punya TEKS, tidak hanya warna. */
+
+
+:root{
+  --bg:#FAF8F2; --surface:#FFFDF8; --surface-2:#F5F1E7; --surface-3:#EFEADC;
+  --border:#E6DFCE; --border-soft:#F0EADA;
+  --text:#2A2620; --text-2:#6A6255; --text-3:#9B9284;
+  --gold:#B58A3A; --gold-dark:#8E681F; --gold-tint:#FAF2E2; --gold-line:#E7D9B8;
+  --sage:#4E7A5A; --sage-t:#E8F0EA;
+  --biru:#1A5FB4; --biru-t:#E7EFFA;
+  --terra:#B4552F; --terra-t:#FBEBE4;
+  --hijau:#12874E; --hijau-t:#E4F3EA;
+  --merah:#C0392B; --merah-t:#FBEAE7;
+  --oranye:#B46A0D; --oranye-t:#FBF0DF;
+  --abu:#8A8377; --abu-t:#F0EDE5;
+  --r:14px; --r-sm:10px;
+  --bayang:0 1px 2px rgba(80,62,26,.05), 0 6px 20px -8px rgba(80,62,26,.10);
+  --ff:'Inter',-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;
+  --fd:'Cormorant Garamond','Iowan Old Style',Georgia,serif;
+}
+@media (prefers-color-scheme:dark){
+  :root:not([data-theme="light"]){
+    --bg:#14120E; --surface:#1C1915; --surface-2:#221E18; --surface-3:#2A251E;
+    --border:#332D24; --border-soft:#2A251E;
+    --text:#F0EADD; --text-2:#B3AA97; --text-3:#7E7666;
+    --gold:#D7BE7A; --gold-dark:#E4D0A0; --gold-tint:#241E12; --gold-line:#3D3320;
+    --sage:#7FBF93; --sage-t:#15271B; --biru:#7CB0F7; --biru-t:#152438;
+    --terra:#E59072; --terra-t:#2E1C14; --hijau:#5FD394; --hijau-t:#122A1E;
+    --merah:#F58E85; --merah-t:#301917; --oranye:#E8A94F; --oranye-t:#2C2211;
+    --abu:#9A9384; --abu-t:#232019;
+    color-scheme:dark;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#14120E; --surface:#1C1915; --surface-2:#221E18; --surface-3:#2A251E;
+  --border:#332D24; --border-soft:#2A251E;
+  --text:#F0EADD; --text-2:#B3AA97; --text-3:#7E7666;
+  --gold:#D7BE7A; --gold-dark:#E4D0A0; --gold-tint:#241E12; --gold-line:#3D3320;
+  --sage:#7FBF93; --sage-t:#15271B; --biru:#7CB0F7; --biru-t:#152438;
+  --terra:#E59072; --terra-t:#2E1C14; --hijau:#5FD394; --hijau-t:#122A1E;
+  --merah:#F58E85; --merah-t:#301917; --oranye:#E8A94F; --oranye-t:#2C2211;
+  --abu:#9A9384; --abu-t:#232019;
+  color-scheme:dark;
+}
+
+*{box-sizing:border-box}
+html,body{margin:0;padding:0}
+body{background:var(--bg);color:var(--text);font-family:var(--ff);font-size:16px;line-height:1.55;
+  -webkit-font-smoothing:antialiased}
+h1,h2,h3{margin:0;font-family:var(--fd);font-weight:600;letter-spacing:-.2px;text-wrap:balance}
+h1{font-size:clamp(26px,4.5vw,38px)}
+h2{font-size:clamp(20px,3vw,26px)}
+h3{font-size:18px;font-family:var(--ff);font-weight:700;letter-spacing:0}
+p{margin:0}
+a{color:var(--biru)}
+:focus-visible{outline:2px solid var(--gold);outline-offset:2px;border-radius:6px}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+
+.bungkus{max-width:1180px;margin:0 auto;padding-inline:18px}
+.sempit{max-width:560px}
+.mini{font-size:12.5px;color:var(--text-3);line-height:1.5}
+.nihil{color:var(--text-3);font-style:italic}
+
+/* ---- kartu ---- */
+.kartu{background:var(--surface);border:1px solid var(--border);border-radius:var(--r);
+  padding:18px;box-shadow:var(--bayang);min-width:0}
+.kartu + .kartu{margin-top:14px}
+.kartu-h{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:12px}
+.kartu-h h3{flex:1;min-width:0}
+
+/* ---- tombol ---- */
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:7px;border:1px solid transparent;
+  border-radius:var(--r-sm);padding:11px 18px;font:inherit;font-size:15px;font-weight:600;
+  cursor:pointer;background:var(--gold);color:#fff;transition:filter .15s;min-height:44px}
+.btn:hover:not(:disabled){filter:brightness(1.08)}
+.btn:disabled{opacity:.55;cursor:default}
+.btn.hantu{background:var(--surface);color:var(--text-2);border-color:var(--border)}
+.btn.hantu:hover:not(:disabled){border-color:var(--gold-line);color:var(--gold-dark)}
+.btn.bahaya{background:var(--merah)}
+.btn.kecil{padding:6px 12px;font-size:13px;min-height:34px}
+.btn.lebar{width:100%}
+
+/* ---- isian ---- */
+.isian{display:flex;flex-direction:column;gap:6px;margin-bottom:14px;min-width:0}
+.isian label{font-size:13px;font-weight:600;color:var(--text-2)}
+.isian label i{font-style:normal;color:var(--merah)}
+.isian input,.isian select,.isian textarea{width:100%;border:1px solid var(--border);
+  background:var(--surface);color:var(--text);border-radius:var(--r-sm);padding:12px 13px;
+  font:inherit;font-size:16px;outline:0;min-width:0}
+.isian textarea{resize:vertical;min-height:88px;line-height:1.55}
+.isian input:focus,.isian select:focus,.isian textarea:focus{border-color:var(--gold);
+  box-shadow:0 0 0 3px var(--gold-tint)}
+.isian.salah input,.isian.salah select,.isian.salah textarea{border-color:var(--merah);background:var(--merah-t)}
+.isian .galat{font-size:12.5px;color:var(--merah);font-weight:600}
+.isian .bantu{font-size:12.5px;color:var(--text-3);line-height:1.5}
+.pilihan{display:flex;gap:10px;align-items:flex-start;padding:11px 12px;border:1px solid var(--border);
+  border-radius:var(--r-sm);cursor:pointer;background:var(--surface);margin-bottom:9px}
+.pilihan:hover{border-color:var(--gold-line)}
+.pilihan input{width:20px;height:20px;flex:0 0 20px;margin-top:2px;accent-color:var(--gold)}
+.pilihan span{flex:1;min-width:0}
+.pilihan b{display:block;font-size:15px}
+.pilihan em{display:block;font-style:normal;font-size:12.5px;color:var(--text-3);margin-top:2px}
+
+/* ---- label status: selalu ada teksnya ---- */
+.lbl{display:inline-flex;align-items:center;gap:5px;font-size:12px;font-weight:700;
+  padding:3px 9px;border-radius:20px;white-space:nowrap}
+.lbl.sage{background:var(--sage-t);color:var(--sage)}
+.lbl.biru{background:var(--biru-t);color:var(--biru)}
+.lbl.terra{background:var(--terra-t);color:var(--terra)}
+.lbl.hijau{background:var(--hijau-t);color:var(--hijau)}
+.lbl.merah{background:var(--merah-t);color:var(--merah)}
+.lbl.oranye{background:var(--oranye-t);color:var(--oranye)}
+.lbl.abu{background:var(--abu-t);color:var(--abu)}
+.lbl.emas{background:var(--gold-tint);color:var(--gold-dark)}
+
+/* ---- keadaan ---- */
+.keadaan{padding:30px 20px;text-align:center;color:var(--text-2);border:1px dashed var(--border);
+  border-radius:var(--r);background:var(--surface-2)}
+.keadaan b{display:block;font-size:17px;color:var(--text);margin-bottom:6px;font-family:var(--fd)}
+.keadaan p{font-size:14px;margin-bottom:12px;max-width:52ch;margin-inline:auto}
+.keadaan.gagal{border-color:var(--merah);background:var(--merah-t)}
+.keadaan.gagal b{color:var(--merah)}
+.keadaan.memuat{border-style:solid;display:flex;align-items:center;justify-content:center;gap:10px}
+.putar{width:15px;height:15px;border:2px solid var(--border);border-top-color:var(--gold);
+  border-radius:50%;display:inline-block;animation:putar .7s linear infinite}
+@keyframes putar{to{transform:rotate(360deg)}}
+
+/* ---- toast ---- */
+.toast{position:fixed;left:50%;bottom:22px;transform:translate(-50%,160%);background:#241F17;color:#F5EFE2;
+  padding:12px 18px;border-radius:12px;font-size:14px;font-weight:600;z-index:400;
+  transition:transform .28s cubic-bezier(.2,.9,.3,1);max-width:calc(100vw - 32px);box-shadow:var(--bayang)}
+.toast.on{transform:translate(-50%,0)}
+.toast.gagal{background:var(--merah);color:#fff}
+.toast.sukses{background:var(--hijau);color:#fff}
+
+/* ---- tabel ---- */
+.gulir{overflow-x:auto;margin-inline:-18px;padding-inline:18px}
+table.data{width:100%;border-collapse:collapse;font-size:14.5px;min-width:620px}
+table.data th{text-align:left;font-size:11.5px;font-weight:700;letter-spacing:.7px;text-transform:uppercase;
+  color:var(--text-3);padding:0 12px 9px;white-space:nowrap}
+table.data td{padding:12px;border-top:1px solid var(--border-soft);vertical-align:middle}
+table.data tbody tr:hover{background:var(--surface-2)}
+table.data .angka{text-align:right;font-variant-numeric:tabular-nums}
+
+/* ---- bilah atas ---- */
+.atas{position:sticky;top:0;z-index:50;background:color-mix(in srgb,var(--bg) 90%,transparent);
+  backdrop-filter:blur(10px);border-bottom:1px solid var(--border-soft)}
+.atas-in{display:flex;align-items:center;gap:12px;min-height:58px}
+.merek{font-family:var(--fd);font-weight:700;font-size:19px;white-space:nowrap}
+.merek em{font-style:normal;color:var(--gold-dark);font-size:11px;letter-spacing:.16em;
+  text-transform:uppercase;display:block;line-height:1;margin-top:1px;font-family:var(--ff);font-weight:700}
+.tumbuh{flex:1}
+
+/* ---- tab ---- */
+.tab{display:flex;gap:3px;border-bottom:1px solid var(--border);margin-bottom:16px;overflow-x:auto}
+.tab button{padding:10px 15px;font:inherit;font-size:14.5px;font-weight:600;color:var(--text-2);
+  background:none;border:0;border-bottom:2px solid transparent;cursor:pointer;white-space:nowrap}
+.tab button[aria-selected="true"]{color:var(--gold-dark);border-bottom-color:var(--gold)}
+
+/* ---- langkah ---- */
+.langkah{display:flex;gap:7px;align-items:center;margin-bottom:18px;font-size:12.5px;color:var(--text-3)}
+.langkah i{flex:1;height:4px;border-radius:3px;background:var(--surface-3);font-style:normal}
+.langkah i.on{background:var(--gold)}
+
+/* ---- daftar baris ---- */
+.baris{display:flex;gap:12px;align-items:flex-start;padding:12px 0;border-top:1px solid var(--border-soft)}
+.baris:first-child{border-top:0}
+.baris .pokok{flex:1;min-width:0}
+.baris .pokok b{display:block;font-size:15px;font-weight:600}
+.baris .pokok span{display:block;font-size:13px;color:var(--text-3)}
+
+.kisi{display:grid;gap:14px}
+@media(min-width:760px){ .kisi.dua{grid-template-columns:1fr 1fr} .kisi.tiga{grid-template-columns:repeat(3,1fr)} }
+.deret{display:flex;gap:9px;flex-wrap:wrap;align-items:center}
+
+@media(max-width:560px){
+  body{font-size:15.5px}
+  .kartu{padding:15px}
+  .bungkus{padding-inline:16px}
+  .gulir{margin-inline:-15px;padding-inline:15px}
+}
+
+/* ---- lapis formulir ---- */
+.lapis{position:fixed;inset:0;z-index:420;background:rgba(28,22,12,.5);backdrop-filter:blur(3px);
+  display:flex;align-items:center;justify-content:center;padding:18px}
+.lapis-kotak{background:var(--surface);border:1px solid var(--border);border-radius:var(--r);
+  padding:20px;width:100%;max-width:440px;max-height:88vh;overflow:auto;box-shadow:var(--bayang)}
+.lapis-kotak h3{margin-bottom:4px}
+
+</style>
+</head>
+<body>
+
+<header class="atas"><div class="bungkus atas-in">
+  <span class="merek">Aji Jaens<em>Life by Design</em></span>
+  <span class="tumbuh"></span>
+  <span id="peran" class="lbl abu">memeriksa…</span>
+  <button class="btn hantu kecil" id="keluar" hidden>Keluar</button>
+</div></header>
+
+<main class="bungkus" style="padding-block:22px 60px">
+
+  <!-- ====================== gerbang masuk ====================== -->
+  <section id="gerbang" hidden>
+    <div class="kartu sempit" style="margin-inline:auto">
+      <h2>Masuk</h2>
+      <p class="mini" style="margin:6px 0 16px">Halaman ini hanya untuk pengelola. Kode masuk dikirim ke email Anda —
+        tidak ada kata sandi yang kami simpan atau minta.</p>
+      <div class="isian" id="i-email">
+        <label for="email">Email</label>
+        <input id="email" type="email" inputmode="email" autocomplete="email" placeholder="nama@contoh.com">
+      </div>
+      <button class="btn lebar" id="kirimKode">Kirim kode</button>
+
+      <div id="tahapKode" hidden style="margin-top:16px">
+        <div class="isian" id="i-kode">
+          <label for="kode">Kode 6 angka dari email</label>
+          <input id="kode" type="text" inputmode="numeric" autocomplete="one-time-code" maxlength="8" placeholder="123456">
+        </div>
+        <button class="btn lebar" id="verifKode">Masuk</button>
+      </div>
+      <p class="mini" style="margin-top:14px">Belum punya akses? Akun dibuat lebih dulu oleh pemilik sistem.</p>
+    </div>
+  </section>
+
+  <!-- ====================== bukan staf ====================== -->
+  <section id="bukanStaf" hidden>
+    <div class="kartu sempit" style="margin-inline:auto">
+      <h2>Tidak punya akses</h2>
+      <p style="margin:8px 0 14px">Akun Anda masuk, tetapi tidak terdaftar sebagai pengelola.
+        Halaman ini menampilkan data pribadi peserta, jadi aksesnya dibatasi di sisi basis data —
+        bukan sekadar disembunyikan di layar.</p>
+      <p class="mini">Kalau Anda peserta, bukan pengelola, portal Anda ada di halaman utama.</p>
+      <div class="deret" style="margin-top:14px">
+        <a class="btn hantu" href="./">Ke portal peserta</a>
+        <button class="btn hantu" id="keluar2">Keluar</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- ====================== isi ====================== -->
+  <section id="isi" hidden>
+    <div style="display:flex;align-items:flex-end;gap:14px;flex-wrap:wrap;margin-bottom:18px">
+      <div style="flex:1;min-width:220px">
+        <h1>Peserta &amp; Komunitas</h1>
+        <p class="mini">Satu profil, seluruh perjalanan belajar dan hubungan.</p>
+      </div>
+      <div class="deret">
+        <button class="btn hantu kecil" id="tambahOrang">+ Tambah peserta</button>
+      </div>
+    </div>
+
+    <div class="tab" role="tablist">
+      <button role="tab" aria-selected="true"  data-tab="db">Database</button>
+      <button role="tab" aria-selected="false" data-tab="funnel">Funnel</button>
+      <button role="tab" aria-selected="false" data-tab="tugas">Follow-up</button>
+    </div>
+
+    <!-- -------- Database -------- -->
+    <div id="tab-db">
+      <div class="kartu" style="margin-bottom:14px">
+        <div class="isian" style="margin:0 0 10px">
+          <label for="cari">Cari peserta, usaha, atau program</label>
+          <input id="cari" type="search" placeholder="Ketik nama, email, atau nama usaha…">
+        </div>
+        <div class="kisi tiga">
+          <div class="isian" style="margin:0"><label for="f-kat">Kategori</label>
+            <select id="f-kat"><option value="">Semua kategori</option></select></div>
+          <div class="isian" style="margin:0"><label for="f-bentuk">Bentuk usaha</label>
+            <select id="f-bentuk"><option value="">Semua bentuk</option></select></div>
+          <div class="isian" style="margin:0"><label for="f-omzet">Rentang omzet</label>
+            <select id="f-omzet"><option value="">Semua rentang</option></select></div>
+          <div class="isian" style="margin:0"><label for="f-kom">Status komunitas</label>
+            <select id="f-kom"><option value="">Semua status</option></select></div>
+          <div class="isian" style="margin:0"><label for="f-tim">Jumlah tim</label>
+            <select id="f-tim"><option value="">Semua</option><option value="0">Belum ada tim</option>
+              <option value="1-5">1–5</option><option value="6-20">6–20</option><option value="21+">21+</option></select></div>
+          <div class="isian" style="margin:0"><label for="f-periode">Periode omzet</label>
+            <select id="f-periode"><option value="">Semua periode</option></select></div>
+        </div>
+        <p class="mini" style="margin-top:10px">Omzet dibandingkan hanya pada periode yang sama.
+          Kosong bukan berarti nol: <b>belum diisi</b>, <b>belum menghasilkan</b>, dan
+          <b>belum bersedia mengisi</b> adalah tiga keadaan berbeda.</p>
+      </div>
+      <div class="kartu"><div id="tabelOrang"></div></div>
+    </div>
+
+    <!-- -------- Funnel -------- -->
+    <div id="tab-funnel" hidden>
+      <div class="kartu" style="margin-bottom:14px">
+        <p class="mini">Status komunitas berbeda dari status pembelajaran.
+          <b>Member aktif hanya setelah peserta mengkonfirmasi sendiri</b> — memindahkan kartu tidak bisa
+          melewati syarat itu.</p>
+      </div>
+      <div id="papanFunnel" class="kisi"></div>
+    </div>
+
+    <!-- -------- Follow-up -------- -->
+    <div id="tab-tugas" hidden>
+      <div class="kartu" style="margin-bottom:14px">
+        <p class="mini"><b>Membuat tugas tidak mengirim pesan apa pun.</b> Ini pencatatan, bukan pengiriman.
+          Integrasi WhatsApp dan email belum ada.</p>
+      </div>
+      <div class="kartu"><div id="daftarTugas"></div></div>
+    </div>
+  </section>
+</main>
+
+<!-- ====================== panel detail ====================== -->
+<div id="panel" class="panel" hidden>
+  <div class="panel-isi">
+    <div class="panel-h">
+      <div style="flex:1;min-width:0">
+        <h2 id="p-nama">—</h2>
+        <p class="mini" id="p-sub">—</p>
+      </div>
+      <button class="btn hantu kecil" id="tutupPanel">Tutup</button>
+    </div>
+    <div class="tab" role="tablist" id="p-tab">
+      <button role="tab" aria-selected="true"  data-pt="profil">Profil</button>
+      <button role="tab" aria-selected="false" data-pt="usaha">Usaha / Pendidikan</button>
+      <button role="tab" aria-selected="false" data-pt="belajar">Pembelajaran</button>
+      <button role="tab" aria-selected="false" data-pt="interaksi">Interaksi</button>
+      <button role="tab" aria-selected="false" data-pt="consent">Persetujuan</button>
+    </div>
+    <div id="p-isi"></div>
+  </div>
+</div>
+
+<style>
+.panel{position:fixed;inset:0;z-index:300;background:rgba(28,22,12,.45);backdrop-filter:blur(3px);
+  display:flex;justify-content:flex-end}
+.panel-isi{background:var(--surface);width:560px;max-width:100%;height:100%;overflow:auto;padding:20px;
+  border-left:1px solid var(--border)}
+.panel-h{display:flex;gap:12px;align-items:flex-start;margin-bottom:16px}
+.kv{display:grid;grid-template-columns:140px 1fr;gap:8px 14px;font-size:14.5px;margin:0}
+.kv dt{color:var(--text-3);font-size:13px;font-weight:600}
+.kv dd{margin:0}
+@media(max-width:560px){.kv{grid-template-columns:1fr}.kv dd{margin-bottom:6px}}
+</style>
+
+<script src="stub.js"></script>
+<script>
+/* ====== ISI DUA BARIS INI ======
+   Dashboard Supabase -> Project Settings -> API Keys.
+   Keduanya MEMANG PUBLIK. JANGAN pernah menaruh service_role di sini. */
+window.AJIOS_CONFIG = {
+  url:  'https://zkqfbdvumqnabptiqjhb.supabase.co',
+  anon: 'eyJUJI',
+  schema: 'ajios', origin: ''
+};
+</script>
+<script>
+/* =====================================================================
+   LAPISAN BERSAMA — klien Supabase, autentikasi, peran, dan keadaan UI.
+   Dipakai portal peserta maupun sisi pengelola.
+
+   Prinsip yang dipegang di sini:
+   - Tidak pernah menyatakan "tersimpan" sebelum server menjawab berhasil.
+   - Tidak pernah menyembunyikan tombol sebagai pengganti izin; yang
+     menolak tetap basis data. UI hanya menjelaskan penolakannya.
+   - Nol dan kosong dibedakan di seluruh lapisan ini.
+   ===================================================================== */
+
+(function (global) {
+  'use strict';
+
+  const CFG = global.AJIOS_CONFIG || {};
+  const ORIGIN = CFG.origin || global.location.origin + global.location.pathname.replace(/\/[^/]*$/, '');
+
+  /* ---------------------------------------------------------- klien */
+  let _sb = null;
+  function sb() {
+    if (_sb) return _sb;
+    if (!global.supabase || !global.supabase.createClient)
+      throw new Error('Pustaka Supabase belum termuat. Periksa koneksi internet.');
+    if (!CFG.url || !CFG.anon || CFG.anon.indexOf('ISI_DENGAN') === 0)
+      throw new Error('config.js belum diisi. Masukkan Project URL dan anon public key.');
+    _sb = global.supabase.createClient(CFG.url, CFG.anon, {
+      db: { schema: CFG.schema || 'ajios' },
+      auth: { persistSession: true, autoRefreshToken: true, detectSessionInUrl: true }
+    });
+    return _sb;
+  }
+  /* Beberapa tabel PDP ada di schema yang sama; disiapkan kalau nanti berbeda. */
+  const from = (t) => sb().from(t);
+
+  /* ------------------------------------------------------ autentikasi */
+  const auth = {
+    async sesiSekarang() {
+      const { data, error } = await sb().auth.getSession();
+      if (error) throw error;
+      return data.session || null;
+    },
+    async user() {
+      const s = await auth.sesiSekarang();
+      return s ? s.user : null;
+    },
+    /* OTP lewat email. Tidak ada kata sandi yang kami simpan atau minta. */
+    async kirimOtp(email, tujuan) {
+      const { error } = await sb().auth.signInWithOtp({
+        email: String(email || '').trim(),
+        options: { emailRedirectTo: tujuan || (ORIGIN + '/') }
+      });
+      if (error) throw error;
+      return true;
+    },
+    async verifikasiOtp(email, kode) {
+      const { data, error } = await sb().auth.verifyOtp({
+        email: String(email || '').trim(), token: String(kode || '').trim(), type: 'email'
+      });
+      if (error) throw error;
+      return data.session;
+    },
+    async keluar() { await sb().auth.signOut(); _profilCache = null; _peranCache = null; },
+    onBerubah(fn) { sb().auth.onAuthStateChange((_e, s) => fn(s)); }
+  };
+
+  /* --------------------------------------------------- profil & peran */
+  let _profilCache = null, _peranCache = null;
+
+  /* Baris person milik pengguna yang sedang masuk. null kalau belum ada
+     — itu keadaan sah, bukan error: akun bisa ada sebelum profilnya diisi. */
+  async function profilSaya() {
+    if (_profilCache !== null) return _profilCache;
+    const u = await auth.user();
+    if (!u) return (_profilCache = false);
+    const { data, error } = await from('person').select('*').eq('auth_user_id', u.id).maybeSingle();
+    if (error) throw error;
+    return (_profilCache = (data || false));
+  }
+
+  /* Peran internal. Peserta biasa tidak punya baris staff, dan RLS membuat
+     kueri ini mengembalikan kosong untuk mereka — bukan error. */
+  async function peranSaya() {
+    if (_peranCache !== null) return _peranCache;
+    const u = await auth.user();
+    if (!u) return (_peranCache = null);
+    const { data, error } = await from('staff').select('peran, aktif').eq('auth_user_id', u.id).maybeSingle();
+    if (error && error.code !== 'PGRST116') throw error;
+    return (_peranCache = (data && data.aktif ? data.peran : null));
+  }
+  const adalahStaf = async (...p) => { const r = await peranSaya(); return !!r && (!p.length || p.indexOf(r) !== -1); };
+  function lupakanCache() { _profilCache = null; _peranCache = null; }
+
+  /* ------------------------------------------------------------ nilai */
+  /* Tiga keadaan yang tidak boleh tertukar sepanjang aplikasi ini. */
+  const KOSONG = Symbol('belum diisi');
+  function tampilNilai(v, opsi) {
+    const o = opsi || {};
+    if (v === null || v === undefined || v === '') return o.kosong || '<span class="nihil">belum diisi</span>';
+    if (v === 0) return o.nol !== undefined ? o.nol : '0';
+    return esc(String(v));
+  }
+  /* Omzet: "Belum menghasilkan" dan "Belum bersedia mengisi" BUKAN nol. */
+  function tampilOmzet(rentang, periode) {
+    if (!rentang) return '<span class="nihil">belum diisi</span>';
+    if (rentang === 'Belum bersedia mengisi') return '<span class="nihil">belum bersedia</span>';
+    if (rentang === 'Belum menghasilkan') return 'Belum menghasilkan';
+    return esc(rentang) + (periode ? ' <span class="mini">· ' + esc(periode) + '</span>' : '');
+  }
+
+  /* ----------------------------------------------------------- utilitas */
+  function esc(s) {
+    return String(s === null || s === undefined ? '' : s)
+      .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
+      .replace(/"/g, '&quot;').replace(/'/g, '&#39;');
+  }
+  function el(id) { return document.getElementById(id); }
+  function tgl(iso) {
+    if (!iso) return '—';
+    try {
+      return new Date(iso).toLocaleDateString('id-ID', { day: 'numeric', month: 'short', year: 'numeric' });
+    } catch (e) { return iso; }
+  }
+  function jam(iso) {
+    if (!iso) return '—';
+    try { return new Date(iso).toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit' }); }
+    catch (e) { return iso; }
+  }
+
+  /* -------------------------------------------------- keadaan tampilan */
+  const UI = {
+    memuat(target, teks) {
+      const n = typeof target === 'string' ? el(target) : target;
+      if (n) n.innerHTML = '<div class="keadaan memuat"><span class="putar"></span>' +
+        esc(teks || 'Memuat…') + '</div>';
+    },
+    kosong(target, judul, isi, aksi) {
+      const n = typeof target === 'string' ? el(target) : target;
+      if (n) n.innerHTML = '<div class="keadaan"><b>' + esc(judul) + '</b><p>' + (isi || '') + '</p>' +
+        (aksi || '') + '</div>';
+    },
+    /* Pesan error menjelaskan apa yang terjadi DAN apa yang bisa dilakukan. */
+    gagal(target, e, konteks) {
+      const n = typeof target === 'string' ? el(target) : target;
+      const p = UI.bacaError(e);
+      if (n) n.innerHTML = '<div class="keadaan gagal"><b>' + esc(p.judul) + '</b><p>' + esc(p.isi) + '</p>' +
+        (konteks ? '<p class="mini">' + esc(konteks) + '</p>' : '') +
+        '<button class="btn" onclick="location.reload()">Muat ulang</button></div>';
+      if (global.console) console.error(e);
+    },
+    bacaError(e) {
+      const kode = (e && (e.code || e.status)) || '';
+      const pesan = (e && (e.message || e.error_description)) || String(e);
+      if (/Failed to fetch|NetworkError/i.test(pesan))
+        return { judul: 'Tidak tersambung', isi: 'Koneksi ke server terputus. Jawaban yang belum terkirim belum tersimpan.' };
+      if (kode === '42501' || /permission denied/i.test(pesan))
+        return { judul: 'Tidak punya akses', isi: 'Akun Anda tidak berhak membuka data ini. Kalau ini keliru, hubungi pengelola.' };
+      if (kode === 'PGRST301' || kode === 401 || /JWT|not authenticated/i.test(pesan))
+        return { judul: 'Sesi berakhir', isi: 'Silakan masuk kembali.' };
+      if (kode === '23505') return { judul: 'Sudah pernah tersimpan', isi: 'Data yang sama sudah ada. Tidak ada yang digandakan.' };
+      if (kode === 'PGRST205' || /schema cache|does not exist/i.test(pesan))
+        return { judul: 'Schema belum dibuka', isi: 'Tambahkan "ajios" di Integrations → Data API → Settings → Exposed schemas.' };
+      if (!CFG.anon || CFG.anon.indexOf('ISI_DENGAN') === 0)
+        return { judul: 'Belum dikonfigurasi', isi: 'config.js belum diisi anon public key.' };
+      return { judul: 'Gagal', isi: pesan };
+    },
+    /* Toast hanya muncul SETELAH server menjawab. */
+    pesan(teks, jenis) {
+      let t = el('ajios-toast');
+      if (!t) {
+        t = document.createElement('div'); t.id = 'ajios-toast'; t.className = 'toast';
+        document.body.appendChild(t);
+      }
+      t.textContent = teks; t.className = 'toast on ' + (jenis || '');
+      clearTimeout(t._t); t._t = setTimeout(() => { t.className = 'toast ' + (jenis || ''); }, 3400);
+    }
+  };
+
+  /* ------------------------------------------------ tombol anti-ganda */
+  /* Mencegah submit dobel yang membuat record kembar. */
+  function sekaliSaja(btn, kerja) {
+    if (btn.dataset.sibuk === '1') return Promise.resolve();
+    btn.dataset.sibuk = '1';
+    const teksLama = btn.textContent;
+    btn.disabled = true; btn.textContent = 'Menyimpan…';
+    return Promise.resolve()
+      .then(kerja)
+      .catch(e => { UI.pesan(UI.bacaError(e).judul + ' — ' + UI.bacaError(e).isi, 'gagal'); throw e; })
+      .finally(() => { btn.dataset.sibuk = '0'; btn.disabled = false; btn.textContent = teksLama; });
+  }
+
+  /* ------------------------------------------------------- persetujuan */
+  const consent = {
+    async tujuan() {
+      const { data, error } = await from('consent_purpose').select('*').order('wajib', { ascending: false });
+      if (error) throw error; return data || [];
+    },
+    async milikSaya(personId) {
+      const { data, error } = await from('consent').select('*').eq('person_id', personId)
+        .order('pada', { ascending: false }).order('urut', { ascending: false });
+      if (error) throw error;
+      const terakhir = {};
+      (data || []).forEach(r => { if (!(r.purpose in terakhir)) terakhir[r.purpose] = r; });
+      return { histori: data || [], terakhir };
+    },
+    /* Pencabutan ditambahkan sebagai baris baru. Histori tidak pernah dihapus. */
+    async catat(personId, purpose, diberikan, sumber, teks) {
+      const { error } = await from('consent').insert({
+        person_id: personId, purpose, diberikan: !!diberikan,
+        sumber: sumber || 'portal', teks_saat_itu: teks || null,
+        dicabut_pada: diberikan ? null : new Date().toISOString()
+      });
+      if (error) throw error; return true;
+    }
+  };
+
+  /* ------------------------------------------------------- formulir */
+  /* prompt() bawaan peramban tidak bisa divalidasi, tidak bisa diberi
+     keterangan, dan di sebagian penampil tidak muncul sama sekali.
+     Semua isian di aplikasi ini memakai formulir sendiri. */
+  function formulir(judul, keterangan, medan) {
+    return new Promise((selesai) => {
+      const lapis = document.createElement('div');
+      lapis.className = 'lapis';
+      lapis.innerHTML = '<div class="lapis-kotak" role="dialog" aria-modal="true" aria-label="' +
+        esc(judul) + '"><h3>' + esc(judul) + '</h3>' +
+        (keterangan ? '<p class="mini" style="margin:6px 0 14px">' + keterangan + '</p>' : '') +
+        medan.map(m => '<div class="isian" data-k="' + esc(m.k) + '">' +
+          '<label for="f-' + esc(m.k) + '">' + esc(m.l) + (m.wajib ? ' <i>*</i>' : '') + '</label>' +
+          (m.t === 'pilih'
+            ? '<select id="f-' + esc(m.k) + '">' + (m.opt || []).map(o =>
+                '<option value="' + esc(o) + '">' + esc(o) + '</option>').join('') + '</select>'
+            : m.t === 'panjang'
+              ? '<textarea id="f-' + esc(m.k) + '" placeholder="' + esc(m.ph || '') + '"></textarea>'
+              : '<input id="f-' + esc(m.k) + '" type="' + esc(m.t || 'text') + '" placeholder="' +
+                esc(m.ph || '') + '">') +
+          (m.bantu ? '<span class="bantu">' + m.bantu + '</span>' : '') +
+          '<span class="galat" hidden></span></div>').join('') +
+        '<div class="deret" style="margin-top:6px"><button class="btn" data-ok>Simpan</button>' +
+        '<button class="btn hantu" data-batal>Batal</button></div></div>';
+      document.body.appendChild(lapis);
+      const tutup = (hasil) => { lapis.remove(); selesai(hasil); };
+      lapis.querySelector('[data-batal]').onclick = () => tutup(null);
+      lapis.onclick = (e) => { if (e.target === lapis) tutup(null); };
+      lapis.querySelector('[data-ok]').onclick = () => {
+        const nilai = {}; let bermasalah = false;
+        medan.forEach(m => {
+          const kotak = lapis.querySelector('[data-k="' + m.k + '"]');
+          const v = (kotak.querySelector('input,select,textarea').value || '').trim();
+          nilai[m.k] = v;
+          const galat = m.wajib && !v ? 'Wajib diisi'
+            : (v && m.periksa ? m.periksa(v) : '');
+          kotak.classList.toggle('salah', !!galat);
+          const g = kotak.querySelector('.galat'); g.textContent = galat || ''; g.hidden = !galat;
+          if (galat) bermasalah = true;
+        });
+        if (!bermasalah) tutup(nilai);
+      };
+      const awal = lapis.querySelector('input,select,textarea'); if (awal) awal.focus();
+      lapis.addEventListener('keydown', (e) => { if (e.key === 'Escape') tutup(null); });
+    });
+  }
+
+  global.AJIOS = {
+    sb, from, auth, profilSaya, peranSaya, adalahStaf, lupakanCache,
+    esc, el, tgl, jam, tampilNilai, tampilOmzet, UI, sekaliSaja, consent, formulir,
+    CFG, ORIGIN, KOSONG
+  };
+})(window);
+
+</script>
+<script>
+/* =====================================================================
+   NP-V05 — Database Peserta, CRM & Funnel Komunitas
+   Semua pembatasan akses ditegakkan basis data. Halaman ini hanya
+   menjelaskan penolakannya, tidak menggantikannya.
+   ===================================================================== */
+(function () {
+  'use strict';
+  const A = window.AJIOS, esc = A.esc, el = A.el, UI = A.UI;
+
+  const KATEGORI = ['Siswa SMA','Mahasiswa','Pengusaha Pemula','Pengusaha 5th+','Pengusaha 10th+'];
+  const BENTUK   = ['Belum dibentuk','Usaha perorangan','CV','Firma','PT Perorangan','PT','Koperasi','Yayasan','Lainnya'];
+  const OMZET    = ['Belum menghasilkan','<100 juta','100-<500 juta','500 juta-<1 miliar','1-<5 miliar','5-<10 miliar','>=10 miliar','Belum bersedia mengisi'];
+  const KOMUNITAS= ['Belum bergabung','Berminat','Diundang','Member aktif','Tidak aktif','Keluar'];
+  const PERIODE  = ['12 bulan terakhir','2026','2025','2024'];
+  const WARNA_KOM= { 'Belum bergabung':'abu','Berminat':'biru','Diundang':'oranye','Member aktif':'hijau','Tidak aktif':'abu','Keluar':'merah' };
+
+  let ORANG = [], USAHA = {}, KOM = {}, TUGAS = [];
+
+  /* ======================= gerbang ======================= */
+  async function boot() {
+    try {
+      const u = await A.auth.user();
+      if (!u) return tampil('gerbang');
+      const peran = await A.peranSaya();
+      el('peran').textContent = peran ? peran : 'bukan pengelola';
+      el('peran').className = 'lbl ' + (peran === 'admin' ? 'emas' : peran ? 'biru' : 'abu');
+      el('keluar').hidden = false;
+      if (!peran || ['admin','cs'].indexOf(peran) === -1) return tampil('bukanStaf');
+      tampil('isi');
+      isiFilter();
+      await muatSemua();
+    } catch (e) { tampil('isi'); UI.gagal('tabelOrang', e); }
+  }
+  function tampil(id) {
+    ['gerbang','bukanStaf','isi'].forEach(k => { el(k).hidden = (k !== id); });
+  }
+
+  el('kirimKode').onclick = function () {
+    const b = this, email = el('email').value.trim();
+    el('i-email').classList.toggle('salah', !/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email));
+    if (el('i-email').classList.contains('salah')) { UI.pesan('Alamat email belum benar', 'gagal'); return; }
+    A.sekaliSaja(b, async () => {
+      await A.auth.kirimOtp(email);
+      el('tahapKode').hidden = false;
+      UI.pesan('Kode dikirim ke ' + email, 'sukses');
+    });
+  };
+  el('verifKode').onclick = function () {
+    const b = this;
+    A.sekaliSaja(b, async () => {
+      await A.auth.verifikasiOtp(el('email').value.trim(), el('kode').value.trim());
+      A.lupakanCache(); await boot();
+    });
+  };
+  el('keluar').onclick = el('keluar2').onclick = async () => { await A.auth.keluar(); location.reload(); };
+
+  /* ======================= filter ======================= */
+  function isiFilter() {
+    const pasang = (id, arr) => { const s = el(id);
+      arr.forEach(v => { const o = document.createElement('option'); o.value = v; o.textContent = v; s.appendChild(o); }); };
+    pasang('f-kat', KATEGORI); pasang('f-bentuk', BENTUK); pasang('f-omzet', OMZET);
+    pasang('f-kom', KOMUNITAS); pasang('f-periode', PERIODE);
+    ['cari','f-kat','f-bentuk','f-omzet','f-kom','f-tim','f-periode'].forEach(id => {
+      el(id).addEventListener('input', gambarTabel);
+      el(id).addEventListener('change', gambarTabel);
+    });
+  }
+
+  /* ======================= muat data ======================= */
+  async function muatSemua() {
+    UI.memuat('tabelOrang', 'Memuat peserta…');
+    try {
+      const [o, br, km, tg] = await Promise.all([
+        A.from('person').select('*').order('dibuat_pada', { ascending: false }),
+        A.from('business_relationship').select('*, business:business_id(*)'),
+        A.from('community_membership').select('*'),
+        A.from('follow_up_task').select('*, person:person_id(nama)').order('jadwal', { ascending: true })
+      ]);
+      [o, br, km, tg].forEach(r => { if (r.error) throw r.error; });
+      ORANG = o.data || [];
+      USAHA = {}; (br.data || []).forEach(r => {
+        (USAHA[r.person_id] = USAHA[r.person_id] || []).push(Object.assign({}, r.business, { _peran: r.peran, _utama: r.utama }));
+      });
+      KOM = {}; (km.data || []).forEach(r => { KOM[r.person_id] = r; });
+      TUGAS = tg.data || [];
+      gambarTabel(); gambarFunnel(); gambarTugas();
+    } catch (e) { UI.gagal('tabelOrang', e, 'Kalau pesannya soal schema, tambahkan "ajios" di Exposed schemas.'); }
+  }
+
+  /* ======================= tabel ======================= */
+  function cocok(p) {
+    const q = el('cari').value.trim().toLowerCase();
+    const us = USAHA[p.id] || [];
+    if (q) {
+      const bahan = [p.nama, p.email, p.whatsapp, p.kota].concat(us.map(u => u.nama + ' ' + (u.brand || '')))
+        .join(' ').toLowerCase();
+      if (bahan.indexOf(q) === -1) return false;
+    }
+    const fk = el('f-kat').value;      if (fk && p.kategori !== fk) return false;
+    const fb = el('f-bentuk').value;   if (fb && !us.some(u => u.bentuk === fb)) return false;
+    const fo = el('f-omzet').value;    if (fo && !us.some(u => u.omzet_rentang === fo)) return false;
+    const fp = el('f-periode').value;  if (fp && !us.some(u => u.omzet_periode === fp)) return false;
+    const fkm = el('f-kom').value;
+    if (fkm) { const k = KOM[p.id]; if (!k || k.status !== fkm) return false; }
+    const ft = el('f-tim').value;
+    if (ft) {
+      const t = us.reduce((m, u) => Math.max(m, Number(u.tim_aktif) || 0), 0);
+      if (ft === '0'    && t !== 0) return false;
+      if (ft === '1-5'  && !(t >= 1 && t <= 5)) return false;
+      if (ft === '6-20' && !(t >= 6 && t <= 20)) return false;
+      if (ft === '21+'  && !(t >= 21)) return false;
+    }
+    return true;
+  }
+
+  function gambarTabel() {
+    if (!ORANG.length) {
+      return UI.kosong('tabelOrang', 'Belum ada peserta',
+        'Peserta masuk lewat portal, atau Anda tambahkan sendiri di sini. ' +
+        'Yang ditambahkan manual tidak otomatis punya akun dan tidak otomatis menyetujui apa pun.',
+        '<button class="btn" onclick="document.getElementById(\'tambahOrang\').click()">+ Tambah peserta pertama</button>');
+    }
+    const rows = ORANG.filter(cocok);
+    const ringkas = '<p class="mini" style="margin-bottom:10px">Menampilkan <b>' + rows.length +
+      '</b> dari ' + ORANG.length + ' peserta.</p>';
+    if (!rows.length) return el('tabelOrang').innerHTML = ringkas +
+      '<div class="keadaan"><b>Tidak ada yang cocok</b><p>Saringan Anda tidak menemukan peserta. ' +
+      ORANG.length + ' peserta lain tetap ada.</p></div>';
+
+    el('tabelOrang').innerHTML = ringkas + '<div class="gulir"><table class="data">' +
+      '<thead><tr><th>Peserta</th><th>Kategori</th><th>Usaha / Pendidikan</th>' +
+      '<th class="angka">Tim</th><th>Omzet / periode</th><th>Komunitas</th><th>Follow-up</th></tr></thead><tbody>' +
+      rows.map(p => {
+        const us = USAHA[p.id] || [], u = us.find(x => x._utama) || us[0];
+        const k = KOM[p.id];
+        const tg = TUGAS.filter(t => t.person_id === p.id && (t.status === 'Terjadwal' || t.status === 'Dikerjakan'));
+        const tim = u && u.tim_aktif !== null && u.tim_aktif !== undefined ? String(u.tim_aktif) : '<span class="nihil">—</span>';
+        return '<tr style="cursor:pointer" data-id="' + p.id + '">' +
+          '<td><b>' + esc(p.nama) + '</b>' + (us.length > 1 ? '<br><span class="mini">' + us.length + ' usaha</span>' : '') + '</td>' +
+          '<td>' + (p.kategori ? '<span class="lbl abu">' + esc(p.kategori) + '</span>' : '<span class="nihil">belum diisi</span>') + '</td>' +
+          '<td>' + (u ? esc(u.nama) + (u.industri ? '<br><span class="mini">' + esc(u.industri) + '</span>' : '')
+                       : '<span class="nihil">belum diisi</span>') + '</td>' +
+          '<td class="angka">' + tim + '</td>' +
+          '<td>' + (u ? A.tampilOmzet(u.omzet_rentang, u.omzet_periode) : '<span class="nihil">tidak berlaku</span>') + '</td>' +
+          '<td>' + (k ? '<span class="lbl ' + (WARNA_KOM[k.status] || 'abu') + '">' + esc(k.status) + '</span>'
+                      : '<span class="lbl abu">Belum bergabung</span>') + '</td>' +
+          '<td>' + (tg.length ? '<span class="lbl oranye">' + tg.length + ' terbuka</span>' : '<span class="mini">—</span>') + '</td>' +
+          '</tr>';
+      }).join('') + '</tbody></table></div>';
+    el('tabelOrang').querySelectorAll('tr[data-id]').forEach(tr => {
+      tr.onclick = () => bukaPanel(tr.dataset.id);
+    });
+  }
+
+  /* ======================= funnel ======================= */
+  function gambarFunnel() {
+    const kolom = ['Berminat','Diundang','Member aktif'];
+    el('papanFunnel').style.gridTemplateColumns = 'repeat(auto-fit,minmax(240px,1fr))';
+    el('papanFunnel').innerHTML = kolom.map(st => {
+      const isi = ORANG.filter(p => (KOM[p.id] || {}).status === st);
+      return '<div class="kartu"><div class="kartu-h"><h3>' + esc(st) + '</h3>' +
+        '<span class="lbl ' + (WARNA_KOM[st] || 'abu') + '">' + isi.length + '</span></div>' +
+        (isi.length ? isi.map(p => {
+          const k = KOM[p.id];
+          return '<div class="baris"><div class="pokok"><b>' + esc(p.nama) + '</b>' +
+            '<span>' + (k.dikonfirmasi_peserta ? 'dikonfirmasi peserta ' + A.tgl(k.dikonfirmasi_pada)
+                                                : 'belum dikonfirmasi peserta') + '</span></div>' +
+            '<button class="btn hantu kecil" data-buka="' + p.id + '">Buka</button></div>';
+        }).join('') : '<p class="mini">Belum ada.</p>') +
+        (st === 'Member aktif' ? '<p class="mini" style="margin-top:10px">Hanya peserta yang sudah ' +
+          'mengkonfirmasi sendiri yang bisa berada di sini.</p>' : '') + '</div>';
+    }).join('');
+    el('papanFunnel').querySelectorAll('[data-buka]').forEach(b => b.onclick = () => bukaPanel(b.dataset.buka));
+  }
+
+  /* ======================= follow-up ======================= */
+  function gambarTugas() {
+    if (!TUGAS.length) return UI.kosong('daftarTugas', 'Belum ada tugas tindak lanjut',
+      'Tugas dibuat dari profil peserta. Membuatnya mencatat rencana — tidak mengirim pesan.');
+    el('daftarTugas').innerHTML = TUGAS.map(t =>
+      '<div class="baris"><div class="pokok"><b>' + esc(t.tujuan) + '</b>' +
+      '<span>' + esc((t.person && t.person.nama) || '—') + ' · ' +
+      (t.jadwal ? A.tgl(t.jadwal) : 'tanpa jadwal') + (t.kanal ? ' · ' + esc(t.kanal) : '') + '</span></div>' +
+      '<span class="lbl ' + (t.status === 'Selesai' ? 'hijau' : t.status === 'Dibatalkan' ? 'abu' : 'oranye') + '">' +
+      esc(t.status) + '</span></div>').join('') +
+      '<p class="mini" style="margin-top:12px">Status di sini adalah catatan pengelola, bukan bukti bahwa ' +
+      'peserta sudah dihubungi.</p>';
+  }
+
+  /* ======================= panel detail ======================= */
+  let PANEL_ID = null, PANEL_TAB = 'profil';
+  function bukaPanel(id) { PANEL_ID = id; PANEL_TAB = 'profil'; el('panel').hidden = false; gambarPanel(); }
+  el('tutupPanel').onclick = () => { el('panel').hidden = true; PANEL_ID = null; };
+  el('panel').onclick = (e) => { if (e.target === el('panel')) { el('panel').hidden = true; PANEL_ID = null; } };
+  el('p-tab').onclick = (e) => {
+    const b = e.target.closest('[data-pt]'); if (!b) return;
+    PANEL_TAB = b.dataset.pt; gambarPanel();
+  };
+
+  async function gambarPanel() {
+    const p = ORANG.find(x => x.id === PANEL_ID); if (!p) return;
+    el('p-nama').textContent = p.nama;
+    el('p-sub').textContent = [p.kategori, p.kota, p.sumber_masuk ? 'masuk lewat ' + p.sumber_masuk : '']
+      .filter(Boolean).join(' · ') || 'belum ada keterangan';
+    el('p-tab').querySelectorAll('[data-pt]').forEach(b =>
+      b.setAttribute('aria-selected', String(b.dataset.pt === PANEL_TAB)));
+    const V = { profil: pProfil, usaha: pUsaha, belajar: pBelajar, interaksi: pInteraksi, consent: pConsent };
+    UI.memuat('p-isi');
+    try { el('p-isi').innerHTML = await (V[PANEL_TAB] || pProfil)(p); pasangAksi(p); }
+    catch (e) { UI.gagal('p-isi', e); }
+  }
+
+  function pProfil(p) {
+    const k = KOM[p.id];
+    return Promise.resolve(
+      '<dl class="kv">' +
+      '<dt>Nama</dt><dd>' + esc(p.nama) + '</dd>' +
+      '<dt>Kategori</dt><dd>' + A.tampilNilai(p.kategori) + '</dd>' +
+      '<dt>WhatsApp</dt><dd>' + A.tampilNilai(p.whatsapp) + '</dd>' +
+      '<dt>Email</dt><dd>' + A.tampilNilai(p.email) + '</dd>' +
+      '<dt>Kota</dt><dd>' + A.tampilNilai(p.kota) + '</dd>' +
+      '<dt>Akun</dt><dd>' + (p.auth_user_id ? 'sudah pernah masuk' :
+        '<span class="nihil">belum punya akun</span>') + '</dd>' +
+      '<dt>Sumber masuk</dt><dd>' + A.tampilNilai(p.sumber_masuk) + '</dd>' +
+      '<dt>Terdaftar</dt><dd>' + A.tgl(p.dibuat_pada) + '</dd>' +
+      '<dt>Komunitas</dt><dd>' + (k ? esc(k.status) +
+        (k.dikonfirmasi_peserta ? ' · dikonfirmasi peserta' : ' · belum dikonfirmasi peserta')
+        : 'Belum bergabung') + '</dd>' +
+      '</dl>' +
+      '<p class="mini" style="margin-top:14px">Jawaban refleksi dan Wellbeing Life Circle ' +
+      '<b>tidak ditampilkan di sini</b> dan tidak terbaca oleh tim CRM. Basis data menolaknya, ' +
+      'bukan halaman ini yang menyembunyikannya.</p>');
+  }
+
+  function pUsaha(p) {
+    const us = USAHA[p.id] || [];
+    if (!us.length) return Promise.resolve(
+      '<div class="keadaan"><b>Belum ada data usaha atau pendidikan</b>' +
+      '<p>Untuk siswa dan mahasiswa, kolom usaha memang <b>tidak berlaku</b> — itu berbeda dari kosong.</p></div>');
+    return Promise.resolve(us.map(u =>
+      '<div class="kartu" style="margin-bottom:12px"><div class="kartu-h"><h3>' + esc(u.nama) + '</h3>' +
+      (u._utama ? '<span class="lbl emas">utama</span>' : '') +
+      '<span class="lbl abu">' + esc(u._peran) + '</span></div>' +
+      '<dl class="kv">' +
+      '<dt>Brand</dt><dd>' + A.tampilNilai(u.brand) + '</dd>' +
+      '<dt>Industri</dt><dd>' + A.tampilNilai(u.industri) + '</dd>' +
+      '<dt>Bidang</dt><dd>' + A.tampilNilai(u.bidang) + '</dd>' +
+      '<dt>Bentuk usaha</dt><dd>' + A.tampilNilai(u.bentuk) + '</dd>' +
+      '<dt>Mulai</dt><dd>' + (u.tanggal_mulai ? A.tgl(u.tanggal_mulai)
+        : u.tahun_mulai ? esc(u.tahun_mulai) + ' <span class="mini">· usia usaha perkiraan, hanya tahun yang diketahui</span>'
+        : '<span class="nihil">belum diisi</span>') + '</dd>' +
+      '<dt>Tim aktif</dt><dd>' + (u.tim_aktif === 0 ? '0 <span class="mini">· termasuk pemilik yang bekerja</span>'
+        : A.tampilNilai(u.tim_aktif)) + '</dd>' +
+      '<dt>Omzet</dt><dd>' + A.tampilOmzet(u.omzet_rentang, u.omzet_periode) + '</dd>' +
+      '<dt>Sumber angka</dt><dd>' + esc(u.omzet_sumber || 'Pernyataan peserta') +
+        ' <span class="mini">· bukan angka teraudit</span></dd>' +
+      '</dl></div>').join('') +
+      '<p class="mini">Satu usaha bisa punya beberapa pemilik, dan satu orang bisa punya beberapa usaha. ' +
+      'Nama yang sama tidak pernah dipakai untuk menggabungkan usaha.</p>');
+  }
+
+  async function pBelajar(p) {
+    const [reg, hadir] = await Promise.all([
+      A.from('session_registration').select('*, sesi:sesi_id(judul, mulai_pada, status)').eq('person_id', p.id),
+      A.from('attendance').select('sesi_id, hadir, check_in_pada').eq('person_id', p.id)
+    ]);
+    if (reg.error) throw reg.error;
+    const H = {}; (hadir.data || []).forEach(a => { H[a.sesi_id] = a; });
+    const r = reg.data || [];
+    if (!r.length) return '<div class="keadaan"><b>Belum terdaftar di sesi mana pun</b>' +
+      '<p>Pendaftaran tercatat saat peserta mendaftar lewat portal.</p></div>';
+    return r.map(x => {
+      const a = H[x.sesi_id];
+      return '<div class="baris"><div class="pokok"><b>' + esc((x.sesi && x.sesi.judul) || '—') + '</b>' +
+        '<span>Terdaftar ' + A.tgl(x.terdaftar_pada) + '</span></div>' +
+        (a ? '<span class="lbl hijau">Hadir · ' + A.jam(a.check_in_pada) + '</span>'
+           : '<span class="lbl abu">Belum check-in</span>') + '</div>';
+    }).join('') + '<p class="mini" style="margin-top:12px"><b>Terdaftar berbeda dari hadir.</b> ' +
+      'Tidak check-in bukan berarti tidak datang — bisa jadi hanya belum tercatat.</p>';
+  }
+
+  async function pInteraksi(p) {
+    const [itr, tgs, bon] = await Promise.all([
+      A.from('interaction').select('*').eq('person_id', p.id).order('terjadi_pada', { ascending: false }),
+      A.from('follow_up_task').select('*').eq('person_id', p.id).order('jadwal', { ascending: true }),
+      A.from('bonus_event').select('*').eq('person_id', p.id).order('terjadi_pada', { ascending: false })
+    ]);
+    [itr, tgs, bon].forEach(x => { if (x.error) throw x.error; });
+    const i = itr.data || [], t = tgs.data || [], b = bon.data || [];
+    return '<h3 style="margin-bottom:8px">Tugas tindak lanjut</h3>' +
+      (t.length ? t.map(x => '<div class="baris"><div class="pokok"><b>' + esc(x.tujuan) + '</b>' +
+        '<span>' + (x.jadwal ? A.tgl(x.jadwal) : 'tanpa jadwal') + (x.kanal ? ' · ' + esc(x.kanal) : '') + '</span></div>' +
+        '<span class="lbl ' + (x.status === 'Selesai' ? 'hijau' : 'oranye') + '">' + esc(x.status) + '</span></div>').join('')
+        : '<p class="mini">Belum ada.</p>') +
+      '<div class="deret" style="margin:12px 0 20px"><button class="btn hantu kecil" data-aksi="tugas">+ Tugas baru</button></div>' +
+      '<h3 style="margin-bottom:8px">Riwayat interaksi</h3>' +
+      (i.length ? i.map(x => '<div class="baris"><div class="pokok"><b>' + esc(x.ringkasan || x.kanal || '—') + '</b>' +
+        '<span>' + A.tgl(x.terjadi_pada) + (x.kanal ? ' · ' + esc(x.kanal) : '') + '</span></div></div>').join('')
+        : '<p class="mini">Belum ada.</p>') +
+      '<h3 style="margin:20px 0 8px">Bonus</h3>' +
+      (b.length ? b.map(x => '<div class="baris"><div class="pokok"><b>' +
+        (x.jenis === 'follow_ig_dikonfirmasi' ? 'Follow Instagram — dikonfirmasi peserta' :
+         x.jenis === 'klik_spotify' ? 'Klik Spotify tercatat' : esc(x.jenis)) + '</b>' +
+        '<span>' + A.tgl(x.terjadi_pada) + '</span></div></div>').join('')
+        : '<p class="mini">Belum ada.</p>') +
+      '<p class="mini" style="margin-top:12px">Klik Spotify adalah peristiwa klik, <b>bukan bukti selesai ' +
+      'mendengarkan</b>. Follow Instagram adalah pernyataan peserta, bukan terverifikasi otomatis.</p>';
+  }
+
+  async function pConsent(p) {
+    const [tujuan, milik] = await Promise.all([A.consent.tujuan(), A.consent.milikSaya(p.id)]);
+    return '<div class="gulir"><table class="data" style="min-width:440px"><thead><tr>' +
+      '<th>Tujuan</th><th>Dasar</th><th>Keadaan</th><th>Terakhir</th></tr></thead><tbody>' +
+      tujuan.map(t => {
+        const c = milik.terakhir[t.kode];
+        const aktif = c && c.diberikan && !c.dicabut_pada;
+        return '<tr><td><b>' + esc(t.nama) + '</b><br><span class="mini">' + esc(t.deskripsi) + '</span></td>' +
+          '<td><span class="lbl abu">' + esc(t.dasar) + '</span>' + (t.wajib ? '<br><span class="mini">wajib</span>' : '') + '</td>' +
+          '<td>' + (!c ? '<span class="nihil">belum ditanyakan</span>'
+            : aktif ? '<span class="lbl hijau">disetujui</span>'
+            : c.dicabut_pada ? '<span class="lbl merah">dicabut</span>'
+            : '<span class="lbl abu">ditolak</span>') + '</td>' +
+          '<td>' + (c ? A.tgl(c.pada) : '—') + '</td></tr>';
+      }).join('') + '</tbody></table></div>' +
+      '<h3 style="margin:20px 0 8px">Histori lengkap</h3>' +
+      (milik.histori.length ? milik.histori.map(h =>
+        '<div class="baris"><div class="pokok"><b>' + esc(h.purpose) + ' — ' +
+        (h.dicabut_pada ? 'dicabut' : h.diberikan ? 'disetujui' : 'ditolak') + '</b>' +
+        '<span>' + A.tgl(h.pada) + (h.sumber ? ' · ' + esc(h.sumber) : '') + '</span></div></div>').join('')
+        : '<p class="mini">Belum ada catatan persetujuan.</p>') +
+      '<p class="mini" style="margin-top:12px">Histori tidak pernah ditimpa. Pencabutan ditambahkan sebagai ' +
+      'baris baru supaya tetap bisa dibuktikan. <b>Persetujuan promosi tidak pernah menjadi syarat ' +
+      'menerima materi.</b></p>';
+  }
+
+  function pasangAksi(p) {
+    const b = el('p-isi').querySelector('[data-aksi="tugas"]');
+    if (b) b.onclick = () => tugasBaru(p);
+  }
+
+  /* ======================= aksi ======================= */
+  async function tugasBaru(p) {
+    const v = await A.formulir('Tugas tindak lanjut — ' + p.nama,
+      '<b>Membuat tugas tidak mengirim pesan apa pun.</b> Ini pencatatan rencana, bukan pengiriman.',
+      [{ k: 'tujuan', l: 'Tujuan', wajib: true, ph: 'Tinjau langkah pertama' },
+       { k: 'jadwal', l: 'Jadwal', t: 'date', bantu: 'Boleh dikosongkan.' },
+       { k: 'kanal',  l: 'Kanal', t: 'pilih', opt: ['', 'WhatsApp', 'Telepon', 'Email', 'Tatap muka'] },
+       { k: 'catatan', l: 'Catatan', t: 'panjang' }]);
+    if (!v) return;
+    const { error } = await A.from('follow_up_task').insert({
+      person_id: p.id, tujuan: v.tujuan, jadwal: v.jadwal || null,
+      kanal: v.kanal || null, catatan: v.catatan || null });
+    if (error) { UI.pesan(UI.bacaError(error).isi, 'gagal'); return; }
+    UI.pesan('Tugas dicatat. Tidak ada pesan yang dikirim.', 'sukses');
+    await muatSemua(); gambarPanel();
+  }
+
+  el('tambahOrang').onclick = async function () {
+    const v = await A.formulir('Tambah peserta',
+      'Peserta yang ditambahkan di sini <b>tidak otomatis punya akun</b> dan ' +
+      '<b>tidak otomatis menyetujui apa pun</b>. Persetujuan hanya sah kalau peserta sendiri yang memberikannya.',
+      [{ k: 'nama', l: 'Nama lengkap', wajib: true },
+       { k: 'kategori', l: 'Kategori', t: 'pilih', opt: [''].concat(KATEGORI) },
+       { k: 'whatsapp', l: 'WhatsApp' },
+       { k: 'email', l: 'Email', t: 'email',
+         periksa: v => /^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(v) ? '' : 'Format email belum benar' },
+       { k: 'kota', l: 'Kota' }]);
+    if (!v) return;
+    const { error } = await A.from('person').insert({
+      nama: v.nama, kategori: v.kategori || null, whatsapp: v.whatsapp || null,
+      email: v.email || null, kota: v.kota || null, sumber_masuk: 'Ditambahkan pengelola' });
+    if (error) { UI.pesan(UI.bacaError(error).isi, 'gagal'); return; }
+    UI.pesan('Peserta ditambahkan.', 'sukses');
+    await muatSemua();
+  };
+
+  /* ======================= tab utama ======================= */
+  document.querySelector('.tab[role="tablist"]').onclick = (e) => {
+    const b = e.target.closest('[data-tab]'); if (!b) return;
+    document.querySelectorAll('.tab[role="tablist"] [data-tab]').forEach(x =>
+      x.setAttribute('aria-selected', String(x === b)));
+    ['db','funnel','tugas'].forEach(k => { el('tab-' + k).hidden = (k !== b.dataset.tab); });
+  };
+
+  boot();
+  A.auth.onBerubah(() => {});
+})();
+
+</script>
+</body>
+</html>
