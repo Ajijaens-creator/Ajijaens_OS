@@ -32,6 +32,14 @@
 
   let SAYA = null, LANGKAH = 1, DRAF = {};
 
+  /* Tautan/QR sesi: ?sesi=KODE. Kodenya hanya penunjuk sesi —
+     tidak membawa hak akses apa pun, dan tetap harus masuk sendiri. */
+  const KODE_URL = (function () {
+    try { return (new URLSearchParams(location.search).get('sesi') || '').trim(); }
+    catch (e) { return ''; }
+  })();
+  let GABUNG = null;   /* {jenis:'sukses'|'ada'|'gagal', judul?, isi} */
+
   /* ===================== boot ===================== */
   async function boot() {
     try {
@@ -45,7 +53,77 @@
   }
   function layar(id) {
     ['pembuka','masuk','daftar','sesi'].forEach(k => { const n = el('l-' + k); if (n) n.hidden = (k !== id); });
+    if (id === 'pembuka') tandaTautan();
     window.scrollTo(0, 0);
+  }
+
+  /* Pemberitahuan di halaman pembuka kalau datang dari QR/tautan sesi. */
+  function tandaTautan() {
+    const n = el('tautanSesi'); if (!n) return;
+    if (!KODE_URL) { n.hidden = true; return; }
+    n.hidden = false;
+    n.innerHTML = 'Anda membuka tautan sesi <b>' + esc(KODE_URL) + '</b>. ' +
+      'Masuk dulu dengan email, lalu Anda didaftarkan ke sesi ini. ' +
+      'Tautan ini tidak memberi akses apa pun dengan sendirinya.';
+  }
+
+  /* ---------- gabung ke sesi dari tautan ----------
+     Mendaftar BUKAN hadir. Yang ditulis di sini hanya pendaftaran;
+     kehadiran tetap dicatat terpisah saat check-in di lokasi. */
+  async function gabungDariTautan() {
+    if (!KODE_URL || !SAYA) return;
+    const kode = KODE_URL;
+    try {
+      const uuid = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(kode);
+      const { data: s, error: e1 } = await (uuid
+        ? A.from('sesi').select('id, judul, status').eq('id', kode).maybeSingle()
+        : A.from('sesi').select('id, judul, status').eq('kode_sesi', kode.toUpperCase()).maybeSingle());
+      if (e1) throw e1;
+      if (!s) {
+        GABUNG = { jenis: 'gagal', isi: 'Sesi dengan kode <b>' + esc(kode) + '</b> tidak ditemukan, ' +
+          'atau belum dibuka untuk pendaftaran. Sesi yang masih berstatus Draft memang belum terlihat. ' +
+          'Tanyakan kodenya ke fasilitator.' };
+        return;
+      }
+      if (s.status === 'Dibatalkan') {
+        GABUNG = { jenis: 'gagal', judul: s.judul,
+          isi: 'Sesi ini <b>dibatalkan</b>, jadi Anda tidak didaftarkan.' };
+        return;
+      }
+      const { data: ada, error: e2 } = await A.from('session_registration')
+        .select('id').eq('sesi_id', s.id).eq('person_id', SAYA.id).maybeSingle();
+      if (e2) throw e2;
+      if (ada) {
+        GABUNG = { jenis: 'ada', judul: s.judul,
+          isi: 'Anda sudah terdaftar di sesi ini sebelumnya — tidak didaftarkan dua kali.' };
+        return;
+      }
+      const { error: e3 } = await A.from('session_registration')
+        .insert({ sesi_id: s.id, person_id: SAYA.id });
+      if (e3) {
+        if (e3.code === '23505') {
+          GABUNG = { jenis: 'ada', judul: s.judul,
+            isi: 'Anda sudah terdaftar di sesi ini — tidak didaftarkan dua kali.' };
+          return;
+        }
+        throw e3;
+      }
+      GABUNG = { jenis: 'sukses', judul: s.judul,
+        isi: 'Anda <b>terdaftar</b> di sesi ini. <b>Terdaftar belum berarti hadir</b> — ' +
+             'kehadiran dicatat terpisah saat Anda check-in di lokasi.' };
+    } catch (e) {
+      GABUNG = { jenis: 'gagal', isi: 'Pendaftaran lewat tautan sesi belum berhasil: ' +
+        esc(UI.bacaError(e).isi) + ' Pendaftaran Anda <b>tidak</b> tersimpan.' };
+    }
+  }
+
+  function kartuGabung() {
+    if (!GABUNG) return '';
+    const w = GABUNG.jenis === 'sukses' ? 'hijau' : GABUNG.jenis === 'ada' ? 'biru' : 'merah';
+    return '<div class="kartu"><div class="kartu-h"><h3>' +
+      esc(GABUNG.judul || 'Tautan sesi') + '</h3><span class="lbl ' + w + '">' +
+      (GABUNG.jenis === 'sukses' ? 'terdaftar' : GABUNG.jenis === 'ada' ? 'sudah terdaftar' : 'tidak terdaftar') +
+      '</span></div><p class="mini">' + GABUNG.isi + '</p></div>';
   }
 
   /* ===================== masuk ===================== */
@@ -311,6 +389,7 @@
     el('halo').textContent = SAYA ? SAYA.nama : '';
     UI.memuat('isiSesi');
     try {
+      await gabungDariTautan();
       const [reg, akt, lc, ap, bon, kom] = await Promise.all([
         A.from('session_registration').select('*, sesi:sesi_id(*)').eq('person_id', SAYA.id),
         A.from('activity').select('*'),
@@ -340,6 +419,7 @@
     const aktifLC = akt.find(a => a.jenis === 'life_circle' && a.status === 'Dibuka');
 
     el('isiSesi').innerHTML =
+      kartuGabung() +
       kartuSesi +
       /* ---- Materi ---- */
       '<div class="kartu"><div class="kartu-h"><h3>Materi</h3></div>' +

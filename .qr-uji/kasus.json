@@ -1,0 +1,32 @@
+[
+ {
+  "teks": "https://os.ajijaens.com/portal/?sesi=UJI-2",
+  "ukuran": 29,
+  "berkas": "/home/claude/repo/.qr-uji/kasus0.txt"
+ },
+ {
+  "teks": "https://os.ajijaens.com/portal/?sesi=LBD-2026-11-01",
+  "ukuran": 33,
+  "berkas": "/home/claude/repo/.qr-uji/kasus1.txt"
+ },
+ {
+  "teks": "https://os.ajijaens.com/portal/?sesi=3f1c9a62-7b44-4e1d-9f0a-2c5d8e7a1b33",
+  "ukuran": 37,
+  "berkas": "/home/claude/repo/.qr-uji/kasus2.txt"
+ },
+ {
+  "teks": "https://ajijaens-creator.github.io/Ajijaens_OS/app/portal/?sesi=UJI-2",
+  "ukuran": 37,
+  "berkas": "/home/claude/repo/.qr-uji/kasus3.txt"
+ },
+ {
+  "teks": "A",
+  "ukuran": 21,
+  "berkas": "/home/claude/repo/.qr-uji/kasus4.txt"
+ },
+ {
+  "teks": "Life by Design — Aji Jaens · sesi Ubud",
+  "ukuran": 29,
+  "berkas": "/home/claude/repo/.qr-uji/kasus5.txt"
+ }
+]

@@ -14,7 +14,6 @@
    Sage = Learn, biru = Do, terracotta = Share.
    Status selalu punya TEKS, tidak hanya warna. */
 
-
 :root{
   --bg:#FAF8F2; --surface:#FFFDF8; --surface-2:#F5F1E7; --surface-3:#EFEADC;
   --border:#E6DFCE; --border-soft:#F0EADA;
@@ -200,7 +199,6 @@ table.data .angka{text-align:right;font-variant-numeric:tabular-nums}
 .lapis-kotak{background:var(--surface);border:1px solid var(--border);border-radius:var(--r);
   padding:20px;width:100%;max-width:440px;max-height:88vh;overflow:auto;box-shadow:var(--bayang)}
 .lapis-kotak h3{margin-bottom:4px}
-
 </style>
 <style>
 /* ---- halaman pembuka: foto hospitality + tulisan emas ---- */
@@ -245,6 +243,8 @@ input[type="range"]{accent-color:var(--gold);width:100%}
       <p class="sub">From Student to Hospitality Entrepreneur</p>
       <div class="rupa"><span class="bulat">AJ</span>
         <span><b>Aji Jaens Suputtra</b><span>Founder · Life Mastery Specialist</span></span></div>
+      <p id="tautanSesi" hidden style="background:rgba(255,253,246,.12);border:1px solid rgba(232,200,122,.45);
+        border-radius:10px;padding:10px 12px;margin-bottom:14px;font-size:13px;line-height:1.55;color:#F2EADA"></p>
       <button class="btn lebar" id="keMasuk">Masuk &amp; dapatkan materi</button>
       <p style="text-align:center;margin-top:12px;font-size:14px;color:#D9CDB4">
         Sudah punya akun? <a href="#" id="keMasuk2" style="color:#E8C87A;font-weight:600">Masuk</a></p>
@@ -298,11 +298,32 @@ input[type="range"]{accent-color:var(--gold);width:100%}
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.js"></script>
 <script>
-/* ====== ISI anon key DI SINI ====== Keduanya PUBLIK. JANGAN service_role. */
+/* =====================================================================
+   KONFIGURASI — satu-satunya berkas yang perlu Anda isi sendiri.
+
+   Keduanya diambil dari:
+   Dashboard Supabase → Project Settings → API Keys
+
+   Dua nilai ini MEMANG PUBLIK. Keduanya tertanam di setiap halaman yang
+   dibuka peserta dan terbaca siapa pun yang melihat kode halaman. Yang
+   melindungi data bukan kerahasiaannya, melainkan 57 kebijakan RLS di
+   basis data.
+
+   JANGAN PERNAH menaruh service_role key di sini. Kunci itu melewati
+   seluruh kebijakan RLS. Kalau ia masuk ke berkas ini, ia ikut terbit
+   ke internet dan seluruh pengamanan kita hilang dalam satu langkah.
+   ===================================================================== */
+
 window.AJIOS_CONFIG = {
   url:  'https://zkqfbdvumqnabptiqjhb.supabase.co',
-  anon: 'ISI_DENGAN_ANON_PUBLIC_KEY',
-  schema: 'ajios', origin: ''
+  anon: 'ISI_DENGAN_ANON_PUBLIC_KEY',   // diawali eyJ...
+
+  /* Nama schema basis data. Jangan diubah. */
+  schema: 'ajios',
+
+  /* Alamat tempat aplikasi ini dihosting. Dipakai untuk tautan OTP dan QR.
+     Biarkan kosong untuk memakai alamat halaman saat ini. */
+  origin: ''
 };
 </script>
 <script>
@@ -574,7 +595,6 @@ window.AJIOS_CONFIG = {
     CFG, ORIGIN, KOSONG
   };
 })(window);
-
 </script>
 <script>
 /* =====================================================================
@@ -611,6 +631,14 @@ window.AJIOS_CONFIG = {
 
   let SAYA = null, LANGKAH = 1, DRAF = {};
 
+  /* Tautan/QR sesi: ?sesi=KODE. Kodenya hanya penunjuk sesi —
+     tidak membawa hak akses apa pun, dan tetap harus masuk sendiri. */
+  const KODE_URL = (function () {
+    try { return (new URLSearchParams(location.search).get('sesi') || '').trim(); }
+    catch (e) { return ''; }
+  })();
+  let GABUNG = null;   /* {jenis:'sukses'|'ada'|'gagal', judul?, isi} */
+
   /* ===================== boot ===================== */
   async function boot() {
     try {
@@ -624,7 +652,77 @@ window.AJIOS_CONFIG = {
   }
   function layar(id) {
     ['pembuka','masuk','daftar','sesi'].forEach(k => { const n = el('l-' + k); if (n) n.hidden = (k !== id); });
+    if (id === 'pembuka') tandaTautan();
     window.scrollTo(0, 0);
+  }
+
+  /* Pemberitahuan di halaman pembuka kalau datang dari QR/tautan sesi. */
+  function tandaTautan() {
+    const n = el('tautanSesi'); if (!n) return;
+    if (!KODE_URL) { n.hidden = true; return; }
+    n.hidden = false;
+    n.innerHTML = 'Anda membuka tautan sesi <b>' + esc(KODE_URL) + '</b>. ' +
+      'Masuk dulu dengan email, lalu Anda didaftarkan ke sesi ini. ' +
+      'Tautan ini tidak memberi akses apa pun dengan sendirinya.';
+  }
+
+  /* ---------- gabung ke sesi dari tautan ----------
+     Mendaftar BUKAN hadir. Yang ditulis di sini hanya pendaftaran;
+     kehadiran tetap dicatat terpisah saat check-in di lokasi. */
+  async function gabungDariTautan() {
+    if (!KODE_URL || !SAYA) return;
+    const kode = KODE_URL;
+    try {
+      const uuid = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(kode);
+      const { data: s, error: e1 } = await (uuid
+        ? A.from('sesi').select('id, judul, status').eq('id', kode).maybeSingle()
+        : A.from('sesi').select('id, judul, status').eq('kode_sesi', kode.toUpperCase()).maybeSingle());
+      if (e1) throw e1;
+      if (!s) {
+        GABUNG = { jenis: 'gagal', isi: 'Sesi dengan kode <b>' + esc(kode) + '</b> tidak ditemukan, ' +
+          'atau belum dibuka untuk pendaftaran. Sesi yang masih berstatus Draft memang belum terlihat. ' +
+          'Tanyakan kodenya ke fasilitator.' };
+        return;
+      }
+      if (s.status === 'Dibatalkan') {
+        GABUNG = { jenis: 'gagal', judul: s.judul,
+          isi: 'Sesi ini <b>dibatalkan</b>, jadi Anda tidak didaftarkan.' };
+        return;
+      }
+      const { data: ada, error: e2 } = await A.from('session_registration')
+        .select('id').eq('sesi_id', s.id).eq('person_id', SAYA.id).maybeSingle();
+      if (e2) throw e2;
+      if (ada) {
+        GABUNG = { jenis: 'ada', judul: s.judul,
+          isi: 'Anda sudah terdaftar di sesi ini sebelumnya — tidak didaftarkan dua kali.' };
+        return;
+      }
+      const { error: e3 } = await A.from('session_registration')
+        .insert({ sesi_id: s.id, person_id: SAYA.id });
+      if (e3) {
+        if (e3.code === '23505') {
+          GABUNG = { jenis: 'ada', judul: s.judul,
+            isi: 'Anda sudah terdaftar di sesi ini — tidak didaftarkan dua kali.' };
+          return;
+        }
+        throw e3;
+      }
+      GABUNG = { jenis: 'sukses', judul: s.judul,
+        isi: 'Anda <b>terdaftar</b> di sesi ini. <b>Terdaftar belum berarti hadir</b> — ' +
+             'kehadiran dicatat terpisah saat Anda check-in di lokasi.' };
+    } catch (e) {
+      GABUNG = { jenis: 'gagal', isi: 'Pendaftaran lewat tautan sesi belum berhasil: ' +
+        esc(UI.bacaError(e).isi) + ' Pendaftaran Anda <b>tidak</b> tersimpan.' };
+    }
+  }
+
+  function kartuGabung() {
+    if (!GABUNG) return '';
+    const w = GABUNG.jenis === 'sukses' ? 'hijau' : GABUNG.jenis === 'ada' ? 'biru' : 'merah';
+    return '<div class="kartu"><div class="kartu-h"><h3>' +
+      esc(GABUNG.judul || 'Tautan sesi') + '</h3><span class="lbl ' + w + '">' +
+      (GABUNG.jenis === 'sukses' ? 'terdaftar' : GABUNG.jenis === 'ada' ? 'sudah terdaftar' : 'tidak terdaftar') +
+      '</span></div><p class="mini">' + GABUNG.isi + '</p></div>';
   }
 
   /* ===================== masuk ===================== */
@@ -890,6 +988,7 @@ window.AJIOS_CONFIG = {
     el('halo').textContent = SAYA ? SAYA.nama : '';
     UI.memuat('isiSesi');
     try {
+      await gabungDariTautan();
       const [reg, akt, lc, ap, bon, kom] = await Promise.all([
         A.from('session_registration').select('*, sesi:sesi_id(*)').eq('person_id', SAYA.id),
         A.from('activity').select('*'),
@@ -919,6 +1018,7 @@ window.AJIOS_CONFIG = {
     const aktifLC = akt.find(a => a.jenis === 'life_circle' && a.status === 'Dibuka');
 
     el('isiSesi').innerHTML =
+      kartuGabung() +
       kartuSesi +
       /* ---- Materi ---- */
       '<div class="kartu"><div class="kartu-h"><h3>Materi</h3></div>' +
@@ -1140,7 +1240,6 @@ window.AJIOS_CONFIG = {
 
   boot();
 })();
-
 </script>
 </body>
 </html>

@@ -14,7 +14,6 @@
    Sage = Learn, biru = Do, terracotta = Share.
    Status selalu punya TEKS, tidak hanya warna. */
 
-
 :root{
   --bg:#FAF8F2; --surface:#FFFDF8; --surface-2:#F5F1E7; --surface-3:#EFEADC;
   --border:#E6DFCE; --border-soft:#F0EADA;
@@ -200,7 +199,6 @@ table.data .angka{text-align:right;font-variant-numeric:tabular-nums}
 .lapis-kotak{background:var(--surface);border:1px solid var(--border);border-radius:var(--r);
   padding:20px;width:100%;max-width:440px;max-height:88vh;overflow:auto;box-shadow:var(--bayang)}
 .lapis-kotak h3{margin-bottom:4px}
-
 </style>
 </head>
 <body>
@@ -246,7 +244,7 @@ table.data .angka{text-align:right;font-variant-numeric:tabular-nums}
         bukan sekadar disembunyikan di layar.</p>
       <p class="mini">Kalau Anda peserta, bukan pengelola, portal Anda ada di halaman utama.</p>
       <div class="deret" style="margin-top:14px">
-        <a class="btn hantu" href="./">Ke portal peserta</a>
+        <a class="btn hantu" href="../portal/">Ke portal peserta</a>
         <button class="btn hantu" id="keluar2">Keluar</button>
       </div>
     </div>
@@ -355,13 +353,32 @@ table.data .angka{text-align:right;font-variant-numeric:tabular-nums}
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.js"></script>
 <script>
-/* ====== ISI DUA BARIS INI ======
-   Dashboard Supabase -> Project Settings -> API Keys.
-   Keduanya MEMANG PUBLIK. JANGAN pernah menaruh service_role di sini. */
+/* =====================================================================
+   KONFIGURASI — satu-satunya berkas yang perlu Anda isi sendiri.
+
+   Keduanya diambil dari:
+   Dashboard Supabase → Project Settings → API Keys
+
+   Dua nilai ini MEMANG PUBLIK. Keduanya tertanam di setiap halaman yang
+   dibuka peserta dan terbaca siapa pun yang melihat kode halaman. Yang
+   melindungi data bukan kerahasiaannya, melainkan 57 kebijakan RLS di
+   basis data.
+
+   JANGAN PERNAH menaruh service_role key di sini. Kunci itu melewati
+   seluruh kebijakan RLS. Kalau ia masuk ke berkas ini, ia ikut terbit
+   ke internet dan seluruh pengamanan kita hilang dalam satu langkah.
+   ===================================================================== */
+
 window.AJIOS_CONFIG = {
   url:  'https://zkqfbdvumqnabptiqjhb.supabase.co',
-  anon: 'ISI_DENGAN_ANON_PUBLIC_KEY',
-  schema: 'ajios', origin: ''
+  anon: 'ISI_DENGAN_ANON_PUBLIC_KEY',   // diawali eyJ...
+
+  /* Nama schema basis data. Jangan diubah. */
+  schema: 'ajios',
+
+  /* Alamat tempat aplikasi ini dihosting. Dipakai untuk tautan OTP dan QR.
+     Biarkan kosong untuk memakai alamat halaman saat ini. */
+  origin: ''
 };
 </script>
 <script>
@@ -633,7 +650,6 @@ window.AJIOS_CONFIG = {
     CFG, ORIGIN, KOSONG
   };
 })(window);
-
 </script>
 <script>
 /* =====================================================================
@@ -1023,7 +1039,6 @@ window.AJIOS_CONFIG = {
   boot();
   A.auth.onBerubah(() => {});
 })();
-
 </script>
 </body>
 </html>

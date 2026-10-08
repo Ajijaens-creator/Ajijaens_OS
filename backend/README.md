@@ -17,17 +17,20 @@ dengan Supabase.
 | `migrations/0002_pdp.sql` | Persetujuan, hak subjek data, catatan kebocoran, audit — PP 33/2026 |
 | `migrations/0003_rls.sql` | 57 kebijakan izin tingkat baris + dua view terbatas |
 | `migrations/0004_grants.sql` | Hak akses schema untuk Supabase + pemeriksaan "tidak ada tabel tanpa RLS" |
+| `migrations/0005_progres.sql` | Hitungan pengirim aktivitas untuk fasilitator — **NULL bila tidak berhak, bukan nol** |
 | `test/shim_lokal.sql` | **Hanya untuk uji lokal.** Jangan dijalankan di Supabase |
-| `test/uji_rls.sql` | 32 pengujian izin dan PDP |
+| `test/uji_rls.sql` | 36 pengujian izin dan PDP |
+| `pasang_semua.sql` | Kelima migrasi dalam satu berkas, satu transaksi — dirakit `rakit.sh` |
+| `pasang_tambahan_0005.sql` | Hanya `0005`, untuk basis data yang sudah memakai versi empat bagian |
 
-Ketiga migrasi **dapat dijalankan ulang tanpa duplikasi** — sudah diuji tiga
-kali berturut-turut pada basis data yang sudah terisi.
+Seluruh migrasi **dapat dijalankan ulang tanpa duplikasi** — sudah diuji
+berkali-kali berturut-turut pada basis data yang sudah terisi.
 
 ---
 
 ## Hasil pengujian
 
-**32 lulus, 0 gagal.** Dijalankan sebagai peran `authenticated` biasa, bukan
+**36 lulus, 0 gagal.** Dijalankan sebagai peran `authenticated` biasa, bukan
 superuser — jadi kebijakannya benar-benar berlaku.
 
 Tiga jalur kegagalan pemasangan juga diuji dan ketiganya berhenti dengan
@@ -83,7 +86,8 @@ bagian berikutnya.
 1. **New project** di organisasi Anda. Region: **Singapore** (terdekat).
    Simpan kata sandi basis datanya — tidak bisa dilihat lagi nanti.
 2. **SQL Editor** → tempel dan Run, **satu per satu, sesuai urutan nomor**:
-   `0001_schema.sql` → `0002_pdp.sql` → `0003_rls.sql` → `0004_grants.sql`.
+   `0001_schema.sql` → `0002_pdp.sql` → `0003_rls.sql` → `0004_grants.sql` →
+   `0005_progres.sql`. Atau cukup `pasang_semua.sql`, sekali tempel.
    Setelah `0003` dan `0004` Anda akan melihat pemberitahuan
    *"RLS aktif di seluruh tabel ajios"*. Kalau tidak muncul, berhenti dan
    baca errornya — jangan lanjut.

@@ -1,0 +1,107 @@
+<!doctype html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="robots" content="noindex,nofollow">
+<title>Sesi &amp; Kendali Fasilitator — AJI JAENS OS</title>
+<link rel="stylesheet" href="../lib/ui.css">
+<style>
+.ikhtisar{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:16px}
+.kepala-sesi{display:flex;gap:14px;align-items:flex-start;flex-wrap:wrap;margin-bottom:14px}
+.kepala-sesi .tumpuk{flex:1;min-width:220px}
+.jam-besar{font-family:var(--fd);font-size:34px;line-height:1;letter-spacing:.02em}
+#qr svg{width:100%;max-width:190px;height:auto;display:block}
+</style>
+</head>
+<body>
+
+<header class="atas"><div class="bungkus atas-in">
+  <span class="merek">Aji Jaens<em>Sesi &amp; Kendali</em></span>
+  <span class="tumbuh"></span>
+  <span id="peran" class="lbl abu">memeriksa…</span>
+  <button class="btn hantu kecil" id="keluar" hidden>Keluar</button>
+</div></header>
+
+<main class="bungkus" style="padding-block:22px 60px">
+
+  <!-- ====================== gerbang masuk ====================== -->
+  <section id="gerbang" hidden>
+    <div class="kartu sempit" style="margin-inline:auto">
+      <h2>Masuk</h2>
+      <p class="mini" style="margin:6px 0 16px">Halaman kendali hanya untuk fasilitator, operator, dan admin.
+        Kode masuk dikirim ke email Anda — tidak ada kata sandi yang kami simpan atau minta.</p>
+      <div class="isian" id="i-email">
+        <label for="email">Email</label>
+        <input id="email" type="email" inputmode="email" autocomplete="email" placeholder="nama@contoh.com">
+      </div>
+      <button class="btn lebar" id="kirimKode">Kirim kode</button>
+      <div id="tahapKode" hidden style="margin-top:16px">
+        <div class="isian" id="i-kode">
+          <label for="kode">Kode 6 angka dari email</label>
+          <input id="kode" type="text" inputmode="numeric" autocomplete="one-time-code" maxlength="8" placeholder="123456">
+        </div>
+        <button class="btn lebar" id="verifKode">Masuk</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- ====================== bukan staf ====================== -->
+  <section id="bukanStaf" hidden>
+    <div class="kartu sempit" style="margin-inline:auto">
+      <h2>Tidak punya akses</h2>
+      <p style="margin:8px 0 14px">Akun Anda masuk, tetapi tidak terdaftar sebagai pengelola sesi.
+        Halaman ini bisa mengubah kehadiran dan membuka aktivitas, jadi aksesnya ditolak
+        <b>di sisi basis data</b> — bukan sekadar disembunyikan di layar.</p>
+      <div class="deret" style="margin-top:14px">
+        <a class="btn hantu" href="../portal/">Ke portal peserta</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ====================== isi ====================== -->
+  <section id="isi" hidden>
+
+    <!-- -------- pilih sesi -------- -->
+    <div id="pilih">
+      <h1>Sesi</h1>
+      <p class="mini" style="margin:4px 0 16px">Pilih sesi untuk membuka layar kendali.
+        Sesi baru selalu dibuat sebagai <b>Draft</b>.</p>
+      <div class="kartu"><div id="daftarSesi"></div></div>
+    </div>
+
+    <!-- -------- layar kerja -------- -->
+    <div id="kerja" hidden>
+      <button class="btn hantu kecil" id="kembaliSesi" style="margin-bottom:14px">← Semua sesi</button>
+
+      <div class="kepala-sesi">
+        <div class="tumpuk">
+          <h1 id="judulSesi">—</h1>
+          <p class="mini" id="subSesi">—</p>
+        </div>
+        <div style="text-align:right">
+          <div class="jam-besar"><span id="timer" class="mini">00:00</span></div>
+          <div style="margin-top:6px" id="statusSesi"></div>
+          <div style="margin-top:6px" id="koneksi"></div>
+        </div>
+      </div>
+
+      <p class="mini" style="margin-bottom:14px">Angka di layar ini <b>disegarkan setiap 12 detik</b> dengan
+        menarik ulang data (polling). Ini bukan realtime — kalau peserta mengirim satu detik lalu,
+        angkanya bisa belum terlihat. Label di kanan atas menyebutkan kapan terakhir diperbarui.</p>
+
+      <div class="ikhtisar" id="angka"></div>
+
+      <div class="tab" role="tablist" id="tabSesi"></div>
+      <div id="isiTab"></div>
+    </div>
+  </section>
+</main>
+
+<script src="stub.js"></script>
+<script src="../lib/qr.js"></script>
+<script>window.AJIOS_CONFIG={url:"https://uji.local",anon:"eyJUJI",schema:"ajios",origin:"https://os.ajijaens.com"}</script>
+<script src="../lib/app.js"></script>
+<script src="../lib/sesi.js"></script>
+</body>
+</html>

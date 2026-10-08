@@ -94,6 +94,50 @@ Diurutkan menurut pekerjaannya, bukan menurut label "Phase":
 
 ---
 
+## Paket NP — keadaan per 8 Oktober 2026
+
+Daftar ini **bukan** pernyataan bahwa Fase 6 selesai. Satu paket selesai
+berarti satu paket selesai. Kolom "Teruji" hanya diisi kalau ada rangkaian
+pengujian yang benar-benar dijalankan dan hasilnya tercatat.
+
+| Paket | Terimplementasi | Teruji | Kekurangan | Ketergantungan |
+|---|---|---|---|---|
+| **NP-01** Knowledge: Learn, Do & Share | Ya — artefak OS v21 | 18 pengujian | Bank bahan belum punya penelusuran penuh | artefak OS |
+| **NP-V02** Share: Bank Bahan, Modul & Program | Ya — artefak OS v22 | 14 pengujian | Tanpa editor slide (memang di luar lingkup) | NP-01 |
+| **NP-V00** Fondasi backend | Ya — 26 tabel, 57 kebijakan RLS, PDP PP 33/2026 | 36 pengujian di PostgreSQL 16.15 | — | Supabase |
+| **NP-V04** Portal Peserta | Ya — `app/portal/` | 25 pengujian | Belum pernah diuji bersama RLS lewat HTTP | NP-V00, anon key |
+| **NP-V05** Database Peserta, CRM & Funnel | Ya — `app/admin/crm.html` | 16 + 16 pengujian | Belum ada kirim WhatsApp/email (memang pencatatan saja) | NP-V00 |
+| **NP-V08** Sesi & Kendali Fasilitator | Ya — `app/sesi/` + layar proyektor | 41 + 41 pengujian, QR 18 pengujian | QR belum dipindai dengan ponsel sungguhan oleh manusia | NP-V00, alamat tetap |
+| **NP-V03** Slide Studio | Belum | — | — | NP-V02 |
+| **NP-V06** Learn | Belum | — | — | NP-01 |
+| **NP-V07** Do | Belum | — | — | NP-01 |
+| **NP-V09** Evaluasi & Tindak Lanjut | Belum | — | — | NP-V04, NP-V08 |
+
+Yang **tidak** boleh disimpulkan dari tabel ini: bahwa sistemnya siap
+produksi. Akses multiuser, penyimpanan, dan alur peserta belum pernah diuji
+bersama lewat HTTP terhadap Supabase sungguhan — hanya terhadap tiruan klien
+dan terhadap PostgreSQL lokal, terpisah.
+
+### Satu kesalahan yang ditemukan pengujian, dan cara memperbaikinya
+
+Kebijakan RLS membuat `activity_response` hanya terbaca pemiliknya — itu
+benar, fasilitator memang tidak boleh membaca jawaban perorangan. Tetapi
+akibatnya hitungan `count(distinct person_id)` yang dijalankan fasilitator
+selalu menghasilkan **0**, dan layar kendali akan menuliskan
+"0 dari 12 peserta hadir sudah mengirim": sebuah pernyataan salah yang
+terlihat seperti data.
+
+Diperbaiki di `backend/migrations/0005_progres.sql` dengan satu fungsi
+SECURITY DEFINER yang mengembalikan **hanya cacahnya**, dan `NULL` — bukan
+nol — bagi yang tidak berhak menghitung. Antarmuka menuliskan NULL sebagai
+"belum bisa dihitung di sini", dan **tidak menggambar batang progres** untuk
+angka yang tidak diketahui, karena batang kosong terbaca sebagai nol.
+
+Basis data yang sudah memakai `pasang_semua.sql` versi empat bagian cukup
+menjalankan `backend/pasang_tambahan_0005.sql` sekali.
+
+---
+
 ## Batas yang diakui, bukan ditutupi
 
 | Hal | Keadaan |

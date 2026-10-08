@@ -21,7 +21,14 @@ window.AJIOS_CONFIG = {
   /* Nama schema basis data. Jangan diubah. */
   schema: 'ajios',
 
-  /* Alamat tempat aplikasi ini dihosting. Dipakai untuk tautan OTP dan QR.
-     Biarkan kosong untuk memakai alamat halaman saat ini. */
+  /* Alamat tempat aplikasi ini dihosting, tanpa garis miring di akhir.
+     Dipakai untuk tautan kode masuk (OTP) dan untuk alamat di QR sesi.
+
+     Contoh setelah domain terpasang:
+       origin: 'https://os.ajijaens.com'
+
+     Dibiarkan kosong, alamatnya dihitung dari halaman yang sedang dibuka.
+     Itu jalan untuk mencoba, tetapi QR yang dicetak sebelum sesi sebaiknya
+     dibuat dari alamat yang pasti — isi nilainya begitu domainnya siap. */
   origin: ''
 };

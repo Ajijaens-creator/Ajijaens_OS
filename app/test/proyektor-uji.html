@@ -1,0 +1,81 @@
+<!doctype html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="noindex,nofollow">
+<title>Layar Proyektor — Sesi</title>
+<link rel="stylesheet" href="../lib/ui.css">
+<style>
+/* Layar ini dilihat dari belakang ruangan: kontras tinggi, huruf besar,
+   tanpa satu pun elemen yang membawa data pribadi. */
+:root{color-scheme:dark}
+body{background:#14110A;color:#F7F2E6;margin:0;min-height:100vh;
+  font-family:var(--fs,system-ui,-apple-system,"Segoe UI",sans-serif)}
+.bar{display:flex;align-items:center;gap:14px;padding:14px 26px;
+  border-bottom:1px solid rgba(232,200,122,.22);flex-wrap:wrap}
+.bar h1{font-size:clamp(20px,2.4vw,30px);margin:0;color:#FFFDF6;flex:1;min-width:200px}
+.tanda{font-size:12px;letter-spacing:.2em;text-transform:uppercase;padding:4px 10px;border-radius:20px;
+  border:1px solid rgba(232,200,122,.5);color:#E8C87A}
+.tanda.jalan{background:rgba(120,170,110,.18);border-color:rgba(150,200,140,.6);color:#BFE3B2}
+.tanda.henti{opacity:.7}
+.jam{font-family:var(--fd,Georgia,serif);font-size:clamp(26px,3.4vw,44px);line-height:1;color:#E8C87A}
+.jam.lewat{color:#E79A8A}
+#segar{font-size:11px;color:#9A9080;letter-spacing:.06em}
+main{padding:26px}
+.panggung{border:1px solid rgba(232,200,122,.22);border-radius:16px;padding:28px;margin-bottom:22px;
+  background:linear-gradient(160deg,rgba(232,200,122,.07),rgba(232,200,122,.02))}
+.panggung h2{font-size:clamp(26px,4.4vw,52px);line-height:1.1;margin:6px 0 12px;color:#FFFDF6}
+.cap{font-size:11px;letter-spacing:.26em;text-transform:uppercase;color:#C9A85A}
+.arah{font-size:clamp(15px,1.6vw,20px);color:#DDD3BE;line-height:1.5;max-width:60ch}
+.arah.kecil{font-size:13px;color:#A79E8C;max-width:40ch}
+.takar{height:14px;border-radius:10px;background:rgba(255,253,246,.1);overflow:hidden;margin:18px 0 8px;max-width:620px}
+.takar i{display:block;height:100%;background:linear-gradient(90deg,#C9A85A,#E8C87A)}
+.angka-ket{font-size:clamp(15px,1.8vw,22px);color:#E3DAC6}
+.angka-besar{font-family:var(--fd,Georgia,serif);font-size:clamp(44px,7vw,86px);line-height:1;margin:8px 0 6px;color:#E8C87A}
+.kode-besar{font-family:var(--fd,Georgia,serif);font-size:clamp(30px,4.6vw,56px);letter-spacing:.08em;
+  margin:8px 0 10px;color:#FFFDF6}
+.kisi-proy{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:18px}
+.kotak{border:1px solid rgba(232,200,122,.2);border-radius:14px;padding:20px;background:rgba(255,253,246,.03)}
+.kotak.lebar{grid-column:1/-1;margin-top:18px}
+#qr{background:#fff;border-radius:10px;padding:10px;max-width:230px;margin:12px 0}
+#qr.sembunyi{display:none}
+#qr svg{width:100%;height:auto;display:block}
+.tanya{font-size:clamp(17px,2vw,26px);line-height:1.4;color:#FFFDF6;margin:0 0 14px;
+  padding-left:16px;border-left:3px solid #C9A85A}
+.tanya.sudah{opacity:.5;border-left-color:#6B6250}
+.keadaan{border:1px dashed rgba(232,200,122,.4);border-radius:14px;padding:26px;color:#DDD3BE}
+.keadaan b{display:block;font-size:22px;color:#FFFDF6;margin-bottom:8px}
+.btn-proy{background:none;border:1px solid rgba(232,200,122,.45);color:#E8C87A;border-radius:20px;
+  padding:6px 14px;font-size:12.5px;cursor:pointer;font-family:inherit}
+.btn-proy:hover{background:rgba(232,200,122,.12)}
+.kaki{padding:0 26px 26px;font-size:11.5px;color:#7E7768;line-height:1.6;max-width:80ch}
+</style>
+</head>
+<body>
+
+<div class="bar">
+  <h1 id="judul">Memuat…</h1>
+  <span class="tanda henti" id="status">—</span>
+  <div style="text-align:right">
+    <div class="jam" id="jam">belum dimulai</div>
+    <div id="segar">belum terhubung</div>
+  </div>
+  <button class="btn-proy" id="togelQR">Sembunyikan QR</button>
+  <button class="btn-proy" id="penuh">Layar penuh</button>
+</div>
+
+<main id="isi"></main>
+
+<p class="kaki">Layar ini hanya menampilkan judul sesi, waktu, cara bergabung, aktivitas yang sedang dibuka,
+  angka agregat, dan pertanyaan yang sudah ditayangkan fasilitator. Catatan presenter, nama dan kontak peserta,
+  data usaha, serta jawaban perorangan tidak pernah muncul di sini. Angka disegarkan setiap 10 detik dengan
+  menarik ulang data — ini polling, bukan realtime, dan waktu pembaruan terakhir tertulis di sudut atas.</p>
+
+<script src="stub.js"></script>
+<script src="../lib/qr.js"></script>
+<script>window.AJIOS_CONFIG={url:"https://uji.local",anon:"eyJUJI",schema:"ajios",origin:"https://os.ajijaens.com"}</script>
+<script src="../lib/app.js"></script>
+<script src="../lib/proyektor.js"></script>
+</body>
+</html>

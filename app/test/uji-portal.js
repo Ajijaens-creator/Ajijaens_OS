@@ -16,7 +16,7 @@ const bad = m => { fail++; console.log('  GAGAL  '+m); };
       window.__MASUK_UJI = cfg.masuk;
       window.__PROFIL_SAYA = cfg.profil || null;
     }, { tanpaProfil: !!o.tanpaProfil, masuk: !!o.masuk, profil: o.profil || null });
-    await pg.goto(URL,{waitUntil:'load'});
+    await pg.goto(URL + (o.cari || ''),{waitUntil:'load'});
     await pg.waitForTimeout(500);
     return pg;
   }
@@ -206,6 +206,61 @@ const bad = m => { fail++; console.log('  GAGAL  '+m); };
   (r.nol && r.lewati && r.baseline && r.jumlah === 8)
     ? ok('Life Circle tersimpan: nilai 0 tercatat sebagai 0, yang dilewati tercatat NULL, ditandai baseline')
     : bad('Simpan Life Circle: '+JSON.stringify(r));
+
+  /* ================= tautan / QR sesi (?sesi=KODE) ================= */
+  await pg.close();
+
+  /* belum masuk: tautan sesi dijelaskan, tidak langsung mendaftarkan */
+  pg = await buka({masuk:false, tanpaProfil:true, cari:'?sesi=UJI-2'});
+  r = await pg.evaluate(() => ({
+    tanda: (document.getElementById('tautanSesi')||{}).hidden === false,
+    teks: (document.getElementById('tautanSesi')||{}).innerText || '',
+    terdaftar: window.__STUB.DB.session_registration.length
+  }));
+  (r.tanda && /UJI-2/.test(r.teks) && /tidak memberi akses apa pun/.test(r.teks))
+    ? ok('Tautan sesi: dijelaskan di halaman pembuka, dan dinyatakan tidak memberi akses sendiri')
+    : bad('Tanda tautan sesi: '+JSON.stringify(r));
+  await pg.close();
+
+  /* sesi yang belum pernah diikuti: didaftarkan sekali, kehadiran tidak tersentuh */
+  pg = await buka({masuk:true, profil:'p1', cari:'?sesi=UJI-3'});
+  await pg.waitForTimeout(1200);
+  r = await pg.evaluate(() => ({
+    teks: document.getElementById('isiSesi').innerText,
+    baris: window.__STUB.DB.session_registration.filter(x => x.sesi_id === 's3' && x.person_id === 'p1').length,
+    hadir: window.__STUB.DB.attendance.filter(x => x.sesi_id === 's3').length
+  }));
+  (r.baris === 1 && /Terdaftar belum berarti hadir/.test(r.teks) && /terdaftar/i.test(r.teks))
+    ? ok('Tautan sesi: peserta didaftarkan sekali, dan "terdaftar bukan hadir" dikatakan')
+    : bad('Gabung sesi: '+JSON.stringify(r).slice(0,300));
+  (r.hadir === 0)
+    ? ok('Mendaftar lewat tautan TIDAK membuat catatan kehadiran apa pun')
+    : bad('Kehadiran ikut berubah: '+r.hadir);
+  await pg.close();
+
+  /* sesi yang sudah diikuti: tidak didaftarkan dua kali */
+  pg = await buka({masuk:true, profil:'p1', cari:'?sesi=UJI-2'});
+  await pg.waitForTimeout(1200);
+  r = await pg.evaluate(() => ({
+    teks: document.getElementById('isiSesi').innerText,
+    baris: window.__STUB.DB.session_registration.filter(x => x.sesi_id === 's2' && x.person_id === 'p1').length
+  }));
+  (r.baris === 1 && /sudah terdaftar/i.test(r.teks) && /tidak didaftarkan dua kali/.test(r.teks))
+    ? ok('Tautan sesi dibuka dua kali: tidak didaftarkan dua kali, dan itu dikatakan')
+    : bad('Daftar ganda: '+JSON.stringify(r).slice(0,300));
+  await pg.close();
+
+  /* kode yang tidak ada: dikatakan tidak terdaftar, bukan diam-diam dianggap berhasil */
+  pg = await buka({masuk:true, profil:'p1', cari:'?sesi=TIDAK-ADA'});
+  await pg.waitForTimeout(1200);
+  r = await pg.evaluate(() => ({
+    teks: document.getElementById('isiSesi').innerText,
+    jml: window.__STUB.DB.session_registration.length
+  }));
+  (/tidak ditemukan/.test(r.teks) && /tidak terdaftar/i.test(r.teks))
+    ? ok('Kode sesi yang tidak ada: dikatakan tidak ditemukan dan tidak terdaftar')
+    : bad('Kode salah: '+JSON.stringify(r).slice(0,240));
+  await pg.close();
 
   /* --- tiga ukuran layar --- */
   await pg.close();

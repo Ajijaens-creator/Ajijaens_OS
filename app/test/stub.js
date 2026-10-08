@@ -89,8 +89,67 @@
       { id: 'ak2', sesi_id: 's1', kode: 'pdf', judul: 'Materi PDF', jenis: 'materi', status: 'Belum dibuka' } ],
     education_profile: [],
     data_subject_request: [],
-    activity_response: [], feedback: [], action_plan: [], staff: []
+    activity_response: [], feedback: [], action_plan: [], staff: [],
+    pertanyaan: [], audit_log: []
   };
+
+  /* Sesi contoh dilengkapi supaya layar kendali NP-V08 bisa diuji apa adanya:
+     satu sesi berlangsung yang sudah punya waktu mulai tersimpan. */
+  DB.sesi.push({ id: 's2', judul: 'Sesi Uji Berlangsung', mulai_pada: NOW, status: 'Berlangsung',
+    kode_sesi: 'UJI-2', durasi_menit: 150, lokasi: 'Ubud', kapasitas: 30,
+    dimulai_pada: '2026-10-08T01:30:00.000Z', jeda_detik: 0, diakhiri_pada: null });
+  /* Sesi terjadwal yang BELUM punya pendaftar — dipakai menguji
+     pendaftaran lewat tautan/QR sesi di portal peserta. */
+  DB.sesi.push({ id: 's3', judul: 'Sesi Uji Terjadwal', mulai_pada: NOW, status: 'Terjadwal',
+    kode_sesi: 'UJI-3', durasi_menit: 150, lokasi: 'Ubud', kapasitas: 30,
+    dimulai_pada: null, jeda_detik: 0, diakhiri_pada: null });
+  DB.session_registration.push(
+    { id: 'g3', sesi_id: 's2', person_id: 'p1', terdaftar_pada: NOW },
+    { id: 'g4', sesi_id: 's2', person_id: 'p2', terdaftar_pada: NOW },
+    { id: 'g5', sesi_id: 's2', person_id: 'p3', terdaftar_pada: NOW });
+  DB.attendance.push({ id: 'a2', sesi_id: 's2', person_id: 'p1', hadir: true,
+    check_in_pada: NOW, metode: 'Mandiri' });
+  DB.attendance.push({ id: 'a3', sesi_id: 's2', person_id: 'p2', hadir: true,
+    check_in_pada: NOW, metode: 'Operator' });
+  DB.activity.push(
+    { id: 'ak3', sesi_id: 's2', kode: 'lc', judul: 'Wellbeing Life Circle',
+      jenis: 'life_circle', status: 'Dibuka', terima_setelah_tutup: false },
+    { id: 'ak4', sesi_id: 's2', kode: 'ap', judul: 'Action Plan 7 Hari',
+      jenis: 'action_plan', status: 'Belum dibuka', terima_setelah_tutup: false });
+  /* satu terkirim, satu masih draft — draft tidak boleh ikut dihitung */
+  DB.activity_response.push(
+    { id: 'ar1', activity_id: 'ak3', person_id: 'p1', jawaban: { x: 1 }, dikirim_pada: NOW },
+    { id: 'ar2', activity_id: 'ak3', person_id: 'p2', draft: { x: 2 }, dikirim_pada: null });
+  DB.pertanyaan.push(
+    { id: 'q1', sesi_id: 's2', person_id: 'p1', isi: 'Bagaimana memulai tanpa modal?',
+      tanpa_nama: true, ditinjau: false, ditayangkan: false, terjawab: false, dikirim_pada: NOW },
+    { id: 'q2', sesi_id: 's2', person_id: 'p2', isi: 'Apakah izin usaha wajib di awal?',
+      tanpa_nama: false, ditinjau: true, ditayangkan: true, terjawab: false, dikirim_pada: NOW });
+
+  /* Kunci unik yang ditiru, supaya percobaan ganda menghasilkan 23505
+     seperti di Postgres — bukan baris kedua yang diam-diam masuk. */
+  const UNIK = {
+    attendance: ['sesi_id', 'person_id'],
+    session_registration: ['sesi_id', 'person_id'],
+    activity_response: ['activity_id', 'person_id']
+  };
+
+  /* Peran yang berhak menghitung pengirim. Di basis data ini ditegakkan
+     oleh jml_pengirim() (SECURITY DEFINER) — di sini ditiru supaya
+     perbedaan NULL dan 0 ikut teruji. */
+  const BOLEH_HITUNG = ['admin', 'fasilitator', 'operator'];
+  function progresAktivitas() {
+    const boleh = BOLEH_HITUNG.indexOf(g.__STUB.peran) !== -1;
+    return DB.activity.map(a => ({
+      activity_id: a.id, sesi_id: a.sesi_id, judul: a.judul, status: a.status,
+      pengirim: boleh
+        ? new Set(DB.activity_response.filter(r => r.activity_id === a.id && r.dikirim_pada)
+            .map(r => r.person_id)).size
+        : null,
+      hadir: DB.attendance.filter(x => x.sesi_id === a.sesi_id && x.hadir).length,
+      terdaftar: DB.session_registration.filter(x => x.sesi_id === a.sesi_id).length
+    }));
+  }
 
   /* peran yang sedang disimulasikan */
   /* Peran dibaca SAAT DIMUAT, sebelum halaman sempat boot — kalau disetel
@@ -98,13 +157,20 @@
   const PERAN_AWAL = (g.__PERAN_UJI === undefined) ? 'admin' : g.__PERAN_UJI;
   g.__STUB = { peran: PERAN_AWAL, user: { id: 'u-admin' }, gagalkan: null };
   const TERLARANG = { cs: ['life_circle_score','feedback','action_plan','activity_response'],
-                      fasilitator: ['life_circle_score','feedback','action_plan','business','business_relationship'] };
+                      fasilitator: ['life_circle_score','feedback','action_plan','activity_response',
+                                    'business','business_relationship'],
+                      operator: ['life_circle_score','feedback','action_plan','activity_response',
+                                 'business','business_relationship'] };
 
   function kueri(tabel) {
-    let rows = (DB[tabel] || []).slice();
+    let rows = (tabel === 'progres_aktivitas' ? progresAktivitas() : (DB[tabel] || [])).slice();
     const q = {
       _eq: [], _order: null, _single: false,
-      select(sel) { q._sel = sel; return q; },
+      select(sel, opt) {
+        q._sel = sel;
+        if (opt && opt.count) { q._count = true; q._head = !!opt.head; }
+        return q;
+      },
       eq(k, v) { q._eq.push([k, v]); return q; },
       order(k, o) { q._order = [k, !o || o.ascending !== false]; return q; },
       limit(n) { q._limit = n; return q; },
@@ -122,8 +188,27 @@
         if (larangan.indexOf(tabel) !== -1) return resolve({ data: [], error: null });
         if (q._insert) {
           const satuan = Array.isArray(q._insert) ? q._insert : [q._insert];
+          const kunci = UNIK[tabel];
+          if (kunci) {
+            const bentrok = satuan.some(x =>
+              (DB[tabel] || []).some(r => kunci.every(k => r[k] === x[k])));
+            if (bentrok) return resolve({ data: null, error: {
+              code: '23505', message: 'duplicate key value violates unique constraint' } });
+          }
+          /* Kolom bernilai bawaan di basis data juga diisi di sini, supaya
+             baris hasil insert tidak tampak kosong padahal di Postgres
+             terisi sendiri. */
+          const BAWAAN = {
+            session_registration: { terdaftar_pada: NOW },
+            attendance: { check_in_pada: NOW, hadir: true },
+            pertanyaan: { dikirim_pada: NOW, tanpa_nama: true, ditinjau: false,
+                          ditayangkan: false, terjawab: false },
+            activity: { status: 'Belum dibuka', terima_setelah_tutup: false },
+            audit_log: { pada: NOW }
+          };
           const dibuat = satuan.map(x => {
-            const baris = Object.assign({ id: 'x' + Math.random().toString(36).slice(2, 8) }, x);
+            const baris = Object.assign({ id: 'x' + Math.random().toString(36).slice(2, 8) },
+                                        BAWAAN[tabel] || {}, x);
             if (!baris.dibuat_pada) baris.dibuat_pada = NOW;
             (DB[tabel] = DB[tabel] || []).unshift(baris);
             return baris;
@@ -148,6 +233,7 @@
           out = out.map(r => Object.assign({}, r, { [alias]: peta.find(x => x.id === r[fk]) || null }));
         }
         if (q._limit) out = out.slice(0, q._limit);
+        if (q._count) return resolve({ data: q._head ? null : out, count: out.length, error: null });
         resolve({ data: q._single ? (out[0] || null) : out, error: null });
       });
     }

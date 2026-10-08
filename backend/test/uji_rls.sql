@@ -73,6 +73,13 @@ begin
     (eA,'Kesehatan',0), (eA,'Keuangan',null),
     (eB,'Kesehatan',7), (eB,'Keuangan',5);
 
+  -- Dua kiriman terkirim + satu draft yang BELUM terkirim. Draft tidak
+  -- boleh ikut dihitung sebagai pengirim.
+  insert into activity_response(activity_id, person_id, jawaban, dikirim_pada)
+    values (act,pA,'{"x":1}'::jsonb, now());
+  insert into activity_response(activity_id, person_id, draft)
+    values (act,pB,'{"x":2}'::jsonb);
+
   insert into action_plan(person_id, sesi_id, tujuan) values (pA,s,'UJI rencana A');
   insert into action_plan(person_id, sesi_id, tujuan) values (pB,s,'UJI rencana B');
   insert into feedback(sesi_id, person_id, jawaban) values (s,pB,'{"saran":"rahasia B"}'::jsonb);
@@ -120,6 +127,11 @@ begin
 exception when insufficient_privilege then
   perform uji('A mencoba menulis action plan B: baris yang berubah', '0', '0');
 end $$;
+
+-- Peserta tidak berhak menghitung pengirim. Jawabannya NULL — bukan 0.
+-- Nol berarti "berhak menghitung, memang belum ada". Dua keadaan berbeda.
+select uji('Peserta: jumlah pengirim NULL, bukan nol',
+  (select coalesce(jml_pengirim(id)::text, 'NULL') from activity where kode = 'lc'), 'NULL');
 select auth.jadi_pemilik();
 
 -- ===================================================== FASILITATOR
@@ -145,6 +157,16 @@ select uji('Fasilitator TIDAK bisa membaca action plan perorangan',
 
 select uji('Fasilitator melihat progres agregat, bukan jawaban',
   (select (terdaftar::text || '/' || hadir::text) from progres_aktivitas limit 1), '2/1');
+
+-- Inti perbaikan 0005: fasilitator mendapat CACAH yang benar tanpa bisa
+-- membaca satu pun baris jawaban. Sebelum ini angkanya selalu 0 — salah,
+-- dan terlihat seperti data.
+select uji('Fasilitator TIDAK bisa membaca baris jawaban aktivitas',
+  (select count(*)::text from activity_response), '0');
+select uji('Fasilitator tetap mendapat jumlah pengirim yang benar',
+  (select pengirim::text from progres_aktivitas limit 1), '1');
+select uji('Draft yang belum terkirim tidak dihitung sebagai pengirim',
+  (select jml_pengirim(id)::text from activity where kode = 'lc'), '1');
 select auth.jadi_pemilik();
 
 -- ===================================================== ADMIN
