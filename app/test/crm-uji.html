@@ -1,0 +1,165 @@
+<!doctype html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="robots" content="noindex,nofollow">
+<title>Peserta &amp; Komunitas — AJI JAENS OS</title>
+<link rel="stylesheet" href="../lib/ui.css">
+</head>
+<body>
+
+<header class="atas"><div class="bungkus atas-in">
+  <span class="merek">Aji Jaens<em>Life by Design</em></span>
+  <span class="tumbuh"></span>
+  <span id="peran" class="lbl abu">memeriksa…</span>
+  <button class="btn hantu kecil" id="keluar" hidden>Keluar</button>
+</div></header>
+
+<main class="bungkus" style="padding-block:22px 60px">
+
+  <!-- ====================== gerbang masuk ====================== -->
+  <section id="gerbang" hidden>
+    <div class="kartu sempit" style="margin-inline:auto">
+      <h2>Masuk</h2>
+      <p class="mini" style="margin:6px 0 16px">Halaman ini hanya untuk pengelola. Kode masuk dikirim ke email Anda —
+        tidak ada kata sandi yang kami simpan atau minta.</p>
+      <div class="isian" id="i-email">
+        <label for="email">Email</label>
+        <input id="email" type="email" inputmode="email" autocomplete="email" placeholder="nama@contoh.com">
+      </div>
+      <button class="btn lebar" id="kirimKode">Kirim kode</button>
+
+      <div id="tahapKode" hidden style="margin-top:16px">
+        <div class="isian" id="i-kode">
+          <label for="kode">Kode 6 angka dari email</label>
+          <input id="kode" type="text" inputmode="numeric" autocomplete="one-time-code" maxlength="8" placeholder="123456">
+        </div>
+        <button class="btn lebar" id="verifKode">Masuk</button>
+      </div>
+      <p class="mini" style="margin-top:14px">Belum punya akses? Akun dibuat lebih dulu oleh pemilik sistem.</p>
+    </div>
+  </section>
+
+  <!-- ====================== bukan staf ====================== -->
+  <section id="bukanStaf" hidden>
+    <div class="kartu sempit" style="margin-inline:auto">
+      <h2>Tidak punya akses</h2>
+      <p style="margin:8px 0 14px">Akun Anda masuk, tetapi tidak terdaftar sebagai pengelola.
+        Halaman ini menampilkan data pribadi peserta, jadi aksesnya dibatasi di sisi basis data —
+        bukan sekadar disembunyikan di layar.</p>
+      <p class="mini">Kalau Anda peserta, bukan pengelola, portal Anda ada di halaman utama.</p>
+      <div class="deret" style="margin-top:14px">
+        <a class="btn hantu" href="../portal/">Ke portal peserta</a>
+        <button class="btn hantu" id="keluar2">Keluar</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- ====================== isi ====================== -->
+  <section id="isi" hidden>
+    <div style="display:flex;align-items:flex-end;gap:14px;flex-wrap:wrap;margin-bottom:18px">
+      <div style="flex:1;min-width:220px">
+        <h1>Peserta &amp; Komunitas</h1>
+        <p class="mini">Satu profil, seluruh perjalanan belajar dan hubungan.</p>
+      </div>
+      <div class="deret">
+        <button class="btn hantu kecil" id="tambahOrang">+ Tambah peserta</button>
+      </div>
+    </div>
+
+    <div class="tab" role="tablist">
+      <button role="tab" aria-selected="true"  data-tab="db">Database</button>
+      <button role="tab" aria-selected="false" data-tab="funnel">Funnel</button>
+      <button role="tab" aria-selected="false" data-tab="tugas">Follow-up</button>
+    </div>
+
+    <!-- -------- Database -------- -->
+    <div id="tab-db">
+      <div class="kartu" style="margin-bottom:14px">
+        <div class="isian" style="margin:0 0 10px">
+          <label for="cari">Cari peserta, usaha, atau program</label>
+          <input id="cari" type="search" placeholder="Ketik nama, email, atau nama usaha…">
+        </div>
+        <div class="kisi tiga">
+          <div class="isian" style="margin:0"><label for="f-kat">Kategori</label>
+            <select id="f-kat"><option value="">Semua kategori</option></select></div>
+          <div class="isian" style="margin:0"><label for="f-bentuk">Bentuk usaha</label>
+            <select id="f-bentuk"><option value="">Semua bentuk</option></select></div>
+          <div class="isian" style="margin:0"><label for="f-omzet">Rentang omzet</label>
+            <select id="f-omzet"><option value="">Semua rentang</option></select></div>
+          <div class="isian" style="margin:0"><label for="f-kom">Status komunitas</label>
+            <select id="f-kom"><option value="">Semua status</option></select></div>
+          <div class="isian" style="margin:0"><label for="f-tim">Jumlah tim</label>
+            <select id="f-tim"><option value="">Semua</option><option value="0">Belum ada tim</option>
+              <option value="1-5">1–5</option><option value="6-20">6–20</option><option value="21+">21+</option></select></div>
+          <div class="isian" style="margin:0"><label for="f-periode">Periode omzet</label>
+            <select id="f-periode"><option value="">Semua periode</option></select></div>
+        </div>
+        <p class="mini" style="margin-top:10px">Omzet dibandingkan hanya pada periode yang sama.
+          Kosong bukan berarti nol: <b>belum diisi</b>, <b>belum menghasilkan</b>, dan
+          <b>belum bersedia mengisi</b> adalah tiga keadaan berbeda.</p>
+      </div>
+      <div class="kartu"><div id="tabelOrang"></div></div>
+    </div>
+
+    <!-- -------- Funnel -------- -->
+    <div id="tab-funnel" hidden>
+      <div class="kartu" style="margin-bottom:14px">
+        <p class="mini">Status komunitas berbeda dari status pembelajaran.
+          <b>Member aktif hanya setelah peserta mengkonfirmasi sendiri</b> — memindahkan kartu tidak bisa
+          melewati syarat itu.</p>
+      </div>
+      <div id="papanFunnel" class="kisi"></div>
+    </div>
+
+    <!-- -------- Follow-up -------- -->
+    <div id="tab-tugas" hidden>
+      <div class="kartu" style="margin-bottom:14px">
+        <p class="mini"><b>Membuat tugas tidak mengirim pesan apa pun.</b> Ini pencatatan, bukan pengiriman.
+          Integrasi WhatsApp dan email belum ada.</p>
+      </div>
+      <div class="kartu"><div id="daftarTugas"></div></div>
+    </div>
+  </section>
+</main>
+
+<!-- ====================== panel detail ====================== -->
+<div id="panel" class="panel" hidden>
+  <div class="panel-isi">
+    <div class="panel-h">
+      <div style="flex:1;min-width:0">
+        <h2 id="p-nama">—</h2>
+        <p class="mini" id="p-sub">—</p>
+      </div>
+      <button class="btn hantu kecil" id="tutupPanel">Tutup</button>
+    </div>
+    <div class="tab" role="tablist" id="p-tab">
+      <button role="tab" aria-selected="true"  data-pt="profil">Profil</button>
+      <button role="tab" aria-selected="false" data-pt="usaha">Usaha / Pendidikan</button>
+      <button role="tab" aria-selected="false" data-pt="belajar">Pembelajaran</button>
+      <button role="tab" aria-selected="false" data-pt="interaksi">Interaksi</button>
+      <button role="tab" aria-selected="false" data-pt="consent">Persetujuan</button>
+    </div>
+    <div id="p-isi"></div>
+  </div>
+</div>
+
+<style>
+.panel{position:fixed;inset:0;z-index:300;background:rgba(28,22,12,.45);backdrop-filter:blur(3px);
+  display:flex;justify-content:flex-end}
+.panel-isi{background:var(--surface);width:560px;max-width:100%;height:100%;overflow:auto;padding:20px;
+  border-left:1px solid var(--border)}
+.panel-h{display:flex;gap:12px;align-items:flex-start;margin-bottom:16px}
+.kv{display:grid;grid-template-columns:140px 1fr;gap:8px 14px;font-size:14.5px;margin:0}
+.kv dt{color:var(--text-3);font-size:13px;font-weight:600}
+.kv dd{margin:0}
+@media(max-width:560px){.kv{grid-template-columns:1fr}.kv dd{margin-bottom:6px}}
+</style>
+
+<script src="../test/stub.js"></script>
+<script>window.AJIOS_CONFIG={url:"https://uji.local",anon:"eyJUJI",schema:"ajios",origin:""}</script>
+<script src="../lib/app.js"></script>
+<script src="../lib/crm.js"></script>
+</body>
+</html>
